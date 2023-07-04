@@ -1,16 +1,16 @@
-<?php 
+<?php
 session_start();
  ?>
 
 <!-- Recently sold products
  -->
-<?php 
+<?php
   include('jdf.php');
   define("DATE", jdate('l j p y i : g a')) ;
   echo DATE;
  ?>
- <?php 
- 
+ <?php
+
  function recentlly(){
     $lint =1;
     if (isset($_GET['view'])) {
@@ -22,21 +22,21 @@ session_start();
  if ($result->num_rows>0) {
        while($row = $result->fetch_assoc()){
 
-        echo' <tr class="">    
+        echo' <tr class="">
                      <td>'.$row["goods_name"].'</td>
-            
+
                      <td> '.$row["price"].'</td>
                      <td>'.$row["sold_date"].'</td>
                      <td><a href="admin.php?customer='.$row["customer_id"].'">'.$row["customer_id"].'</a></td>
-                    
+
                  </tr>';
        }
-   }  
+   }
  }
 
 
   ?>
-<?php 
+<?php
 if (isset($_POST["provID"])) {
     require_once('DBConnection.php');
 $sql="SELECT * FROM `district` WHERE province_id=".$_POST["provID"];
@@ -47,7 +47,7 @@ if ($result->num_rows>0) {
 echo'<option value="">selext</option>';
 while ($row = $result->fetch_assoc()) {
  echo '<option value="'.$row["district_id"].'">'.$row["district_name"].'</option>';
-            
+
         }
         //echo $outpot;
     }
@@ -90,12 +90,12 @@ $allowTypes = array('jpg','png','jpeg','gif');
     if(in_array($fileType, $allowTypes)){
         // Upload file to server
         if(move_uploaded_file($_FILES["image"]["tmp_name"], $targetFilePath)){
-                
+
 
         }else{
             $statusMsg = "Sorry, there was an error uploading your file.";
         }
-    
+
 }
 $date = DATE;
 $sql7 ="INSERT INTO `customer` (`customer_id`, `customer_name`, `customer_f_name`, `customer_email`,`cutomer_image`,`customer_address`,`created_date`) VALUES (NULL, '$name', '$fname', '$email','$targetFilePath','$locationid','$date')";
@@ -113,7 +113,7 @@ $mobile=$id["customer_id"];
 $mobileNO =$_POST['mobile'];
 $sql5 ="INSERT INTO `mobile_numbers` (`mobile_number`, `customer_id`) VALUES ('$mobileNO', '$mobile');";
 $conn->query($sql5);
-    
+
 $mobileNO1 =$_POST['mobile1'];
 $sql5 ="INSERT INTO `mobile_numbers` (`mobile_number`, `customer_id`) VALUES ('$mobileNO1', '$mobile');";
 $conn->query($sql5);
@@ -121,14 +121,14 @@ $conn->query($sql5);
 $mobileNO2 =$_POST['mobile2'];
 $sql5 ="INSERT INTO `mobile_numbers` (`mobile_number`, `customer_id`) VALUES ('$mobileNO2', '$mobile');";
 $conn->query($sql5);
-      //header( "Location: admin.php" ); 
+      //header( "Location: admin.php" );
 
 
 }
 if (isset($_POST['submit'])) {
   // setaddress();
     addcustomer();
-     
+
 }
 // Add category
  function addcate(){
@@ -142,17 +142,17 @@ if (isset($_POST['submit'])) {
     else{
        echo' <script LANGUAGE="JavaScript">
                  swal("په بریالی توګه !", "د محضول مغلومات اضافه شول!", "success");
-                
-               </script>;'; 
+
+               </script>;';
     }
 
     }
     catch(Exception $e){
         echo $e->getMessage();
     }
-   
+
  }
- // add company 
+ // add company
  function addco(){
     try {
         $coname =$_POST['company_name'];
@@ -161,8 +161,8 @@ if (isset($_POST['submit'])) {
     if ($conn->query($sql)) {
          echo' <script LANGUAGE="JavaScript">
                  swal("په بریالی توګه !", "د محضول مغلومات اضافه شول!", "success");
-                
-               </script>;'; 
+
+               </script>;';
     }else{
          echo' ("<script LANGUAGE="JavaScript">
                  window.alert("Opps");
@@ -172,7 +172,7 @@ if (isset($_POST['submit'])) {
     }catch(Exception $e){
 
     }
-   
+
  }
  // add countery
  function  addcounter(){
@@ -183,20 +183,20 @@ if (isset($_POST['submit'])) {
       if ($conn->query($sql)) {
        echo' <script LANGUAGE="JavaScript">
                  swal("په بریالی توګه !", "د محضول مغلومات اضافه شول!", "success");
-                
-               </script>;'; 
+
+               </script>;';
     }
     else{
         echo' <script LANGUAGE="JavaScript">
                  window.alert("Opps");
                  window.location.href="admin.php";
-               </script>"'; 
+               </script>"';
     }
-  
+
     } catch (Exception $e) {
         echo $e->getMessage();
     }
-    
+
  }
  // add currecy
  try {
@@ -208,14 +208,14 @@ if (isset($_POST['submit'])) {
         if ($conn->query($sql)) {
            echo' <script LANGUAGE="JavaScript">
                  swal("په بریالی توګه !", "د محضول مغلومات اضافه شول!", "success");
-                
-               </script>;'; 
+
+               </script>;';
         }
         else{
              echo' ("<script LANGUAGE="JavaScript">
                      window.alert("Opps");
-                
-                   </script>");';  
+
+                   </script>");';
         }
     }
  }
@@ -228,23 +228,23 @@ if (isset($_POST['submit'])) {
          $unit_name = $_POST['unit_name'];
          $sql="INSERT INTO `unit` (`unit_id`, `unit_name`) VALUES (NULL, '$unit_name');";
          if ($conn->query($sql)) {
-            
+
                   echo' <script LANGUAGE="JavaScript">
                  swal("په بریالی توګه !", "د محضول مغلومات اضافه شول!", "success");
                         window.location.href="";
-               </script>;'; 
+               </script>;';
          }
          else{
              echo' ("<script LANGUAGE="JavaScript">
                      window.alert("Opps");
-                
-                   </script>");'; 
+
+                   </script>");';
          }
     }
     catch(Exception $e){
         echo $e->getMessage();
     }
-   
+
  }
   function addStore(){
     try {
@@ -257,11 +257,11 @@ if (isset($_POST['submit'])) {
            echo "opps!";
         }
 
-            
+
                   echo' <script LANGUAGE="JavaScript">
                  swal("په بریالی توګه !", "د محضول مغلومات اضافه شول!", "success");
-                        
-               </script>;'; 
+
+               </script>;';
          $sql ="SELECT * FROM `location` ORDER BY location_id desc limit 1";
          $id = $conn->query($sql);
          $addres="";
@@ -272,29 +272,29 @@ if (isset($_POST['submit'])) {
          //$store_address = $_POST['store_address'];
          $sql="INSERT INTO `store` (`store_id`, `store_name`, `store_address`) VALUES (NULL, '$store_name', '$addres');";
          if ($conn->query($sql)) {
-       
+
          $conn->query($sqll);
           echo' <script LANGUAGE="JavaScript">
                  swal("په بریالی توګه !", "د محضول مغلومات اضافه شول!", "success");
-                        
-               </script>;'; 
+
+               </script>;';
          }
          else{
              echo' ("<script LANGUAGE="JavaScript">
                      window.alert("Opps");
-                
-                   </script>");'; 
+
+                   </script>");';
          }
     }
     catch(Exception $e){
         echo $e->getMessage();
     }
-    
-     
+
+
  }
     try{
          function laon(){
-        
+
             $loan_quqntity = $_POST["loan_quantity"];
             $paid_quantity = $_POST["paid_quantity"];
            echo $total_paid    = $_POST["total_paid"];
@@ -309,18 +309,18 @@ if (isset($_POST['submit'])) {
                          swal("په بریالی توګه !", "د محضول مغلومات اضافه شول!", "success");
                       </script>;';
              }
-        
+
         }
     }catch(Exception $e){
 
     }
     // Dashboaerd -----------------------------------------------------------------------------------------------------------------//
-   
-       
+
+
 
  ?>
 
-  
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -365,7 +365,7 @@ if (isset($_POST['submit'])) {
                     <img src="https://via.placeholder.com/28?text=!" alt="user" width="32" height="32" class="rounded-circle">
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownUser2" style="">
-                   
+
                     <li><a class="dropdown-item" href="#">Settings</a></li>
                     <li><a class="dropdown-item" href="#">Profile</a></li>
                     <li>
@@ -417,7 +417,7 @@ if (isset($_POST['submit'])) {
 
               </div>
             </div><!-- End Revenue Card -->
-            
+
                  <div class="col-xxl-4 col-md-4 "style="direction: rtl; text-align: right;">
               <div class="card info-card sales-card ss">
 
@@ -483,7 +483,7 @@ if (isset($_POST['submit'])) {
                       <i class="bi bi-people"></i>
                     </div>
                     <div class="ps-3">
-                        <?php 
+                        <?php
 
                              try{
 
@@ -493,14 +493,14 @@ if (isset($_POST['submit'])) {
                                      if ($result->num_rows>0) {
 
                                          $row = $result->fetch_assoc();
-                                          echo '<h6>'.$row['NumberOfcustomer'].'</h6>'; 
+                                          echo '<h6>'.$row['NumberOfcustomer'].'</h6>';
                                     }
-                                
+
                                }
                                catch(Exception $e){
                              }
                          ?>
-                      
+
                       <span class="text-danger small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">ریات شوی</span>
 
                     </div>
@@ -521,14 +521,14 @@ if (isset($_POST['submit'])) {
 
         if(isset($_GET['editeprofiles'])){
            $id= $_GET['editeprofiles'];
-            echo '<script> 
+            echo '<script>
                     $(document).ready(function(){
                             $("#addcustomer").modal("show");
                         });
-                     
-              
-                 
-           
+
+
+
+
                  </script>';
                   $sql = "SELECT * FROM `customer` INNER JOIN location ON customer.customer_address = location.location_id INNER JOIN district ON location.location_district = district.district_id INNER JOIN province ON district.province_id = province.province_id WHERE customer_id='$id';";
                   include('DBConnection.php');
@@ -538,7 +538,7 @@ if (isset($_POST['submit'])) {
                     $sql2 ="SELECT * FROM `mobile_numbers` WHERE customer_id ='$id'";
                     $result2 = $conn->query($sql2);
                     if ($result2->num_rows>0) {
-                        
+
                     }
                       while($row = $result->fetch_assoc()){
                         $name = $row["customer_name"];
@@ -547,7 +547,7 @@ if (isset($_POST['submit'])) {
                       }
                   }
         }
-       
+
     }catch(Exception $e){
 
     }
@@ -557,10 +557,10 @@ if (isset($_POST['submit'])) {
         <div class="modal-content">
             <div class="modal-body ">
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                
+
                 <div class="px-4 py-5">
                         <h5 class="card-title"><span>د مشتری معلومات د ننه کړي!</span></h5>
-                   
+
                   <form method="post" class="row g-3 needs-validation" novalidate style="text-align:right;" enctype="multipart/form-data">
                     <div class="col-12">
                       <label for="yourName" class="form-label">نوم</label>
@@ -580,16 +580,16 @@ if (isset($_POST['submit'])) {
                     </div>
                    <label for="for add" class="form-label">ادرس</label>
                      <div class="col-12 input-group" >
-                      
-                   
+
+
                       <div class="invalid-feedback">Please enter price!</div>
 
                         <label for="for add" class="form-label">ولایت</label>
                       <select id="province" name="province" onchange="province(this.value)">
-                      <?php 
+                      <?php
                       try{
                             require_once('DBConnection.php');
-  
+
                              $sql="SELECT * FROM `province`";
                              $result=$conn->query($sql);
                              if ($result->num_rows>0) {
@@ -597,7 +597,7 @@ if (isset($_POST['submit'])) {
                                  while ($row = $result->fetch_assoc()) {
                                      echo'<option value="'.$row["province_id"].'">'.$row["province_name"].'</option>';
                                  }
-     
+
                                 }
                       }
                       catch(Exception $e){
@@ -647,22 +647,22 @@ if (isset($_POST['submit'])) {
                       <div class="invalid-feedback">Please enter price!</div>
                     </div>
                     </div>
-                    
-                   
+
+
                           <div class="text-center mt-5">
 
                             <input type="submit" name="submit"class="btn btn-primary btn-submit" >
-                            <?php 
+                            <?php
 
                                 function success(){
-                                    //  
+                                    //
                                     echo '<script>  alert ("Data submite successfully");  </script
                                         window.location.href="admin.php";
                                     ';
 
                                 }
                              ?>
-                         </div>                   
+                         </div>
 
                      </div>
                     </form>
@@ -670,13 +670,13 @@ if (isset($_POST['submit'])) {
         </div>
     </div>
 </div>
-        
+
 </div><!-- End Customers --------------------------------------------------------------------------------------------------------------------------------------------------Card -->
 <!-- customer History modal -->
 <div class="modal left fade" id="customerHistory" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-           
+
                 <div class="col">
                     <div class="modal-body card ">
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -693,21 +693,21 @@ if (isset($_POST['submit'])) {
                     </div>
                 </form>
             </div>
-                <div class="px-4 py-5">  
-                 
+                <div class="px-4 py-5">
+
                   <table class="table table-borderless align-middle mb-0 bg-white table-hover " style="direction:rtl" class="card">
                     <thead>
                         <tr class="cusomerHistory" id="customerhistory">
-                           
-                       
-        
+
+
+
                        </tr>
-                     
-                      
+
+
                   </thead>
                   <tbody>
-                    
-                      
+
+
                     </tbody>
                   </table>
 
@@ -716,11 +716,11 @@ if (isset($_POST['submit'])) {
                   <div id="laoninfo"></div>
 
 
-            </div> 
+            </div>
                 </div>
-                
-           
-           
+
+
+
         </div>
     </div>
 </div>
@@ -747,14 +747,14 @@ if (isset($_POST['submit'])) {
 <div class="modal left fade" id="catagory" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog ">
         <div class="modal-content">
-           
+
                 <div class="col">
                     <div class="modal-body ">
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                  <h5 class="card-title text-center"><span>کټګوری اضافه کړي!</span></h5>
-                <div class="px-4 py-5">  
+                <div class="px-4 py-5">
                   <form method="post" class="row g-3 needs-validation" novalidate style="text-align:right;">
-                    
+
                      <div class="col-12">
                       <label for="yourName" class="form-label">نوم</label>
                       <input type="text" name="category_name" class="form-control" id="" required>
@@ -762,21 +762,21 @@ if (isset($_POST['submit'])) {
                       <div class="text-center mt-5">
 
                     <button class="btn btn-primary btn-submit" type="submit" name="addcate">ثبتول</button>
-                    
+
                       </div>
                     </div>
-                   
+
                   </form>
                   <table class="table table-borderless align-middle mb-0 bg-white table-hover mt-2" style="direction:rtl" class="card">
                     <thead>
                         <tr>
                              <th>کټګوری نوم</th>
                              <th>عملیات</th>
-        
+
                        </tr>
                   </thead>
                   <tbody>
-                    
+
                         <?php
                         try{
                             require_once('DBConnection.php');
@@ -786,36 +786,36 @@ if (isset($_POST['submit'])) {
                                 while($row = $result->fetch_assoc()){
                                   echo'   <tr><td>'.$row["categ_name"].'</td>
                                     <td><a class="fa fa-edit text-decoration-none" href=""></a>
-            
+
                                     </td>
                                      <td><a class="fa fa-trash text-decoration-none" href=""></a></td>
                                       </tr>
-                                    ';  
+                                    ';
                                 }
                             }
                         } catch(Exception $e){
 
                         }
-                            
+
                          ?>
-                            
-                        
-    
+
+
+
                     </tbody>
                   </table>
 
                 </div>
 
 
-            </div> 
+            </div>
                 </div>
-                
-           
-           
+
+
+
         </div>
     </div>
 </div>
-<?php 
+<?php
 
 if (isset($_POST['addcate'])) {
      addcate();
@@ -830,14 +830,14 @@ if (isset($_POST['addcate'])) {
 <div class="modal left fade" id="company" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-           
+
                 <div class="col">
                     <div class="modal-body ">
                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                          <h5 class="card-title text-center"><span>! کمپنی اضافه کړی</span></h5>
-                      <div class="px-4 py-5">  
+                      <div class="px-4 py-5">
                        <form class="row g-3 needs-validation" novalidate style="text-align:right;" method="post">
-                   
+
                          <div class="col-12">
                           <label for="yourName" class="form-label">د کمپنی نوم</label>
                           <input type="text" name="company_name" class="form-control" id="" required>
@@ -846,21 +846,21 @@ if (isset($_POST['addcate'])) {
                          <div class="text-center mt-5">
 
                           <button class="btn btn-primary btn-submit" type="submit" name="addco">ثبتول</button>
-                    
-                        </div>  
-                      </form>                   
+
+                        </div>
+                      </form>
                         </form>
                   <table class="table table-borderless align-middle mb-0 bg-white table-hover mt-2" style="direction:rtl" class="card">
                       <thead>
                         <tr>
                              <th>د کمپنی نوم</th>
                              <th>عملیات</th>
-        
+
                        </tr>
                      </thead>
                   <tbody>
-                    
-                        <?php 
+
+                        <?php
                         try{
                              require_once('DBConnection.php');
                             $sql="SELECT * FROM `company`";
@@ -869,23 +869,23 @@ if (isset($_POST['addcate'])) {
                                 while($row = $result->fetch_assoc()){
                                   echo'   <tr><td>'.$row["comp_name"].'</td>
                                     <td><a class="fa fa-edit text-decoration-none" href=""></a>
-            
+
                                     </td>
                                      <td><a class="fa fa-trash text-decoration-none" href=""></a></td>
                                       </tr>
-                                    ';  
+                                    ';
                                 }
                             }
                         }catch(Exception $e){
 
                         }
-                           
+
                          ?>
                    </tbody>
                   </table>
-                    </div>                      
-                  </div> 
-                </div>  
+                    </div>
+                  </div>
+                </div>
         </div>
     </div>
 </div>
@@ -902,7 +902,7 @@ if (isset($_POST['addcate'])) {
 <div class="modal left fade" id="loan" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-           
+
             <div class="col">
                 <div class="modal-body  card " style="direction:rtl">
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -916,7 +916,7 @@ if (isset($_POST['addcate'])) {
                                     include('DBConnection.php');
                                     $result = $conn->query($sql);
                                     if ($result->num_rows>0) {
-                                      
+
                                     }
                                     else{
                                         echo 'No Customer Information Find';
@@ -928,13 +928,13 @@ if (isset($_POST['addcate'])) {
                                         if (isset($_POST['selecte'])) {
                                              echo $_POST['selecte'];
                                              $_SESSION['selecte'] = $_POST['selecte'];
-                                            
+
                                          }
                                }catch(Exception $e){
 
                                }
-                                    
-                                 ?>  
+
+                                 ?>
                              </select>
                         </div>
                         <div class="mb-3">
@@ -949,12 +949,12 @@ if (isset($_POST['addcate'])) {
                              <label for="paid_quantity">ټوټل</label>
                              <input type="text" class="form-control" id="total_paid" placeholder="" name="total_paid" required>
                         </div>
-                       
+
                                  <input  type="submit" class="btn btn-success form-control " name="loan" value="Save">
-                 </form>  
-                    
-                </div>                      
-            </div> 
+                 </form>
+
+                </div>
+            </div>
              <script type="text/javascript">
              $(document).ready(function(){
               $('#store').on('change', function(){
@@ -965,15 +965,15 @@ if (isset($_POST['addcate'])) {
                     data: {selecte: selecte},
                     success: function(response){
                      //alert(selecte);s
-                 
-                  
+
+
 
                     }
                   });
               })
                            });
            </script>
-        </div>  
+        </div>
     </div>
 </div>
 
@@ -990,12 +990,12 @@ if (isset($_POST['addcate'])) {
 <div class="modal left fade" id="bill" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-           
+
             <div class="col">
                 <div class="modal-body  card " style="direction:rtl">
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                
-                         
+
+
                 <form action="">
                     <div class="input-group">
                         <input type="text" class="form-control bill" placeholder="" style="width:90%">
@@ -1006,13 +1006,13 @@ if (isset($_POST['addcate'])) {
                         </div>
                     </div>
                 </form>
-             
+
             <div class="billedcustoemr">
-               
+
                 <table class="table caption-top table-bordered border-primary">
-                    
+
                      <caption>Automict Bill Generation </caption>
-                     <?php 
+                     <?php
                         try{
                          include('DBConnection.php');
                         $sql2 = "SELECT * FROM `bill` ORDER by bill_id DESC LIMIT 1;";
@@ -1022,14 +1022,14 @@ if (isset($_POST['addcate'])) {
 
                         while($row = $result ->fetch_assoc()){
                           $userid = $row["customer_id"];
-                          $goods_id = $row["goods_id"];  
+                          $goods_id = $row["goods_id"];
                         }
-                       
+
                         $sql ="SELECT bill.bill_id, customer.customer_name,bill.quantity, goods.unit_id, goods.goods_name AS product, bill.price AS فی, bill.price*bill.quantity AS total, customer_buy_goods.currency_id,customer_buy_goods.buy_date FROM bill,customer,goods,customer_buy_goods WHERE customer.customer_id=$userid and goods.goods_id =$goods_id  ORDER by bill.bill_id DESC LIMIT 1;";
                         $result = $conn->query($sql);
                         if ($result->num_rows>0) {
                             while($row = $result->fetch_assoc()){
-                                // get uint name 
+                                // get uint name
                                 // $unit_id = $row["unit_id"];
                                 // $sql2 = "SELECT * FROM `unit` WHERE unit_id=.$unit_id";
 
@@ -1056,20 +1056,20 @@ if (isset($_POST['addcate'])) {
                   <th scope="col">جنس</th>
                   <th scope="col">مقدار</th>
                   <th scope="col">قمت فی دانه</th>
-                
+
                  </tr>
                 </thead>
- 
 
-  
+
+
                 <tbody>
                   <tr>
                     <th scope="row">'.$row["product"].'</th>
                     <td  style="height: 250px;">'.$row["quantity"].$unit["unit_name"].'</td>
                     <td>'.$row["فی"].'</td>
-                  
+
                   </tr>
-               </tbody></table> 
+               </tbody></table>
                         <p class="text-center">..........................................'.$row["total"].'...............................................</p>
                ';
                             }
@@ -1077,31 +1077,31 @@ if (isset($_POST['addcate'])) {
                         else{
                             echo "";
                         }
-   
+
                         }
                         catch(Exception $e){
 
                         }
-                        
+
                       ?>
-              
-                
+
+
                 <p style="outline-style: dotted; outline-color: red;" class="mt-2">خر] شوی جنس بیا نه واإس کیز</p>
                 <button class="btn btn-primary" id="print">Print</button>
                 <script type="text/javascript">
-                   
+
 
                 </script>
-        </div>     
-        </div>                      
-            </div> 
+        </div>
+        </div>
+            </div>
 
 
 <script type="text/javascript">
               $(document).ready(function(){
-                              
+
               $('.bill').keyup(function(){
-              var bill = $(this).val();  
+              var bill = $(this).val();
               if (bill !="") {
                 $.ajax({
                 url:"ajax.php",
@@ -1112,12 +1112,12 @@ if (isset($_POST['addcate'])) {
                         //alert(bill);
                 }
                  });
-                } 
-                });                              
-                               
+                }
+                });
+
            });
 </script>
-        </div>  
+        </div>
     </div>
 </div>
 
@@ -1133,12 +1133,12 @@ if (isset($_POST['addcate'])) {
 <div class="modal" id="countryModal"  role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-           
+
                 <div class="col">
                     <div class="modal-body ">
                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                
-                      <div class="px-4 py-5">  
+
+                      <div class="px-4 py-5">
                        <form class="row g-3 needs-validation" novalidate style="text-align:right;" method="post">
                         <div class="col-12">
                           <label for="yourName" class="form-label">نوم</label>
@@ -1148,23 +1148,23 @@ if (isset($_POST['addcate'])) {
                          <div class="text-center mt-5">
 
                                  <button class="btn btn-primary btn-submit" type="submit" name="addcountery">ثبتول</button>
-                    
+
                          </div>
                   </form>
-                                  
+
 
                 </div>
 
 
-                   </div> 
+                   </div>
                 </div>
-              
-           
+
+
         </div>
     </div>
 </div>
 
-<?php 
+<?php
     if (isset($_POST['addcountery'])) {
         addcounter();
     }
@@ -1174,12 +1174,12 @@ if (isset($_POST['addcate'])) {
 <div class="modal left fade" id="currency" data-backdrop="statc" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 <div class="modal-dialog">
     <div class="modal-content">
-         
+
             <div class="col">
              <div class="modal-body ">
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                
-                <div class="px-4 py-5">  
+
+                <div class="px-4 py-5">
                   <form class="row g-3 needs-validation" novalidate style="text-align:right;" method="post">
                      <div class="col-12">
                       <label for="yourName" class="form-label">نوم</label>
@@ -1194,17 +1194,17 @@ if (isset($_POST['addcate'])) {
                   <div class="text-center mt-5">
 
                     <button class="btn btn-primary btn-submit" type="submit" name="addCurrency">ثبتول</button>
-                    
-                  </div> 
+
+                  </div>
                   </form>
-                            
+
                 </div>
-             </div> 
-            </div>  
+             </div>
+            </div>
         </div>
     </div>
 </div>
-<?php 
+<?php
   if (isset($_POST['addCurrency'])) {
       addCurrency();
   }
@@ -1213,32 +1213,32 @@ if (isset($_POST['addcate'])) {
  <!---------------------------------------------------  customers modal start here -------------------------------------------------------------->
  <div class="modal left fade" id="showcustomers" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content">  
+        <div class="modal-content">
          <div class="col">
             <div class="modal-body ">
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                 <h5 class="card-title text-center"><span>Customer Profiles</span></h5>   
-                <div class="px-4 py-5">  
+                 <h5 class="card-title text-center"><span>Customer Profiles</span></h5>
+                <div class="px-4 py-5">
                   <form class="row g-3 needs-validation" novalidate style="text-align:right;" method="post">
                      <div class="col-12">
                       <label for="yourName" class="form-label">نوم</label>
                       <input type="text" name="unit_name" class="form-control customers" id="" required>
                       <div class="invalid-feedback">Please,bill id!</div>
                       <div class="text-center mt-5">
-                                   
+
                       </div>
-                    </div> 
+                    </div>
                   </form>
                   <!-- <div id="cc" class="ccc">cddd</div>   -->
                     <table class="table table-borderless align-middle mb-0 bg-white table-hover mt-2" style="direction:rtl" class="card">
                       <thead id="cc">
                         <tr>
-                            
-        
+
+
                        </tr>
                      </thead>
                   <tbody>
-                    
+
                         <?php
                         try{
                             require_once('DBConnection.php');
@@ -1246,26 +1246,26 @@ if (isset($_POST['addcate'])) {
                             $result = $conn->query($sql);
                             if ($result->num_rows>0) {
                                 while($row = $result->fetch_assoc()){
-                                 
+
                                 }
                             }
                         } catch(Exception $e){
 
                         }
-                          
+
                          ?>
                    </tbody>
-                  </table>             
+                  </table>
                 </div>
-            </div> 
+            </div>
          </div>
-             
-           
+
+
         </div>
     </div>
 </div>
 <script type="text/javascript">
-    // Live sarch with 
+    // Live sarch with
     $(document).ready(function(){
         $('.customers').keyup(function(){
             var customers = $(this).val();
@@ -1287,33 +1287,33 @@ if (isset($_POST['addcate'])) {
 
 <div class="modal left fade" id="unit" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">  
+        <div class="modal-content">
          <div class="col">
             <div class="modal-body ">
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                 <h5 class="card-title text-center"><span>Add Unit</span></h5>   
-                <div class="px-4 py-5">  
+                 <h5 class="card-title text-center"><span>Add Unit</span></h5>
+                <div class="px-4 py-5">
                   <form class="row g-3 needs-validation" novalidate style="text-align:right;" method="post">
                      <div class="col-12">
                       <label for="yourName" class="form-label">نوم</label>
                       <input type="text" name="unit_name" class="form-control" id="" required>
                       <div class="invalid-feedback">Please,bill id!</div>
                       <div class="text-center mt-5">
-                       <button class="btn btn-primary btn-submit" type="submit" name="addUnit">ثبتول</button>             
+                       <button class="btn btn-primary btn-submit" type="submit" name="addUnit">ثبتول</button>
                       </div>
-                    </div> 
+                    </div>
                   </form>
                     <table class="table table-borderless align-middle mb-0 bg-white table-hover mt-2" style="direction:rtl" class="card">
                       <thead>
                         <tr>
                              <th>د کمپنی نوم</th>
                              <th>عملیات</th>
-        
+
                        </tr>
                      </thead>
                   <tbody>
-                    
-                        <?php 
+
+                        <?php
                             require_once('DBConnection.php');
                             $sql="SELECT * FROM `unit`";
                             $result = $conn->query($sql);
@@ -1321,27 +1321,27 @@ if (isset($_POST['addcate'])) {
                                 while($row = $result->fetch_assoc()){
                                   echo'   <tr><td>'.$row["unit_name"].'</td>
                                     <td><a class="fa fa-edit text-decoration-none" href=""></a>
-            
+
                                     </td>
                                      <td><a class="fa fa-trash text-decoration-none" href=""></a></td>
                                       </tr>
-                                    ';  
+                                    ';
                                 }
                             }
                          ?>
                    </tbody>
-                  </table>             
+                  </table>
                 </div>
-            </div> 
+            </div>
          </div>
-               
-           
+
+
         </div>
     </div>
 </div>
 <?php
     if (isset($_POST['addUnit'])) {
-            addUnit(); 
+            addUnit();
     }
   ?>
 <!-- unit modal end here=================================================================================================================================================================================================================================================== -->
@@ -1350,12 +1350,12 @@ if (isset($_POST['addcate'])) {
 
 <div class="modal left fade" id="store" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">  
+        <div class="modal-content">
          <div class="col">
             <div class="modal-body ">
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                 <h5 class="card-title text-center"><span>Add Store</span></h5>   
-                <div class="px-4 py-5">  
+                 <h5 class="card-title text-center"><span>Add Store</span></h5>
+                <div class="px-4 py-5">
                   <form class="row g-3 needs-validation" novalidate style="text-align:right;" method="post">
                      <div class="col-12">
                       <label for="yourName" class="form-label">نوم</label>
@@ -1363,9 +1363,9 @@ if (isset($_POST['addcate'])) {
                       <div class="invalid-feedback">Please,bill id!</div>
                       <label for="yourName" class="form-label">سټور ادرس</label>
                         <select class="form-control"  id="address" name="address" onchange="address(this.value)">
-                      <?php 
+                      <?php
                             require_once('DBConnection.php');
-  
+
                              $sql="SELECT * FROM `province`";
                              $result=$conn->query($sql);
                              if ($result->num_rows>0) {
@@ -1373,7 +1373,7 @@ if (isset($_POST['addcate'])) {
                                  while ($row = $result->fetch_assoc()) {
                                      echo'<option value="'.$row["province_id"].'">'.$row["province_name"].'</option>';
                                  }
-     
+
                                 }
 
                         ?>
@@ -1401,23 +1401,23 @@ if (isset($_POST['addcate'])) {
                          <label for="yourName" class="form-label">کلی</label>
                       <input type="text" name="location_name" class="form-control" id="" required>
                       <div class="invalid-feedback">Please,bill id!</div>
-                   
+
                       <div class="text-center mt-5">
-                       <button class="btn btn-primary btn-submit" type="submit" name="addStore">ثبتول</button>             
+                       <button class="btn btn-primary btn-submit" type="submit" name="addStore">ثبتول</button>
                       </div>
-                    </div> 
+                    </div>
                   </form>
                     <table class="table table-borderless align-middle mb-0 bg-white table-hover mt-2" style="direction:rtl" class="card">
                       <thead>
                         <tr>
                              <th>د کمپنی نوم</th>
                              <th>عملیات</th>
-        
+
                        </tr>
                      </thead>
                   <tbody>
-                    
-                        <?php 
+
+                        <?php
                             require_once('DBConnection.php');
                             $sql="SELECT * FROM `store`";
                             $result = $conn->query($sql);
@@ -1425,27 +1425,27 @@ if (isset($_POST['addcate'])) {
                                 while($row = $result->fetch_assoc()){
                                   echo'   <tr><td>'.$row["store_name"].'</td>
                                     <td><a class="fa fa-edit text-decoration-none" href=""></a>
-            
+
                                     </td>
                                      <td><a class="fa fa-trash text-decoration-none" href=""></a></td>
                                       </tr>
-                                    ';  
+                                    ';
                                 }
                             }
                          ?>
                    </tbody>
-                  </table>             
+                  </table>
                 </div>
-            </div> 
+            </div>
          </div>
-               
-           
+
+
         </div>
     </div>
 </div>
 <?php
     if (isset($_POST['addStore'])) {
-            addStore(); 
+            addStore();
     }
   ?>
 <!-- store modal end here======================================================================================================================================================= -->
@@ -1484,7 +1484,7 @@ if (isset($_POST['addcate'])) {
 
               </div>
             </div> --><!-- End Revenue Card -->
-            
+
                 <!--  <div class="col-xxl-4 col-md-4"style="direction: rtl; text-align: right;">
               <div class="card info-card sales-card">
 
@@ -1521,8 +1521,8 @@ if (isset($_POST['addcate'])) {
             </div>
               </div> -->
             <!-- End Sales Card -->
-            
-              
+
+
 
               <div class="col d-flex justify-content-end">
 
@@ -1542,7 +1542,7 @@ if (isset($_POST['addcate'])) {
                                 var quantity = $('#view :selected').text();
                         alert(quantity);
                         });
-                        
+
                       });
                   </script>
                     <div class="btn-group  d-flex justify-content-center">
@@ -1552,7 +1552,7 @@ if (isset($_POST['addcate'])) {
                           <a class="dropdown-item" href="#">نوی مخصولات </a>
                           <a class="dropdown-item" href="#">تحفیف شوی محصولات</a>
                        </div>
-                  </div>     
+                  </div>
               </div>
                <div class="row" style="text-align: right;">
                     <div class="col-lg-6 card " style="text-align: right;">
@@ -1560,19 +1560,19 @@ if (isset($_POST['addcate'])) {
                  <table class="table table-bordered border-primary text-center" style="text-align:center">
                     <thead class="overflow-auto h-100">
                                    <h5 class="card-title">تر ټول ډیر خرڅ شوی <span>| نن</span></h5>
-                  <tr class="">  
-                    <th>نوم</th>  
+                  <tr class="">
+                    <th>نوم</th>
                      <th>انځور</th>
-                     
+
                      <th>د اخسبلو بیه</th>
                      <th>د خرځ بیه</th>
                      <th>تاریخ</th>
-                   
+
                  </tr>
 
                     </thead>
                       <tbody>
-                        <?php 
+                        <?php
                             try{
                                  $lint =1;
     if (isset($_GET['view'])) {
@@ -1588,48 +1588,48 @@ if (isset($_POST['addcate'])) {
                                                     <td>data</td>
                                                     <td>data</td>
                                                     <td>data</td>
-                                                    <td>$12</td> 
+                                                    <td>$12</td>
                                                  </tr>';
                                      }
                                  }
                             }catch(Exception $e){
-                               
+
 
                             }
                          ?>
-                       
-     
-      
+
+
+
                       </tbody>
-                     </table> 
+                     </table>
                     </div>
          <div class="col-lg-6 card" style="direction:rtl; text-align: right;">
                     <h5 class="card-title">وروستی خرڅ شوی مخصولات<span>| نن</span></h5>
             <table class="table table-bordered border-primary " >
                 <thead class="overflow-auto h-100">
                   <tr class="">
-                    
+
                      <th>نوم</th>
-               
+
                      <th>د خرځ بیه</th>
-                     <th>تاریخ</th> 
-                     <th>دمشتری آیدی</th> 
+                     <th>تاریخ</th>
+                     <th>دمشتری آیدی</th>
                  </tr>
                </thead>
               <tbody>
                  <tr>
                     <?php recentlly(); ?>
-                
-                   
+
+
                   </tr>
                </tbody>
-            </table> 
+            </table>
         </div>
 
 <!-- ================================================================================================================================================chart start here -->
                     <div class="col-lg-6 card">
                         <canvas id="product" style="width:100%;max-width:600px; lis"></canvas>
-                            <?php 
+                            <?php
                                 $sql ="SELECT category.categ_name, count(customer_buy_goods.quantity) as quantity FROM category,customer_buy_goods WHERE customer_buy_goods.goods_id = customer_buy_goods.goods_id GROUP BY category.categ_name;";
                                 include('DBConnection.php');
                                 $result = $conn ->query($sql);
@@ -1682,11 +1682,11 @@ if (isset($_POST['addcate'])) {
                         } catch(Exception $e){
 
                         }
-                           
+
                          ?>
 
                                         <script>
-                                           
+
                                          var xValues = <?php echo json_encode($cate_name)  ?>;
                                          var yValues = <?php echo json_encode($data); ?>;
                                          var barColors = [
@@ -1724,9 +1724,9 @@ if (isset($_POST['addcate'])) {
                                             });
                                           </script>
                     </div>
-                
+
                </div>
-            
+
             </div>
  <!-- chart=================================================================================================================================strat-->
 <div class="modal fade" id="product">
@@ -1739,11 +1739,11 @@ if (isset($_POST['addcate'])) {
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
 
-  
+
       <div class="modal-body">
         <div class="card">
            <form class="" >
-        
+
 
                 <div class="input-group ">
                   <input type="text" class="form-control" required placeholder="" name="goods_name">
@@ -1766,7 +1766,7 @@ if (isset($_POST['addcate'])) {
                        <option>افغانی</option>
                        <option>دالر</option>
                        <option>کلدار</option>
-                
+
                      </select>
                     <span class="input-group-text">کټګوری</span>
                 </div>
@@ -1777,7 +1777,7 @@ if (isset($_POST['addcate'])) {
                     <option>افغانی</option>
                     <option>دالر</option>
                     <option>کلدار</option>
-                
+
                     </select>
                     <span class="input-group-text">هیواد</span>
                 </div>
@@ -1788,7 +1788,7 @@ if (isset($_POST['addcate'])) {
                     <option>افغانی</option>
                     <option>دالر</option>
                     <option>کلدار</option>
-                
+
                  </select>
                  <span class="input-group-text">کمپنی</span>
                </div>
@@ -1798,7 +1798,7 @@ if (isset($_POST['addcate'])) {
                     <option>افغانی</option>
                     <option>دالر</option>
                     <option>کلدار</option>
-                
+
                  </select>
                  <span class="input-group-text">یونټ</span>
                </div>
@@ -1807,11 +1807,11 @@ if (isset($_POST['addcate'])) {
                       <input type="file" class="form-control" required placeholder="" name="buy_price">
                    <span class="input-group-text">انځور</span>
                </div>
-     
+
               <div class="input-group mt-2">
                  <button class="form-control btn btn-success" name="submit">ثیتول</button>
               </div>
-     
+
           </form>
 
       </div>
@@ -1829,12 +1829,12 @@ if (isset($_POST['addcate'])) {
         <aside class="col-sm-3 flex-grow-sm-1 flex-shrink-1 flex-grow-0 sticky-top pb-sm-0 pb-3" style="text-align:right; b">
             <div class="bg-light border rounded-3 p-1 h-100 sticky-top" style="height: 100%;" >
                 <ul class="nav nav-pills flex-sm-column flex-row mb-auto justify-content-between text-truncate" style="background-color:#fff; color:#ffffff">
-                 
+
                     <li>
                         <a href="#" class="nav-link px-2 text-truncate">
                           <span class="d-none d-sm-inline">Dashboard</span>
                             <i class="bi bi-speedometer fs-5"></i>
-                            
+
                         </a>
                     </li>
                       <li>
@@ -1844,41 +1844,41 @@ if (isset($_POST['addcate'])) {
                             </a>
                     </li>
                       <li>
-                        
+
                         <a  href="#"  class=" nav-link px-2 text-truncate" data-bs-toggle="modal" data-bs-target="#company" style="text-align:righ;">
                              <span class="d-none d-sm-inline">Company</span>
                           <i class="bi bi-c-square-fill"style="font-size:22px;"></i>
                             </a>
                     </li>
                      <li>
-                        
+
                         <a  href="admin/"  class=" nav-link px-2 text-truncate" data-bs-toggle="modal" data-bs-target="#countryModal" style="text-align:righ;">
                                 <span class="d-none d-sm-inline">Countery</span>
                                 <i class="bi bi-bricks fs-5"></i>
                         </a>
                     </li>
                     <li>
-                        
+
                         <a  href="#"  class=" nav-link px-2 text-truncate" data-bs-toggle="modal" data-bs-target="#currency" style="text-align:righ;">
                                 <span class="d-none d-sm-inline">currency</span>
                                 <i class="fa fa-money" style="font-size:22px;"></i>
                         </a>
                     </li>
                     <li>
-                        
+
                         <a  href="#"  class=" nav-link px-2 text-truncate" data-bs-toggle="modal" data-bs-target="#unit" style="text-align:righ;">
                                 <span class="d-none d-sm-inline">unit</span>
                                 <i class="bi bi-bricks fs-5"></i>
                         </a>
                     </li>
                      <li>
-                        
+
                         <a  href="#"  class=" nav-link px-2 text-truncate" data-bs-toggle="modal" data-bs-target="#store" style="text-align:righ;">
                                 <span class="d-none d-sm-inline">Store</span>
                                 <i class="bi bi-shop fs-5"></i>
                         </a>
                     </li>
-                
+
                     <li>
                         <a href="goods.php" class="nav-link px-2 text-truncate">
                              <span class="d-none d-sm-inline">Products</span>
@@ -1894,21 +1894,21 @@ if (isset($_POST['addcate'])) {
                     </li>
                     <li>
                          <li>
-                        
+
                         <a  href="#"  class=" nav-link px-2 text-truncate" data-bs-toggle="modal" data-bs-target="#loan" style="text-align:righ;">
                                 <span class="d-none d-sm-inline">Loan</span>
                                 <i class="bi bi-shop fs-5"></i>
                         </a>
                     </li>
                       <li>
-                        
+
                         <a  href="#"  class=" nav-link px-2 text-truncate" data-bs-toggle="modal" data-bs-target="#showcustomers" style="text-align:righ;">
                                 <span class="d-none d-sm-inline">Customers</span>
                                 <i class="fa fa-user fs-5"></i>
                         </a>
                     </li>
                     </li>
-                   
+
                 </ul>
                     <!-- category search Start -->
                 <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">د کټکوری پر اساس پلټڼه</span></h5>
@@ -1948,11 +1948,11 @@ if (isset($_POST['addcate'])) {
                 </div>
                 <!-- category -->
             </div>
-        
+
             </div>
             <!-- Shop Sidebar End -->
         </aside>
-       
+
     </div>
 </div>
   <!-- JavaScript Libraries -->

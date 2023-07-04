@@ -2,7 +2,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$db="solartech_solar_solution";
+$db="solar";
 
 $conn = new mysqli($servername, $username, $password,$db);
 
