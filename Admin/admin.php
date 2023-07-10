@@ -339,7 +339,7 @@ try {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Admin</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
-  <link rel="stylesheet" type="text/css" href="admin.css?verssion=2">
+  <link rel="stylesheet" type="text/css" href="admin.css?verssion=3">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.32/dist/sweetalert2.all.min.js"></script>
@@ -1042,106 +1042,126 @@ try {
                           </div>
                         </div>
                       </form>
-
-                      <div class="billedcustoemr mt-2" id="billedcustoemr">
-                        <div class="d-flex justify-content-start mt-3 ">
-                          <a href="" class="text-decoration-none">
-                            <span class="h1 text-uppercase text-warning bg-dark px-2">SOLAR</span>
-                            <span class="h1 text-uppercase text-dark bg-warning px-2 ml-n1">SYSTEM</span>
-                          </a>
+                      <div id="billedcustoemr">
+                        <div class="row">
+                          <div class="col d-flex justify-center">
+                          <img src="img/logo.jpg" alt="logo">
+                          </div>
+                          <div class="col">
+                            <p>مسولر تیک ټریډنګ کمپنۍ</p>
+                          </div>
                         </div>
-                        <table class="table caption-top table-bordered border-primary mt-2" id="print">
+                        <div class="billedcustoemr mt-2">
+                            
+                          <section class="intro mt-2">
+                            <div class="bg-image h-100" style="background-color: #f5f7fa;">
+                              <div class="mask d-flex align-items-center h-100">
+                                <div class="container">
+                                  <div class="row justify-content-center">
+                                    <div class="col-12">
+                                      <div class="card">
+                                        <div class="card-body p-0">
+                                          <div class="table-responsive table-scroll" data-mdb-perfect-scrollbar="true"
+                                            style="position: relative; height: 700px">
+                                            <table class="table table-striped mb-0">
+                                              <?php
+                                              try {
+                                                include('DBConnection.php');
+                                                $sql2 = "SELECT * FROM `bill` ORDER by bill_id DESC LIMIT 1;";
+                                                $result = $conn->query($sql2);
+                                                $userid = "";
+                                                $goods_id = "";
 
-                          <caption>Automict Bill Generation </caption>
-                          <?php
-                          try {
-                            include('DBConnection.php');
-                            $sql2 = "SELECT * FROM `bill` ORDER by bill_id DESC LIMIT 1;";
-                            $result = $conn->query($sql2);
-                            $userid = "";
-                            $goods_id = "";
+                                                while ($row = $result->fetch_assoc()) {
+                                                  $userid = $row["customer_id"];
+                                                  $goods_id = $row["goods_id"];
+                                                }
 
-                            while ($row = $result->fetch_assoc()) {
-                              $userid = $row["customer_id"];
-                              $goods_id = $row["goods_id"];
-                            }
-
-                            $sql = "SELECT bill.bill_id, customer.customer_name,bill.quantity, goods.unit_id, goods.goods_name AS product, bill.price AS فی, bill.price*bill.quantity AS total, customer_buy_goods.currency_id,customer_buy_goods.buy_date FROM bill,customer,goods,customer_buy_goods WHERE customer.customer_id=$userid and goods.goods_id =$goods_id  ORDER by bill.bill_id DESC LIMIT 1;";
-                            $result = $conn->query($sql);
-                            if ($result->num_rows > 0) {
-                              while ($row = $result->fetch_assoc()) {
-                                $customerName = mb_convert_encoding($row["customer_name"], 'UTF-8');
-                                $buyDate = mb_convert_encoding($row["buy_date"], 'UTF-8');
-                                $product = mb_convert_encoding($row["product"], 'UTF-8');
-                                $quantity = mb_convert_encoding($row["quantity"], 'UTF-8');
-                                $price = mb_convert_encoding($row["فی"], 'UTF-8');
-                                $total = mb_convert_encoding($row["total"], 'UTF-8');
+                                                $sql = "SELECT bill.bill_id, customer.customer_name,bill.quantity, goods.unit_id, goods.goods_name AS product, bill.price AS فی, bill.price*bill.quantity AS total, customer_buy_goods.currency_id,customer_buy_goods.buy_date FROM bill,customer,goods,customer_buy_goods WHERE customer.customer_id=$userid and goods.goods_id =$goods_id  ORDER by bill.bill_id DESC LIMIT 1;";
+                                                $result = $conn->query($sql);
+                                                if ($result->num_rows > 0) {
+                                                  while ($row = $result->fetch_assoc()) {
+                                                    $customerName = mb_convert_encoding($row["customer_name"], 'UTF-8');
+                                                    $buyDate = mb_convert_encoding($row["buy_date"], 'UTF-8');
+                                                    $product = mb_convert_encoding($row["product"], 'UTF-8');
+                                                    $quantity = mb_convert_encoding($row["quantity"], 'UTF-8');
+                                                    $price = mb_convert_encoding($row["فی"], 'UTF-8');
+                                                    $total = mb_convert_encoding($row["total"], 'UTF-8');
 
 
-                                // Encode the data as JSON
-                                // $jsonData = json_encode($data);
-                          
-                                // get uint name
-                                // $unit_id = $row["unit_id"];
-                                // $sql2 = "SELECT * FROM `unit` WHERE unit_id=.$unit_id";
-                          
-                                // $unitrsult = $conn->query($sql2);
-                                // if ($unit = $unitrsult->fetch_assoc()) {
-                                //     echo $unit;
-                                // }
-                                // else{
-                                //     echo "opps";
-                                // }
-                                echo '  <thead>
-                              <div class="row" id="printable">
-                              <div class="col-xxl-4 mt-2">
-                              <p style="outline-style: dotted;">' . $row["customer_name"] . '</p>
-                              </div>
-                              <div class="col-xxl-4 mt-2">
-                                  <p style="outline-style: dotted; outline-top:none">' . $buyDate . '</p>
-                              </div>
-                              <div class="col-xxl-4 mt-2">
-                                  <p style="outline-style: dotted; border-top: none;">نمر  ' . $row["bill_id"] . '</p>
-                              </div>
+                                                    // Encode the data as JSON
+                                                    // $jsonData = json_encode($data);
+                                              
+                                                    // get uint name
+                                                    // $unit_id = $row["unit_id"];
+                                                    // $sql2 = "SELECT * FROM `unit` WHERE unit_id=.$unit_id";
+                                              
+                                                    // $unitrsult = $conn->query($sql2);
+                                                    // if ($unit = $unitrsult->fetch_assoc()) {
+                                                    //     echo $unit;
+                                                    // }
+                                                    // else{
+                                                    //     echo "opps";
+                                                    // }
+                                                    echo '          
+                                                            <thead style="background-color: #002d72;">
+                                                            <div class="row" id="printable">
+                                                            <div class="col-xxl-4 mt-2">
+                                                            <p style="outline-style: dotted;">' . $row["customer_name"] . '</p>
+                                                            </div>
+                                                            <div class="col-xxl-4 mt-2">
+                                                                <p style="outline-style: dotted; outline-top:none">' . $buyDate . '</p>
+                                                            </div>
+                                                            <div class="col-xxl-4 mt-2">
+                                                                <p style="outline-style: dotted; border-top: none;">نمر  ' . $row["bill_id"] . '</p>
+                                                            </div>
+                                                            <tr>
+                                                              <th scope="col">نمبر</th>
+                                                              <th scope="col">جنس</th>
+                                                              <th scope="col">مقدار</th>
+                                                              <th scope="col">قمت فی دانه</th>
+                                                              <th scope="col">ټوټل</th>
+                                                            </tr>
+                                                          </thead>
+                                                          <tbody>
+                                                            <tr>
+                                                              <td>' . $row["product"] . 'y</td>
+                                                              <td>Boxing</td>
+                                                              <td>' . $row["quantity"] . '</td>
+                                                              <td>' . $row["فی"] . '</td>
+                                                              <td>10</td>
+                                                            </tr>
+                                                        
+                                                          </tbody> ';
+                                                  }
+                                                } else {
+                                                  echo "No data found!!";
+                                                }
+
+                                              } catch (Exception $e) {
+                                                $e->getMessage();
+                                              }
+
+                                              ?>
+                                              
+                                            </table>
+                                          </div>
+                      
+                                        </div>
+                                      </div>
+                                    </div>
                                   </div>
-                                  <tr>
-                                    <th scope="col">' . mb_convert_encoding('جنس', 'HTML-ENTITIES', 'UTF-8') . '</th>
-                                    <th scope="col">' . mb_convert_encoding('مقدار', 'HTML-ENTITIES', 'UTF-8') . '</th>
-                                    <th scope="col">' . mb_convert_encoding('قمت فی دانه', 'HTML-ENTITIES', 'UTF-8') . '</th>
-
-                                  </tr>
-                                  </thead>
-
-
-
-                                  <tbody>
-                                    <tr>
-                                      <th scope="row">' . $row["product"] . '</th>
-                                      <td  style="height: 250px;">' . $row["quantity"] . '</td>
-                                      <td>' . $row["فی"] . '</td>
-                                    </tr>
-                                  </tbody>
-                              </table>
-                                  <p class="text-center">..........................................'
-                                  . $row["total"] .
-                                  '...............................................</p ';
-                              }
-                            } else {
-                              echo "No data found!!";
-                            }
-
-                          } catch (Exception $e) {
-                            $e->getMessage();
-                          }
-
-                          ?>
-                          <p style="outline-style: dotted; outline-color: red;" class="mt-2 text-center">
-                            خرڅ شوی جنس بېرته نه واپس کیږی !
-                          </p>
-
+                                </div>
+                                
+                              </div>
+                          
+                            </div>
+                          </section>
+                        </div>
                       </div>
-                      <button class="btn btn-primary" id="print" onclick="printDivContents()">Print</button>
                     </div>
+                    <button class="btn btn-primary" id="print" onclick="printDivContents()">Print</button>
+
                   </div>
                   <style>
                     #billedcustoemr {
