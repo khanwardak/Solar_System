@@ -114,14 +114,14 @@ session_start();
                    echo $afterQauntity = $beforQantity - $quantity;
                 }
                  $sqlupdate ="UPDATE goods SET quantity='$afterQauntity' WHERE goods_id = '$goods_id'";
-                 // if there no quantity that the seller inserted
-                 if ($quantity>$beforQantity) {
-                   echo '<script>
-                            alert("there is not Sucfient Porduct To sell")
-                        </script>';
+                 if ($quantity<=$beforQantity) {
+                      $conn->query($sqlupdate);
                  }
-                  elseif (!$conn->query($sqlupdate)) {
-                     echo "the opretion was not completed";
+                 else{
+                   echo '<script>
+             alert("There is not Sufficient Product To sell");
+             window.location.href = "admin.php";
+           </script>';
                  }
             }
 
