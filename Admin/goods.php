@@ -155,37 +155,35 @@
 
                </thead>
               <tbody>
-               <?php
+               <?php 
                       require_once('DBConnection.php');
-
-
                       $sql = "SELECT
-            goods.goods_name,
-            goods.goods_id,
-            goods.goods_discription,
-            goods.buy_price,
-            goods.entry_date,
-            company.comp_name,
-            country.count_name,
-            currency.currency_name,
-            unit.unit_name,
-            SUM(goods.quantity) AS Quantity,
-            category.categ_name
-        FROM
-            goods
-        LEFT JOIN
-            category ON category.categ_id = goods.category_id
-        INNER JOIN
-            unit ON goods.unit_id = unit.unit_id
-        INNER JOIN
-            currency ON goods.currency = currency.currency_id
-        INNER JOIN
-            company ON goods.company_id = company.comp_id
-        INNER JOIN
-            country ON goods.country_id = country.count_id
-        GROUP BY
-            currency.currency_name,
-            category.categ_name";
+                                      goods.goods_name,
+                                      goods.goods_id,
+                                      goods.goods_discription,
+                                      goods.buy_price,
+                                      goods.entry_date,
+                                      company.comp_name,
+                                      country.count_name,
+                                      currency.currency_name,
+                                      unit.unit_name,
+                                      SUM(goods.quantity) AS Quantity,
+                                      category.categ_name
+                                  FROM
+                                      goods
+                                  LEFT JOIN
+                                      category ON category.categ_id = goods.category_id
+                                  INNER JOIN
+                                      unit ON goods.unit_id = unit.unit_id
+                                  INNER JOIN
+                                      currency ON goods.currency = currency.currency_id
+                                  INNER JOIN
+                                      company ON goods.company_id = company.comp_id
+                                  INNER JOIN
+                                      country ON goods.country_id = country.count_id
+                                  GROUP BY
+                                      currency.currency_name,
+                                      category.categ_name";
 
                       $result = $conn->query($sql);
                       if ($result->num_rows>0) {
