@@ -36,8 +36,10 @@
       VALUES (NULL, '$goods_name', '$goods_discription', '$buy_price', '2022-09-13', '$targetFilePath', '$category_id', '$company_id', '$country_id', '$unit_id', '$currency_id','$quantity');";
       if ( $conn->query($sql2)) {
          echo' <script LANGUAGE="JavaScript">
-                 swal("په بریالی توګه !", "د محضول مغلومات اضافه شول!", "success");
-
+                 swal("په بریالی توګه !", "د محصول معلومات اضافه شول!", "success");
+                    setTimeout(function() {
+                    window.location.href = "goods.php";
+                    }, 2000); // 2000 milliseconds (2 seconds)
                </script>;';
       }
       else{
@@ -155,7 +157,7 @@
 
                </thead>
               <tbody>
-               <?php 
+               <?php
                       require_once('DBConnection.php');
                       $sql = "SELECT
                                       goods.goods_name,
@@ -391,7 +393,7 @@
                </div>
 
               <div class="input-group mt-2">
-                 <button class="form-control btn btn-success" name="addproduct">ثیتول</button>
+                 <button class="form-control btn btn-success" name="addproduct">ثبتول</button>
               </div>
 
           </form>
