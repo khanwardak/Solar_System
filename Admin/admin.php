@@ -11,6 +11,7 @@ session_start();
 include('jdf.php');
 define("DATE", jdate('l j p y i : g a'));
 echo DATE;
+
 ?>
 <?php
 
@@ -1052,7 +1053,7 @@ try {
                           </div>
                         </div>
                         <div class="billedcustoemr mt-2">
-                            
+
                           <section class="intro mt-2">
                             <div class="bg-image h-100" style="background-color: #f5f7fa;">
                               <div class="mask d-flex align-items-center h-100">
@@ -1091,11 +1092,11 @@ try {
 
                                                     // Encode the data as JSON
                                                     // $jsonData = json_encode($data);
-                                              
+
                                                     // get uint name
                                                     // $unit_id = $row["unit_id"];
                                                     // $sql2 = "SELECT * FROM `unit` WHERE unit_id=.$unit_id";
-                                              
+
                                                     // $unitrsult = $conn->query($sql2);
                                                     // if ($unit = $unitrsult->fetch_assoc()) {
                                                     //     echo $unit;
@@ -1103,7 +1104,7 @@ try {
                                                     // else{
                                                     //     echo "opps";
                                                     // }
-                                                    echo '          
+                                                    echo '
                                                             <thead style="background-color: #002d72;">
                                                             <div class="row" id="printable">
                                                             <div class="col-xxl-4 mt-2">
@@ -1116,7 +1117,7 @@ try {
                                                                 <p style="outline-style: dotted; border-top: none;">نمر  ' . $row["bill_id"] . '</p>
                                                             </div>
                                                             <tr>
-                                                              <th scope="col">نمبر</th>
+                                                              <th scope="col" style="color:black">نمبر</th>
                                                               <th scope="col">جنس</th>
                                                               <th scope="col">مقدار</th>
                                                               <th scope="col">قمت فی دانه</th>
@@ -1131,7 +1132,7 @@ try {
                                                               <td>' . $row["فی"] . '</td>
                                                               <td>10</td>
                                                             </tr>
-                                                        
+
                                                           </tbody> ';
                                                   }
                                                 } else {
@@ -1143,18 +1144,18 @@ try {
                                               }
 
                                               ?>
-                                              
+
                                             </table>
                                           </div>
-                      
+
                                         </div>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
-                                
+
                               </div>
-                          
+
                             </div>
                           </section>
                         </div>
