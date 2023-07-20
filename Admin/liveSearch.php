@@ -119,9 +119,9 @@ session_start();
                  }
                  else{
                    echo '<script>
-             alert("There is not Sufficient Product To sell");
-             window.location.href = "admin.php";
-           </script>';
+                         alert("There is not Sufficient Product To sell");
+                         window.location.href = "admin.php";
+                       </script>';
                  }
             }
 
