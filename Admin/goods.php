@@ -28,7 +28,7 @@
         }else{
             $statusMsg = "Sorry, there was an error uploading your file.";
         }
-    
+
       }
      $sqll="SET FOREIGN_KEY_CHECKS = 0;";
      $conn->query($sqll);
@@ -37,17 +37,17 @@
       if ( $conn->query($sql2)) {
          echo' <script LANGUAGE="JavaScript">
                  swal("په بریالی توګه !", "د محضول مغلومات اضافه شول!", "success");
-                
-               </script>;'; 
+
+               </script>;';
       }
       else{
          echo' ("<script LANGUAGE="JavaScript">
                  window.alert("Opps!");
                  window.location.href="admin.php";
-               </script>");'; 
+               </script>");';
       }
-     
-  } 
+
+  }
 
  ?>
 
@@ -89,7 +89,7 @@
                     <img src="https://via.placeholder.com/28?text=!" alt="user" width="32" height="32" class="rounded-circle">
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownUser2" style="">
-                   
+
                     <li><a class="dropdown-item" href="#">Settings</a></li>
                     <li><a class="dropdown-item" href="#">Profile</a></li>
                     <li>
@@ -108,7 +108,7 @@
        <main class="col-lg-9 col-md-8 col-sm-3 overflow-auto h-100">
 
             <div class="bg-light border rounded-3 p-3">
-             
+
 
               <div class="col d-flex justify-content-end">
 
@@ -131,12 +131,12 @@
                 <a  class=" d-flex justify-content-end text-decoration-none" data-bs-toggle="modal" data-bs-target="#product" style="text-align:right;">
                       Add new product <i class="bi-plus"></i>
                  </a>
-                
+
               </div>
               <div class="card table-responsive">
                  <table id="sells" class="table mt-2 table-ligh table table-hover  " style="direction:rtl">
                 <thead class="overflow-auto h-100">
-      
+
                   <tr class="">
 
                      <th>نمبر</th>
@@ -155,45 +155,74 @@
 
                </thead>
               <tbody>
-               <?php 
+               <?php
                       require_once('DBConnection.php');
-                       $sql="SELECT goods_name,goods.goods_id,goods.goods_discription, goods.buy_price, goods.entry_date,company.comp_name ,country.count_name,currency.currency_name,unit.unit_name,sum(quantity) AS Qantity,category.categ_name FROM unit, currency, company,country,goods LEFT JOIN category ON category.categ_id = goods.category_id GROUP BY category.categ_name";
+
+
+                      $sql = "SELECT
+            goods.goods_name,
+            goods.goods_id,
+            goods.goods_discription,
+            goods.buy_price,
+            goods.entry_date,
+            company.comp_name,
+            country.count_name,
+            currency.currency_name,
+            unit.unit_name,
+            SUM(goods.quantity) AS Quantity,
+            category.categ_name
+        FROM
+            goods
+        LEFT JOIN
+            category ON category.categ_id = goods.category_id
+        INNER JOIN
+            unit ON goods.unit_id = unit.unit_id
+        INNER JOIN
+            currency ON goods.currency = currency.currency_id
+        INNER JOIN
+            company ON goods.company_id = company.comp_id
+        INNER JOIN
+            country ON goods.country_id = country.count_id
+        GROUP BY
+            currency.currency_name,
+            category.categ_name";
+
                       $result = $conn->query($sql);
                       if ($result->num_rows>0) {
-                       
+
                                 while($row = $result->fetch_assoc()){
                                    $button ='<td> <button id="btn" class ="userinfo btn btn-outline-warning" data-id='.$row["goods_id"].'>Sell</button></td>';
-                                  if ($row["Qantity"]<=0) {
-                                       $row["Qantity"] = "<p style='color:red'>محصولات موحود نه دی</p>"; 
+                                  if ($row["Quantity"]<=0) {
+                                       $row["Quantity"] = "<p style='color:red'>محصولات موحود نه دی</p>";
                                        $button ='<td> <button style="text-decoration:line-through" class ="userinfo btn btn-outline-warning disabled" data-id='.$row["goods_id"].'>Sell</button></td>';
                                   }
 
                                   echo'<tr>
                                          <a href="#"> <td>'.$row["goods_id"].'</td></a>
-                                         <td><a class="text-dark d-flex justify-content-center text-decoration-none" data-bs-toggle="modal" data-bs-target="#showAndSell">'.$row["goods_name"].'</a></td> 
+                                         <td><a class="text-dark d-flex justify-content-center text-decoration-none" data-bs-toggle="modal" data-bs-target="#showAndSell">'.$row["goods_name"].'</a></td>
                                           <td>'.$row["goods_discription"].'</td>
                                           <td>'.$row["buy_price"].'</td>
                                           <td>'.$row["entry_date"].'</td>
-                                          <td id="q">'.$row["Qantity"].'</td>
+                                          <td id="q">'.$row["Quantity"].'</td>
                                           <td>'.$row["categ_name"].'</td>
                                           <td>'.$row["comp_name"].'</td>
                                           <td>'.$row["count_name"].'</td>
                                           <td>'.$row["currency_name"].'</td>
                                               <td>'.$row["unit_name"].'</td>
-                                         
+
                                               '.$button.'
                                        </tr>';
-                                    
-                                         
+
+
                                        echo '<script>
-                                                  
+
                                               </script>';
                                 }
 
                      }
                  ?>
                </tbody>
-             </table> 
+             </table>
               </div>
             <script type="text/javascript">
               $(document).ready(function(){
@@ -209,7 +238,7 @@
                       $('#userifo').hide();
                     }
                   });
-                
+
                 });
               });
             </script>
@@ -225,7 +254,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
 
-  
+
       <div class="modal-body">
         <div class="card">
            <form class="post" method="post" enctype="multipart/form-data">
@@ -250,7 +279,7 @@
                  <div class="input-group mt-2">
 
                     <select class="form-select form-control "required name="currency_id">
-                         
+
                       <?php
                       //  $sql="SELECT * FROM `currency`";
                         include('DBConnection.php');
@@ -261,20 +290,20 @@
                                  while ($row = $result->fetch_assoc()) {
                                      echo'<option value="'.$row["currency_id"].'">'.$row["currency_name"].'</option>';
                                  }
-     
+
                                 }
                         else "no record found";
 
                       ?>
-                      
-                
+
+
                      </select>
                     <span class="input-group-text">پولی واحد</span>
                 </div>
                 <div class="input-group mt-2">
                     <select class="form-select form-control "required name="category_id">
                       <?php
-                     
+
                         include('DBConnection.php');
                         $sql="SELECT * FROM `category`";
                              $result=$conn->query($sql);
@@ -283,12 +312,12 @@
                                  while ($row = $result->fetch_assoc()) {
                                      echo'<option value="'.$row["categ_id"].'">'.$row["categ_name"].'</option>';
                                  }
-     
+
                                 }
                         else "no record found";
 
                       ?>
-                
+
                      </select>
                     <span class="input-group-text">کټګوری</span>
                 </div>
@@ -296,7 +325,7 @@
                 <div class="input-group mt-2">
                   <select class="form-select form-control "required name="country_id">
                  <?php
-                     
+
                         include('DBConnection.php');
                         $sql="SELECT * FROM `country`";
                              $result=$conn->query($sql);
@@ -305,12 +334,12 @@
                                  while ($row = $result->fetch_assoc()) {
                                      echo'<option value="'.$row["count_id"].'">'.$row["count_name"].'</option>';
                                  }
-     
+
                                 }
                         else "no record found";
 
                       ?>
-                
+
                     </select>
                     <span class="input-group-text">هیواد</span>
                 </div>
@@ -318,7 +347,7 @@
                <div class="input-group mt-2">
                  <select class="form-select form-control "required name="company_id">
                     <?php
-                     
+
                         include('DBConnection.php');
                         $sql="SELECT * FROM `company`";
                              $result=$conn->query($sql);
@@ -327,19 +356,19 @@
                                  while ($row = $result->fetch_assoc()) {
                                      echo'<option value="'.$row["comp_id"].'">'.$row["comp_name"].'</option>';
                                  }
-     
+
                                 }
                         else "no record found";
 
                       ?>
-                
+
                  </select>
                  <span class="input-group-text">کمپنی</span>
                </div>
                   <div class="input-group mt-2">
                  <select class="form-select form-control "required name="unit_id">
                    <?php
-                     
+
                         include('DBConnection.php');
                         $sql="SELECT * FROM `unit`";
                              $result=$conn->query($sql);
@@ -348,12 +377,12 @@
                                  while ($row = $result->fetch_assoc()) {
                                      echo'<option value="'.$row["unit_id"].'">'.$row["unit_name"].'</option>';
                                  }
-     
+
                                 }
                         else "no record found";
 
                       ?>
-                
+
                  </select>
                  <span class="input-group-text">یونټ</span>
                </div>
@@ -362,11 +391,11 @@
                       <input type="file" class="form-control" required placeholder="" name="image">
                    <span class="input-group-text">انځور</span>
                </div>
-     
+
               <div class="input-group mt-2">
                  <button class="form-control btn btn-success" name="addproduct">ثیتول</button>
               </div>
-     
+
           </form>
 
       </div>
@@ -399,7 +428,7 @@ if(isset($_POST['addproduct'])){
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-       
+
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-6">.col-md-4</div>
@@ -414,7 +443,7 @@ if(isset($_POST['addproduct'])){
     </div>
     <div class="row">
       <div class="col-sm-9">
-       
+
         <div class="row">
           <div class="col-8 col-sm-6">
             Level 2: .col-8 .col-sm-6
@@ -429,14 +458,14 @@ if(isset($_POST['addproduct'])){
 
       </div>
       <div class="user"></div>
-    
+
       <form method="post">
          <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
         <a href="liveSearch.php" type="submit" class="btn btn-primary"name="confirm" value="confirm"></a>
       </div>
       </form>
-     
+
     </div>
   </div>
 </div>
@@ -446,12 +475,12 @@ if(isset($_POST['addproduct'])){
          <aside class="col-sm-3 flex-grow-sm-1 flex-shrink-1 flex-grow-0 sticky-top pb-sm-0 pb-3" style="text-align:right;">
             <div class="bg-light border rounded-3 p-1 h-100 sticky-top">
                 <ul class="nav nav-pills flex-sm-column flex-row mb-auto justify-content-between text-truncate">
-                 
+
                     <li>
                         <a href="admin.php" class="nav-link px-2 text-truncate">
                           <span class="d-none d-sm-inline">Dashboard</span>
                             <i class="bi bi-speedometer fs-5"></i>
-                            
+
                         </a>
                     </li>
                          </ul>
@@ -492,10 +521,10 @@ if(isset($_POST['addproduct'])){
                     </form>
                 </div>
                 <!-- category -->
-            
+
             </div>
         </aside>
-       
+
     </div>
 </div>
   <!-- JavaScript Libraries -->
