@@ -21,7 +21,7 @@ function recentlly()
   if (isset($_GET['view'])) {
     $lint = $_GET['view'];
   }
-  $sql = "SELECT customer_buy_goods.price,customer_buy_goods.sold_date, customer_buy_goods.customer_id, customer_buy_goods.quantity,goods.goods_name,goods.buy_price, (customer_buy_goods.price-goods.buy_price)*customer_buy_goods.quantity AS re FROM goods,customer_buy_goods WHERE customer_buy_goods.goods_id=goods.goods_id ORDER by goods.goods_id DESC LIMIT $lint;";
+  $sql = "SELECT customers_bys_goods.price,customers_bys_goods.buy_date, customers_bys_goods.person_id, customers_bys_goods.quantity,goods.goods_name,goods.goods_price, (customers_bys_goods.price-goods.goods_price)*customers_bys_goods.quantity AS re FROM goods,customers_bys_goods  ORDER by goods.goods_id DESC LIMIT $lint;";
   include('DBConnection.php');
   $result = $conn->query($sql);
   if ($result->num_rows > 0) {
@@ -31,8 +31,8 @@ function recentlly()
                      <td>' . $row["goods_name"] . '</td>
 
                      <td> ' . $row["price"] . '</td>
-                     <td>' . $row["sold_date"] . '</td>
-                     <td><a href="admin.php?customer=' . $row["customer_id"] . '">' . $row["customer_id"] . '</a></td>
+                     <td>' . $row["buy_date"] . '</td>
+                     <td><a href="admin.php?customer=' . $row["person_id"] . '">' . $row["person_id"] . '</a></td>
 
                  </tr>';
     }
@@ -74,56 +74,41 @@ function addcustomer()
   $location = $_POST['location'];
   $dist = $_POST['dist'];
   $province = $_POST['province'];
-  $sql2 = "INSERT INTO `location` (`location_name`, `location_province`, `location_district`) VALUES ( '$location', '$province', '$dist');";
+  $sql2 = "INSERT INTO `address` (`adress_vilage`, `address_province`, `address_district`) VALUES ( '$location', '$province', '$dist');";
   if (!$conn->query($sql2)) {
     echo "opps!";
   }
 
   // set the customer address
-  $sql3 = "SELECT location_id FROM `location` ORDER BY `location_id` DESC LIMIT 1";
+  $sql3 = "SELECT address_id FROM `address` ORDER BY `address_id` DESC LIMIT 1";
   $result = $conn->query($sql3);
   $id = $result->fetch_assoc();
-  $locationid = $id["location_id"];
+  $locationid = $id["address_id"];
   //$conn->query($sql2);
 // select image and uploaded it as customer profile image
   $uniquesavename = time() . uniqid(rand());
-  $targetDir = "uploads/";
-  $fileName = basename($_FILES["image"]["name"]);
-  $targetFilePath = $targetDir . $uniquesavename . $fileName;
-  $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
-  $allowTypes = array('jpg', 'png', 'jpeg', 'gif');
-  if (in_array($fileType, $allowTypes)) {
-    // Upload file to server
-    if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFilePath)) {
-
-
-    } else {
-      $statusMsg = "Sorry, there was an error uploading your file.";
-    }
-
-  }
   $date = DATE;
-  $sql7 = "INSERT INTO `customer` (`customer_id`, `customer_name`, `customer_f_name`, `customer_email`,`cutomer_image`,`customer_address`,`created_date`) VALUES (NULL, '$name', '$fname', '$email','$targetFilePath','$locationid','$date')";
+  $sql7 = "INSERT INTO `person` (`person_id`, `person_name`, `person_f_name`, `person_fathe_name`,`person_address`,`created_date`) VALUES (NULL, '$name', '$fname', '$email','$locationid','$date')";
   if (!$conn->query($sql7)) {
     echo "opps some wrong";
   } else {
     success();
   }
   // add mobile numbers
-  $sql4 = "SELECT customer_id FROM `customer` ORDER BY `customer_id` DESC LIMIT 1";
+  $sql4 = "SELECT person_id FROM `person` ORDER BY `person_id` DESC LIMIT 1";
   $result = $conn->query($sql4);
   $id = $result->fetch_assoc();
-  $mobile = $id["customer_id"];
+  $mobile = $id["person_id"];
   $mobileNO = $_POST['mobile'];
-  $sql5 = "INSERT INTO `mobile_numbers` (`mobile_number`, `customer_id`) VALUES ('$mobileNO', '$mobile');";
+  $sql5 = "INSERT INTO `mobile_numbers` (`mobile_numbers`, `person_id`) VALUES ('$mobileNO', '$mobile');";
   $conn->query($sql5);
 
   $mobileNO1 = $_POST['mobile1'];
-  $sql5 = "INSERT INTO `mobile_numbers` (`mobile_number`, `customer_id`) VALUES ('$mobileNO1', '$mobile');";
+  $sql5 = "INSERT INTO `mobile_numbers` (`mobile_numbers`, `person_id`) VALUES ('$mobileNO1', '$mobile');";
   $conn->query($sql5);
 
   $mobileNO2 = $_POST['mobile2'];
-  $sql5 = "INSERT INTO `mobile_numbers` (`mobile_number`, `customer_id`) VALUES ('$mobileNO2', '$mobile');";
+  $sql5 = "INSERT INTO `mobile_numbers` (`mobile_numbers`, `person_id`) VALUES ('$mobileNO2', '$mobile');";
   $conn->query($sql5);
   //header( "Location: admin.php" );
 
@@ -248,74 +233,74 @@ function addUnit()
   }
 
 }
-function addStore()
-{
-  try {
-    include('DBConnection.php');
-    $location = $_POST['location_name'];
-    $dist = $_POST['district'];
-    $province = $_POST['address'];
-    $sql2 = "INSERT INTO `location` (`location_name`, `location_province`, `location_district`) VALUES ( '$location', '$province', '$dist');";
-    if (!$conn->query($sql2)) {
-      echo "opps!";
-    }
+// function addStore()
+// {
+//   try {
+//     include('DBConnection.php');
+//     $location = $_POST['location_name'];
+//     $dist = $_POST['district'];
+//     $province = $_POST['address'];
+//     $sql2 = "INSERT INTO `location` (`location_name`, `location_province`, `location_district`) VALUES ( '$location', '$province', '$dist');";
+//     if (!$conn->query($sql2)) {
+//       echo "opps!";
+//     }
 
 
-    echo ' <script LANGUAGE="JavaScript">
-                 swal("په بریالی توګه !", "د محضول مغلومات اضافه شول!", "success");
+//     echo ' <script LANGUAGE="JavaScript">
+//                  swal("په بریالی توګه !", "د محضول مغلومات اضافه شول!", "success");
 
-               </script>;';
-    $sql = "SELECT * FROM `location` ORDER BY location_id desc limit 1";
-    $id = $conn->query($sql);
-    $addres = "";
-    while ($row = $id->fetch_assoc()) {
-      $addres = $row["location_id"];
-    }
-    $store_name = $_POST['store_name'];
-    //$store_address = $_POST['store_address'];
-    $sql = "INSERT INTO `store` (`store_id`, `store_name`, `store_address`) VALUES (NULL, '$store_name', '$addres');";
-    if ($conn->query($sql)) {
+//                </script>;';
+//     $sql = "SELECT * FROM `location` ORDER BY location_id desc limit 1";
+//     $id = $conn->query($sql);
+//     $addres = "";
+//     while ($row = $id->fetch_assoc()) {
+//       $addres = $row["location_id"];
+//     }
+//     $store_name = $_POST['store_name'];
+//     //$store_address = $_POST['store_address'];
+//     $sql = "INSERT INTO `store` (`store_id`, `store_name`, `store_address`) VALUES (NULL, '$store_name', '$addres');";
+//     if ($conn->query($sql)) {
 
-      $conn->query($sqll);
-      echo ' <script LANGUAGE="JavaScript">
-                 swal("په بریالی توګه !", "د محضول مغلومات اضافه شول!", "success");
+//       $conn->query($sqll);
+//       echo ' <script LANGUAGE="JavaScript">
+//                  swal("په بریالی توګه !", "د محضول مغلومات اضافه شول!", "success");
 
-               </script>;';
-    } else {
-      echo ' ("<script LANGUAGE="JavaScript">
-                     window.alert("Opps");
+//                </script>;';
+//     } else {
+//       echo ' ("<script LANGUAGE="JavaScript">
+//                      window.alert("Opps");
 
-                   </script>");';
-    }
-  } catch (Exception $e) {
-    echo $e->getMessage();
-  }
+//                    </script>");';
+//     }
+//   } catch (Exception $e) {
+//     echo $e->getMessage();
+//   }
 
 
-}
-try {
-  function laon()
-  {
+// }
+// try {
+//   function laon()
+//   {
 
-    $loan_quqntity = $_POST["loan_quantity"];
-    $paid_quantity = $_POST["paid_quantity"];
-    echo $total_paid = $_POST["total_paid"];
-    $select = $_SESSION['selecte'];
-    include('DBConnection.php');
-    //$sqll="SET FOREIGN_KEY_CHECKS = 0;";
-    // $conn->query($sqll);
-    $date = DATE;
-    $sqlLoan = "INSERT INTO `loan` (`loan_id`, `loan_quantity`, `paid_quantity`, `total_paid`, `customer_id`,`created_date`) VALUES (NULL, '$loan_quqntity', '$paid_quantity', '$total_paid', '$select','$date');";
-    if ($conn->query($sqlLoan)) {
-      echo ' <script LANGUAGE="JavaScript">
-                         swal("په بریالی توګه !", "د محضول مغلومات اضافه شول!", "success");
-                      </script>;';
-    }
+//     $loan_quqntity = $_POST["loan_quantity"];
+//     $paid_quantity = $_POST["paid_quantity"];
+//     echo $total_paid = $_POST["total_paid"];
+//     $select = $_SESSION['selecte'];
+//     include('DBConnection.php');
+//     //$sqll="SET FOREIGN_KEY_CHECKS = 0;";
+//     // $conn->query($sqll);
+//     $date = DATE;
+//     $sqlLoan = "INSERT INTO `loan` (`loan_id`, `loan_quantity`, `paid_quantity`, `total_paid`, `customer_id`,`created_date`) VALUES (NULL, '$loan_quqntity', '$paid_quantity', '$total_paid', '$select','$date');";
+//     if ($conn->query($sqlLoan)) {
+//       echo ' <script LANGUAGE="JavaScript">
+//                          swal("په بریالی توګه !", "د محضول مغلومات اضافه شول!", "success");
+//                       </script>;';
+//     }
 
-  }
-} catch (Exception $e) {
+//   }
+// } catch (Exception $e) {
 
-}
+// }
 // Dashboaerd -----------------------------------------------------------------------------------------------------------------//
 
 
@@ -512,7 +497,7 @@ try {
                       try {
 
                         include('DBConnection.php');
-                        $sql2 = "SELECT COUNT(customer.customer_id) AS NumberOfcustomer FROM customer;";
+                        $sql2 = "SELECT COUNT(person.person_id) AS NumberOfcustomer FROM person;";
                         $result = $conn->query($sql2);
                         if ($result->num_rows > 0) {
 
@@ -554,20 +539,20 @@ try {
 
 
                  </script>';
-                  $sql = "SELECT * FROM `customer` INNER JOIN location ON customer.customer_address = location.location_id INNER JOIN district ON location.location_district = district.district_id INNER JOIN province ON district.province_id = province.province_id WHERE customer_id='$id';";
+                  $sql = "SELECT * FROM `person` INNER JOIN address ON person.person_address = address.adress_id INNER JOIN district ON address.address_district= district.district_id INNER JOIN province ON district.province_id = province.province_id WHERE person_id='$id';";
                   include('DBConnection.php');
                   $result = $conn->query($sql);
 
                   if ($result->num_rows > 0) {
-                    $sql2 = "SELECT * FROM `mobile_numbers` WHERE customer_id ='$id'";
+                    $sql2 = "SELECT * FROM `mobile_numbers` WHERE person_id ='$id'";
                     $result2 = $conn->query($sql2);
                     if ($result2->num_rows > 0) {
 
                     }
                     while ($row = $result->fetch_assoc()) {
-                      $name = $row["customer_name"];
-                      $fname = $row["customer_f_name"];
-                      $email = $row["customer_email"];
+                      $name = $row["person_name"];
+                      $fname = $row["person_f_name"];
+                      $email = $row["person_fathe_name"];
                     }
                   }
                 }
@@ -1014,9 +999,9 @@ try {
             </div>
 
             <?php
-            if (isset($_POST['loan'])) {
-              laon();
-            }
+            // if (isset($_POST['loan'])) {
+            //   laon();
+            // }
             ?>
             <!-- Loan profile modle end here ====================================================================================================================================================================================================-->
 
@@ -1046,7 +1031,7 @@ try {
                       <div id="billedcustoemr">
                         <div class="row">
                           <div class="col d-flex justify-center">
-                          <img src="img/logo.jpg" alt="logo">
+                            <img src="img/logo.jpg" alt="logo">
                           </div>
                           <div class="col">
                             <p>مسولر تیک ټریډنګ کمپنۍ</p>
@@ -1074,7 +1059,7 @@ try {
                                                 $goods_id = "";
 
                                                 while ($row = $result->fetch_assoc()) {
-                                                  $userid = $row["customer_id"];
+                                                  $userid = $row["person_id"];
                                                   $goods_id = $row["goods_id"];
                                                 }
 
@@ -1092,11 +1077,11 @@ try {
 
                                                     // Encode the data as JSON
                                                     // $jsonData = json_encode($data);
-
+                                              
                                                     // get uint name
                                                     // $unit_id = $row["unit_id"];
                                                     // $sql2 = "SELECT * FROM `unit` WHERE unit_id=.$unit_id";
-
+                                              
                                                     // $unitrsult = $conn->query($sql2);
                                                     // if ($unit = $unitrsult->fetch_assoc()) {
                                                     //     echo $unit;
@@ -1519,20 +1504,20 @@ try {
                           <tbody>
 
                             <?php
-                            require_once('DBConnection.php');
-                            $sql = "SELECT * FROM `store`";
-                            $result = $conn->query($sql);
-                            if ($result->num_rows > 0) {
-                              while ($row = $result->fetch_assoc()) {
-                                echo '   <tr><td>' . $row["store_name"] . '</td>
-                                    <td><a class="fa fa-edit text-decoration-none" href=""></a>
+                            // require_once('DBConnection.php');
+                            // $sql = "SELECT * FROM `store`";
+                            // $result = $conn->query($sql);
+                            // if ($result->num_rows > 0) {
+                            //   while ($row = $result->fetch_assoc()) {
+                            //     echo '   <tr><td>' . $row["store_name"] . '</td>
+                            //         <td><a class="fa fa-edit text-decoration-none" href=""></a>
 
-                                    </td>
-                                     <td><a class="fa fa-trash text-decoration-none" href=""></a></td>
-                                      </tr>
-                                    ';
-                              }
-                            }
+                            //         </td>
+                            //          <td><a class="fa fa-trash text-decoration-none" href=""></a></td>
+                            //           </tr>
+                            //         ';
+                            //   }
+                            // }
                             ?>
                           </tbody>
                         </table>
@@ -1545,9 +1530,9 @@ try {
               </div>
             </div>
             <?php
-            if (isset($_POST['addStore'])) {
-              addStore();
-            }
+            // if (isset($_POST['addStore'])) {
+            //   addStore();
+            // }
             ?>
             <!-- store modal end here======================================================================================================================================================= -->
 
@@ -1680,7 +1665,7 @@ try {
                       if (isset($_GET['view'])) {
                         $lint = $_GET['view'];
                       }
-                      $sql = "SELECT * FROM `customer_buy_goods` INNER JOIN goods ON customer_buy_goods.goods_id= goods.goods_id INNER JOIN currency on customer_buy_goods.currency_id=currency.currency_id ORDER by customer_buy_goods.quantity desc limit $lint  ";
+                      $sql = "SELECT * FROM `customers_bys_goods` INNER JOIN goods ON customers_bys_goods.goods_id= goods.goods_id INNER JOIN currency on customers_bys_goods.currency_id=currency.currency_id ORDER by customers_bys_goods.quantity desc limit $lint  ";
                       include('DBConnection.php');
                       $result = $conn->query($sql);
                       if ($result->num_rows > 0) {
@@ -1732,13 +1717,13 @@ try {
               <div class="col-lg-6 card">
                 <canvas id="product" style="width:100%;max-width:600px; lis"></canvas>
                 <?php
-                $sql = "SELECT category.categ_name, count(customer_buy_goods.quantity) as quantity FROM category,customer_buy_goods WHERE customer_buy_goods.goods_id = customer_buy_goods.goods_id GROUP BY category.categ_name;";
+                $sql = "select category.categ_name,sum(customers_bys_goods.quantity) from category,customers_bys_goods,goods WHERE category.categ_id=goods.categ_id  GROUP BY category.categ_name;";
                 include('DBConnection.php');
                 $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
                   $data = array();
                   foreach ($result as $value) {
-                    $ydata[] = $value["quantity"];
+                    $ydata[] = $value["sum(customers_bys_goods.quantity)"];
                     $xcate_name[] = $value["categ_name"];
                   }
                 }
@@ -1772,14 +1757,17 @@ try {
                 <?php
                 try {
                   include('DBConnection.php');
-                  $sql = "SELECT goods_name, sum(quantity),category.categ_name FROM goods LEFT JOIN category ON category.categ_id = goods.category_id GROUP BY category.categ_name;";
+                  $sql = "select category.categ_name,sum(goods.goods_qunatity) from goods,category where goods.categ_id=category.categ_id GROUP BY category.categ_name;";
                   $result = $conn->query($sql);
                   if ($result->num_rows > 0) {
                     $data = array();
                     foreach ($result as $value) {
-                      $data[] = $value["sum(quantity)"];
+                      $data[] = $value["sum(goods.goods_qunatity)"];
                       $cate_name[] = $value["categ_name"];
                     }
+                  }
+                  else{
+                    echo "no data found";
                   }
                 } catch (Exception $e) {
 
