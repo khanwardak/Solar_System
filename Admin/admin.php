@@ -26,7 +26,7 @@ unit.unit_name, customers_bys_goods.unit_amount, person.person_name FROM custome
 currency, category, country, unit, person, company
  WHERE customers_bys_goods.currency_id = currency.currency_id AND 
 customers_bys_goods.categ_id = category.categ_id AND customers_bys_goods.count_id = country.count_id
- AND person.person_id = customers_bys_goods.person_id AND customers_bys_goods.unit_id = unit.unit_id AND
+ AND person.person_id = customers_bys_goods.person_id  AND
  company.comp_id = customers_bys_goods.comp_id ORDER BY customers_bys_goods.buy_date DESC LIMIT 1;";
   include('DBConnection.php');
   $result = $conn->query($sql);
