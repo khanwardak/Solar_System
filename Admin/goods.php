@@ -4,11 +4,7 @@ function addproduct()
 {
   include('DBConnection.php');
   $goods_name = $_POST['goods_name'];
-<<<<<<< Updated upstream
   $goods_discription = $_POST['goods_discription'];
-=======
-  $goods_discription = $_POST['goods_description'];
->>>>>>> Stashed changes
   $buy_price = $_POST['buy_price'];
   $currency_id = $_POST['currency_id'];
   $quantity = $_POST['quantity'];
@@ -33,11 +29,7 @@ function addproduct()
   }
   $sqll = "SET FOREIGN_KEY_CHECKS = 0;";
   $conn->query($sqll);
-<<<<<<< Updated upstream
   $sql2 = "INSERT INTO `goods` (`goods_id`, `goods_name`, `goods_description`, `goods_price`, `entry_date`, `image`, `categ_id`, `comp_id`, `count_id`, `unit_id`, `currency_id`,`goods_qunatity`)
-=======
-  $sql2 = "INSERT INTO `goods` (`goods_id`, `goods_name`, `goods_description`, `goods_price`, `entry_date`, `image`, `category_id`, `company_id`, `country_id`, `unit_id`, `currency`,`quantity`)
->>>>>>> Stashed changes
       VALUES (NULL, '$goods_name', '$goods_discription', '$buy_price', '2022-09-13', '$targetFilePath', '$category_id', '$company_id', '$country_id', '$unit_id', '$currency_id','$quantity');";
   if ($conn->query($sql2)) {
     echo ' <script LANGUAGE="JavaScript">
@@ -176,58 +168,31 @@ function addproduct()
               <tbody>
                 <?php
                 require_once('DBConnection.php');
-                $sql = "SELECT
-                                      goods.goods_name,
-                                      goods.goods_id,
-                                      goods.goods_description,
-                                      goods.goods_price,
-                                      goods.entry_date,
-                                      company.comp_name,
-                                      country.count_name,
-                                      currency.currency_name,
-                                      unit.unit_name,
-                                      SUM(goods.goods_qunatity) AS Quantity,
-                                      category.categ_name
-                                  FROM
-                                      goods
-                                  LEFT JOIN
-                                      category ON category.categ_id = goods.categ_id
-                                  INNER JOIN
-                                      unit ON goods.unit_id = unit.unit_id
-                                  INNER JOIN
-                                      currency ON goods.currency_id = currency.currency_id
-                                  INNER JOIN
-                                      company ON goods.comp_id = company.comp_id
-                                  INNER JOIN
-                                      country ON goods.count_id = country.count_id
-                                  GROUP BY
-                                      currency.currency_name,
-                                      category.categ_name";
-
+                $sql = "
+                SELECT category.categ_name, MIN(company.comp_name) AS comp_name, 
+                MIN(country.count_name) AS count_name, unit.unit_name,goods.unit_amount,
+                 IFNULL(SUM(goods_qunatity), 0) AS Quantity FROM goods JOIN category 
+                ON category.categ_id = goods.categ_id JOIN unit ON goods.unit_id = unit.unit_id JOIN currency
+                 ON goods.currency_id = currency.currency_id JOIN company ON goods.comp_id = company.comp_id JOIN country
+                 ON goods.count_id = country.count_id GROUP BY category.categ_name, unit.unit_name,
+                country.count_name,company.comp_name,goods.unit_amount;";
                 $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
 
                   while ($row = $result->fetch_assoc()) {
-                    $button = '<td> <button id="btn" class ="userinfo btn btn-outline-warning" data-id=' . $row["goods_id"] . '>Sell</button></td>';
-                    if ($row["Quantity"] <= 0) {
-                      $row["Quantity"] = "<p style='color:red'>محصولات موحود نه دی</p>";
-                      $button = '<td> <button style="text-decoration:line-through" class ="userinfo btn btn-outline-warning disabled" data-id=' . $row["goods_id"] . '>Sell</button></td>';
-                    }
+                   
 
                     echo '<tr>
-                                         <a href="#"> <td>' . $row["goods_id"] . '</td></a>
-                                         <td><a class="text-dark d-flex justify-content-center text-decoration-none" data-bs-toggle="modal" data-bs-target="#showAndSell">' . $row["goods_name"] . '</a></td>
-                                          <td>' . $row["goods_description"] . '</td>
-                                          <td>' . $row["goods_price"] . '</td>
-                                          <td>' . $row["entry_date"] . '</td>
-                                          <td id="q">' . $row["Quantity"] . '</td>
+                                        
+                                          
                                           <td>' . $row["categ_name"] . '</td>
                                           <td>' . $row["comp_name"] . '</td>
                                           <td>' . $row["count_name"] . '</td>
-                                          <td>' . $row["currency_name"] . '</td>
-                                              <td>' . $row["unit_name"] . '</td>
+                                          <td>' . $row["unit_amount"] . '</td>
+                                           <td>' . $row["unit_name"] . '</td>
+                                           <td id="q">' . $row["Quantity"] . '</td>
 
-                                              ' . $button . '
+                                         
                                        </tr>';
 
 
@@ -371,13 +336,8 @@ function addproduct()
 
 
                     <div class="input-group mt-2">
-<<<<<<< Updated upstream
                       <input type="text" class="form-control" required placeholder="" name="sold_quantity">
                       <span class="input-group-text">مقدار </span>
-=======
-                      <input type="text" class="form-control" required placeholder="" name="quantity">
-                      <span class="input-group-text">مقدار</span>
->>>>>>> Stashed changes
                     </div>
 
 
@@ -438,11 +398,7 @@ function addproduct()
                     </div>
 
                     <div class="input-group mt-2">
-<<<<<<< Updated upstream
                       <input type="text" class="form-control" required name="product_price">
-=======
-                      <input type="text" class="form-control" required name="buy_price">
->>>>>>> Stashed changes
                       <span class="input-group-text">قمت فی دانه</span>
                     </div>
 
