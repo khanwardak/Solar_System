@@ -4,7 +4,11 @@ function addproduct()
 {
   include('DBConnection.php');
   $goods_name = $_POST['goods_name'];
+<<<<<<< Updated upstream
   $goods_discription = $_POST['goods_discription'];
+=======
+  $goods_discription = $_POST['goods_description'];
+>>>>>>> Stashed changes
   $buy_price = $_POST['buy_price'];
   $currency_id = $_POST['currency_id'];
   $quantity = $_POST['quantity'];
@@ -29,7 +33,11 @@ function addproduct()
   }
   $sqll = "SET FOREIGN_KEY_CHECKS = 0;";
   $conn->query($sqll);
+<<<<<<< Updated upstream
   $sql2 = "INSERT INTO `goods` (`goods_id`, `goods_name`, `goods_description`, `goods_price`, `entry_date`, `image`, `categ_id`, `comp_id`, `count_id`, `unit_id`, `currency_id`,`goods_qunatity`)
+=======
+  $sql2 = "INSERT INTO `goods` (`goods_id`, `goods_name`, `goods_description`, `goods_price`, `entry_date`, `image`, `category_id`, `company_id`, `country_id`, `unit_id`, `currency`,`quantity`)
+>>>>>>> Stashed changes
       VALUES (NULL, '$goods_name', '$goods_discription', '$buy_price', '2022-09-13', '$targetFilePath', '$category_id', '$company_id', '$country_id', '$unit_id', '$currency_id','$quantity');";
   if ($conn->query($sql2)) {
     echo ' <script LANGUAGE="JavaScript">
@@ -363,8 +371,13 @@ function addproduct()
 
 
                     <div class="input-group mt-2">
+<<<<<<< Updated upstream
                       <input type="text" class="form-control" required placeholder="" name="sold_quantity">
                       <span class="input-group-text">مقدار </span>
+=======
+                      <input type="text" class="form-control" required placeholder="" name="quantity">
+                      <span class="input-group-text">مقدار</span>
+>>>>>>> Stashed changes
                     </div>
 
 
@@ -425,7 +438,11 @@ function addproduct()
                     </div>
 
                     <div class="input-group mt-2">
+<<<<<<< Updated upstream
                       <input type="text" class="form-control" required name="product_price">
+=======
+                      <input type="text" class="form-control" required name="buy_price">
+>>>>>>> Stashed changes
                       <span class="input-group-text">قمت فی دانه</span>
                     </div>
 
