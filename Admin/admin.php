@@ -21,18 +21,24 @@ function recentlly()
   if (isset($_GET['view'])) {
     $lint = $_GET['view'];
   }
-  $sql = "SELECT customers_bys_goods.price,customers_bys_goods.buy_date, customers_bys_goods.person_id, customers_bys_goods.quantity,goods.goods_name,goods.goods_price, (customers_bys_goods.price-goods.goods_price)*customers_bys_goods.quantity AS re FROM goods,customers_bys_goods  ORDER by goods.goods_id DESC LIMIT $lint;";
+  $sql = "SELECT category.categ_name, country.count_name,customers_bys_goods.buy_date, company.comp_name, customers_bys_goods.price, currency.currency_name, 
+unit.unit_name, customers_bys_goods.unit_amount, person.person_name FROM customers_bys_goods, 
+currency, category, country, unit, person, company
+ WHERE customers_bys_goods.currency_id = currency.currency_id AND 
+customers_bys_goods.categ_id = category.categ_id AND customers_bys_goods.count_id = country.count_id
+ AND person.person_id = customers_bys_goods.person_id AND customers_bys_goods.unit_id = unit.unit_id AND
+ company.comp_id = customers_bys_goods.comp_id ORDER BY customers_bys_goods.buy_date DESC LIMIT 1;";
   include('DBConnection.php');
   $result = $conn->query($sql);
   if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
 
       echo ' <tr class="">
-                     <td>' . $row["goods_name"] . '</td>
+                     <td>' . $row["categ_name"] . '</td>
 
                      <td> ' . $row["price"] . '</td>
                      <td>' . $row["buy_date"] . '</td>
-                     <td><a href="admin.php?customer=' . $row["person_id"] . '">' . $row["person_id"] . '</a></td>
+                     <td><a href="admin.php?customer=' . $row["person_name"] . '">' . $row["person_name"] . '</a></td>
 
                  </tr>';
     }
@@ -585,7 +591,7 @@ function addUnit()
                             <div class="invalid-feedback">Please enter number!</div>
                           </div>
                           <div class="col-12">
-                            <label for="yourEmail" class="form-label">ایمل</label>
+                            <label for="yourEmail" class="form-label">اد پلار نوم</label>
                             <input type="email" name="customer_email" class="form-control" id="" required value=<?php echo $email; ?>>
                             <div class="invalid-feedback">Please enter price!</div>
                           </div>
@@ -931,7 +937,7 @@ function addUnit()
                           <select name="store" id="store" class="form-select form-select-sm">
                             <?php
                             try {
-                              $sql = "SELECT customer_id,customer_name FROM `customer`";
+                              $sql = "SELECT person_id,person_name FROM `person`";
                               include('DBConnection.php');
                               $result = $conn->query($sql);
                               if ($result->num_rows > 0) {
@@ -940,7 +946,7 @@ function addUnit()
                                 echo 'No Customer Information Find';
                               }
                               while ($row = $result->fetch_assoc()) {
-                                echo '<option value="' . $row['customer_id'] . '">' . $row['customer_name'] . '</option>';
+                                echo '<option value="' . $row['person_id'] . '">' . $row['person_name'] . '</option>';
                               }
                               //loaned customer id
                               if (isset($_POST['selecte'])) {
@@ -1051,82 +1057,82 @@ function addUnit()
                                             style="position: relative; height: 700px">
                                             <table class="table table-striped mb-0">
                                               <?php
-                                              try {
-                                                include('DBConnection.php');
-                                                $sql2 = "SELECT * FROM `bill` ORDER by bill_id DESC LIMIT 1;";
-                                                $result = $conn->query($sql2);
-                                                $userid = "";
-                                                $goods_id = "";
+                                              // try {
+                                              //   include('DBConnection.php');
+                                              //   $sql2 = "SELECT * FROM `bill` ORDER by bill_id DESC LIMIT 1;";
+                                              //   $result = $conn->query($sql2);
+                                              //   $userid = "";
+                                              //   $goods_id = "";
 
-                                                while ($row = $result->fetch_assoc()) {
-                                                  $userid = $row["person_id"];
-                                                  $goods_id = $row["goods_id"];
-                                                }
+                                              //   while ($row = $result->fetch_assoc()) {
+                                              //     $userid = $row["person_id"];
+                                              //     $goods_id = $row["goods_id"];
+                                              //   }
 
-                                                $sql = "SELECT bill.bill_id, customer.customer_name,bill.quantity, goods.unit_id, goods.goods_name AS product, bill.price AS فی, bill.price*bill.quantity AS total, customer_buy_goods.currency_id,customer_buy_goods.buy_date FROM bill,customer,goods,customer_buy_goods WHERE customer.customer_id=$userid and goods.goods_id =$goods_id  ORDER by bill.bill_id DESC LIMIT 1;";
-                                                $result = $conn->query($sql);
-                                                if ($result->num_rows > 0) {
-                                                  while ($row = $result->fetch_assoc()) {
-                                                    $customerName = mb_convert_encoding($row["customer_name"], 'UTF-8');
-                                                    $buyDate = mb_convert_encoding($row["buy_date"], 'UTF-8');
-                                                    $product = mb_convert_encoding($row["product"], 'UTF-8');
-                                                    $quantity = mb_convert_encoding($row["quantity"], 'UTF-8');
-                                                    $price = mb_convert_encoding($row["فی"], 'UTF-8');
-                                                    $total = mb_convert_encoding($row["total"], 'UTF-8');
+                                              //   $sql = "SELECT bill.bill_id, customer.customer_name,bill.quantity, goods.unit_id, goods.goods_name AS product, bill.price AS فی, bill.price*bill.quantity AS total, customer_buy_goods.currency_id,customer_buy_goods.buy_date FROM bill,customer,goods,customer_buy_goods WHERE customer.customer_id=$userid and goods.goods_id =$goods_id  ORDER by bill.bill_id DESC LIMIT 1;";
+                                              //   $result = $conn->query($sql);
+                                              //   if ($result->num_rows > 0) {
+                                              //     while ($row = $result->fetch_assoc()) {
+                                              //       $customerName = mb_convert_encoding($row["customer_name"], 'UTF-8');
+                                              //       $buyDate = mb_convert_encoding($row["buy_date"], 'UTF-8');
+                                              //       $product = mb_convert_encoding($row["product"], 'UTF-8');
+                                              //       $quantity = mb_convert_encoding($row["quantity"], 'UTF-8');
+                                              //       $price = mb_convert_encoding($row["فی"], 'UTF-8');
+                                              //       $total = mb_convert_encoding($row["total"], 'UTF-8');
 
 
-                                                    // Encode the data as JSON
-                                                    // $jsonData = json_encode($data);
+                                              //       // Encode the data as JSON
+                                              //       // $jsonData = json_encode($data);
                                               
-                                                    // get uint name
-                                                    // $unit_id = $row["unit_id"];
-                                                    // $sql2 = "SELECT * FROM `unit` WHERE unit_id=.$unit_id";
+                                              //       // get uint name
+                                              //       // $unit_id = $row["unit_id"];
+                                              //       // $sql2 = "SELECT * FROM `unit` WHERE unit_id=.$unit_id";
                                               
-                                                    // $unitrsult = $conn->query($sql2);
-                                                    // if ($unit = $unitrsult->fetch_assoc()) {
-                                                    //     echo $unit;
-                                                    // }
-                                                    // else{
-                                                    //     echo "opps";
-                                                    // }
-                                                    echo '
-                                                            <thead style="background-color: #002d72;">
-                                                            <div class="row" id="printable">
-                                                            <div class="col-xxl-4 mt-2">
-                                                            <p style="outline-style: dotted;">' . $row["customer_name"] . '</p>
-                                                            </div>
-                                                            <div class="col-xxl-4 mt-2">
-                                                                <p style="outline-style: dotted; outline-top:none">' . $buyDate . '</p>
-                                                            </div>
-                                                            <div class="col-xxl-4 mt-2">
-                                                                <p style="outline-style: dotted; border-top: none;">نمر  ' . $row["bill_id"] . '</p>
-                                                            </div>
-                                                            <tr>
-                                                              <th scope="col" style="color:black">نمبر</th>
-                                                              <th scope="col">جنس</th>
-                                                              <th scope="col">مقدار</th>
-                                                              <th scope="col">قمت فی دانه</th>
-                                                              <th scope="col">ټوټل</th>
-                                                            </tr>
-                                                          </thead>
-                                                          <tbody>
-                                                            <tr>
-                                                              <td>' . $row["product"] . 'y</td>
-                                                              <td>Boxing</td>
-                                                              <td>' . $row["quantity"] . '</td>
-                                                              <td>' . $row["فی"] . '</td>
-                                                              <td>10</td>
-                                                            </tr>
+                                              //       // $unitrsult = $conn->query($sql2);
+                                              //       // if ($unit = $unitrsult->fetch_assoc()) {
+                                              //       //     echo $unit;
+                                              //       // }
+                                              //       // else{
+                                              //       //     echo "opps";
+                                              //       // }
+                                              //       echo '
+                                              //               <thead style="background-color: #002d72;">
+                                              //               <div class="row" id="printable">
+                                              //               <div class="col-xxl-4 mt-2">
+                                              //               <p style="outline-style: dotted;">' . $row["customer_name"] . '</p>
+                                              //               </div>
+                                              //               <div class="col-xxl-4 mt-2">
+                                              //                   <p style="outline-style: dotted; outline-top:none">' . $buyDate . '</p>
+                                              //               </div>
+                                              //               <div class="col-xxl-4 mt-2">
+                                              //                   <p style="outline-style: dotted; border-top: none;">نمر  ' . $row["bill_id"] . '</p>
+                                              //               </div>
+                                              //               <tr>
+                                              //                 <th scope="col" style="color:black">نمبر</th>
+                                              //                 <th scope="col">جنس</th>
+                                              //                 <th scope="col">مقدار</th>
+                                              //                 <th scope="col">قمت فی دانه</th>
+                                              //                 <th scope="col">ټوټل</th>
+                                              //               </tr>
+                                              //             </thead>
+                                              //             <tbody>
+                                              //               <tr>
+                                              //                 <td>' . $row["product"] . 'y</td>
+                                              //                 <td>Boxing</td>
+                                              //                 <td>' . $row["quantity"] . '</td>
+                                              //                 <td>' . $row["فی"] . '</td>
+                                              //                 <td>10</td>
+                                              //               </tr>
 
-                                                          </tbody> ';
-                                                  }
-                                                } else {
-                                                  echo "No data found!!";
-                                                }
+                                              //             </tbody> ';
+                                              //     }
+                                              //   } else {
+                                              //     echo "No data found!!";
+                                              //   }
 
-                                              } catch (Exception $e) {
-                                                $e->getMessage();
-                                              }
+                                              // } catch (Exception $e) {
+                                              //   $e->getMessage();
+                                              // }
 
                                               ?>
 
@@ -1324,7 +1330,7 @@ function addUnit()
                             <?php
                             try {
                               require_once('DBConnection.php');
-                              $sql = "SELECT * FROM `customer` ORDER BY customer_id DESC LIMIT 10;";
+                              $sql = "SELECT * FROM `person` ORDER BY person_id DESC LIMIT 10;";
                               $result = $conn->query($sql);
                               if ($result->num_rows > 0) {
                                 while ($row = $result->fetch_assoc()) {
@@ -1665,13 +1671,13 @@ function addUnit()
                       if (isset($_GET['view'])) {
                         $lint = $_GET['view'];
                       }
-                      $sql = "SELECT * FROM `customers_bys_goods` INNER JOIN goods ON customers_bys_goods.goods_id= goods.goods_id INNER JOIN currency on customers_bys_goods.currency_id=currency.currency_id ORDER by customers_bys_goods.quantity desc limit $lint  ";
+                      $sql = "SELECT category.categ_name ,sum(customers_bys_goods.quantity) as summ FROM customers_bys_goods,category where customers_bys_goods.categ_id=category.categ_id GROUP by categ_name ORDER BY summ desc LIMIT 3; ";
                       include('DBConnection.php');
                       $result = $conn->query($sql);
                       if ($result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
                           echo '  <tr>
-                                                    <td>' . $row["goods_name"] . '</td>
+                                                    <td>' . $row["categ_name"] . '</td>
                                                     <td>data</td>
                                                     <td>data</td>
                                                     <td>data</td>
@@ -1717,7 +1723,7 @@ function addUnit()
               <div class="col-lg-6 card">
                 <canvas id="product" style="width:100%;max-width:600px; lis"></canvas>
                 <?php
-                $sql = "select category.categ_name,sum(customers_bys_goods.quantity) from category,customers_bys_goods,goods WHERE category.categ_id=goods.categ_id  GROUP BY category.categ_name;";
+                $sql = "select category.categ_name,sum(customers_bys_goods.quantity) from category,customers_bys_goods WHERE category.categ_id=customers_bys_goods.categ_id GROUP BY category.categ_name;";
                 include('DBConnection.php');
                 $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
@@ -1757,12 +1763,12 @@ function addUnit()
                 <?php
                 try {
                   include('DBConnection.php');
-                  $sql = "select category.categ_name,sum(goods.goods_qunatity) from goods,category where goods.categ_id=category.categ_id GROUP BY category.categ_name;";
+                  $sql = "select category.categ_name,sum(customers_bys_goods.quantity) from category,customers_bys_goods WHERE category.categ_id=customers_bys_goods.categ_id GROUP BY category.categ_name;";
                   $result = $conn->query($sql);
                   if ($result->num_rows > 0) {
                     $data = array();
                     foreach ($result as $value) {
-                      $data[] = $value["sum(goods.goods_qunatity)"];
+                      $data[] = $value["sum(customers_bys_goods.quantity)"];
                       $cate_name[] = $value["categ_name"];
                     }
                   }
