@@ -31,16 +31,7 @@ function recentlly()
             AND person.person_id = customers_bys_goods.person_id  AND
             company.comp_id = customers_bys_goods.comp_id ORDER BY customers_bys_goods.buy_date DESC LIMIT " . $lint;
   include('DBConnection.php');
-<<<<<<< HEAD
-=======
-=======
-            company.comp_id = customers_bys_goods.comp_id ORDER BY customers_bys_goods.buy_date DESC LIMIT ".$lint;
-              include('DBConnection.php');
-<<<<<<< Updated upstream
->>>>>>> 3acda78c8f4a15e05eaf9aa2b52d73d0302309c2
-=======
->>>>>>> Stashed changes
->>>>>>> 44021ddcb643c3eaac502a63bca921467c8a47ff
+
   $result = $conn->query($sql);
   if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
@@ -189,65 +180,65 @@ function addco()
 // strat of adding Users
 function addUsers(){
 
-<<<<<<< Updated upstream
+}
 // start of addingform function
-function addFirm()
-{
-=======
-  try{
-    include('DBConnection.php');
-    $name=$_POST['first_name'];
-    $lastname=$_POST['last_name'];
-    $username=$_POST['user_name'];
-    $userpassword=$_POST['user_password'];
-    $usertype=$_POST['userType'];
-    $useremails=$_POST['user_email'];
-    $sqlusertype = "SELECT * FROM `user_type` WHERE type_flag = '$usertype'";
-    $id = $conn->query($sqlusertype);
-    $type_id = "";
-    while ($row = $id->fetch_assoc()) {
-      $type_id = $row["type_id"];
-      echo ' ("<script LANGUAGE="JavaScript">
-      window.alert("Opps");
-      window.alert("' . $type_id . '");
+// function addFirm()
+// {
 
-    </script>");';
-    }
+//   try{
+//     include('DBConnection.php');
+//     $name=$_POST['first_name'];
+//     $lastname=$_POST['last_name'];
+//     $username=$_POST['user_name'];
+//     $userpassword=$_POST['user_password'];
+//     $usertype=$_POST['userType'];
+//     $useremails=$_POST['user_email'];
+//     $sqlusertype = "SELECT * FROM `user_type` WHERE type_flag = '$usertype'";
+//     $id = $conn->query($sqlusertype);
+//     $type_id = "";
+//     while ($row = $id->fetch_assoc()) {
+//       $type_id = $row["type_id"];
+//       echo ' ("<script LANGUAGE="JavaScript">
+//       window.alert("Opps");
+//       window.alert("' . $type_id . '");
+
+//     </script>");';
+//     }
 
     
 
-    $sqluser = "INSERT INTO `user`(user_id,`username`, `password`, `name`, `last_name`,  `email`, `user_type`) 
-    VALUES (NULL,'$username','$userpassword','$name','$lastname','$useremails','$type_id')";
-        if ($conn->query($sqluser)) {
+//     $sqluser = "INSERT INTO `user`(user_id,`username`, `password`, `name`, `last_name`,  `email`, `user_type`) 
+//     VALUES (NULL,'$username','$userpassword','$name','$lastname','$useremails','$type_id')";
+//         if ($conn->query($sqluser)) {
     
-          $conn->query($sqluser);
-          echo ' <script LANGUAGE="JavaScript">
-                     swal("په بریالی توګه !", "د شرکت معلومات اضافه شول!", "success");
+//           $conn->query($sqluser);
+//           echo ' <script LANGUAGE="JavaScript">
+//                      swal("په بریالی توګه !", "د شرکت معلومات اضافه شول!", "success");
     
-                   </script>;';
-        } else {
-          echo ' ("<script LANGUAGE="JavaScript">
-                         window.alert("Opps");
+//                    </script>;';
+//         } else {
+//           echo ' ("<script LANGUAGE="JavaScript">
+//                          window.alert("Opps");
                         
     
-                       </script>");';
+//                        </script>");';
                        
                       
-        }
+//         }
 
 
 
 
-  }catch(Exception $e){
+//   }catch(Exception $e){
 
-  }
+//   }
 
 
-}
+// }
 
 // start of addingfirm function
 function addFirm(){
->>>>>>> Stashed changes
+
 
   try {
     include('DBConnection.php');
@@ -1376,15 +1367,13 @@ function addUnit()
             }
             ?>
 
-<<<<<<< Updated upstream
+
         <!-- start of user model -->
 
             <!-- start of firm model -->
 
     <div class="modal left fade" id="firm" data-backdrop="static" data-keyboard="false" tabindex="-1"
-<<<<<<< HEAD
-=======
-=======
+
         <div class="modal left fade" id="firm" data-backdrop="static" data-keyboard="false" tabindex="-1"
               role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
               <div class="modal-dialog">
@@ -1498,8 +1487,7 @@ function addUnit()
             <!-- start of firm model -->
 
         <div class="modal left fade" id="firm" data-backdrop="static" data-keyboard="false" tabindex="-1"
->>>>>>> 3acda78c8f4a15e05eaf9aa2b52d73d0302309c2
-=======
+
         <!-- start of users model -->
 
         <div class="modal left fade" id="users" data-backdrop="static" data-keyboard="false" tabindex="-1"
@@ -1616,9 +1604,7 @@ function addUnit()
             <!-- start of firm model -->
 
         <div class="modal left fade" id="firm" data-backdrop="static" data-keyboard="false" tabindex="-1"
->>>>>>> Stashed changes
->>>>>>> 44021ddcb643c3eaac502a63bca921467c8a47ff
-              role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="col">
