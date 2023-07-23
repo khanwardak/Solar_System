@@ -29,7 +29,6 @@ function recentlly()
             WHERE customers_bys_goods.currency_id = currency.currency_id AND 
             customers_bys_goods.categ_id = category.categ_id AND customers_bys_goods.count_id = country.count_id
             AND person.person_id = customers_bys_goods.person_id  AND
-
             company.comp_id = customers_bys_goods.comp_id ORDER BY customers_bys_goods.buy_date DESC LIMIT " . $lint;
              include('DBConnection.php');
 
@@ -184,11 +183,6 @@ function addUsers(){
     $userpassword=$_POST['user_password'];
     $usertype=$_POST['userType'];
     $useremails=$_POST['user_email'];
-  
-    
-
-    
-
     $sqluser = "INSERT INTO `user`(user_id,`username`, `password`, `name`, `last_name`,  `email`, `user_type`) 
     VALUES (NULL,'$username','$userpassword','$name','$lastname','$useremails','$usertype')";
         if ($conn->query($sqluser)) {
@@ -217,6 +211,8 @@ function addUsers(){
 
 
 }
+
+// end of user adding function
 
 // start of addingfirm function
 function addFirm(){
@@ -1348,7 +1344,7 @@ function addUnit()
             }
             ?>
 
-
+<!-- start of firm model -->
         <div class="modal left fade" id="firm" data-backdrop="static" data-keyboard="false" tabindex="-1"
               role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
               <div class="modal-dialog">
@@ -1456,14 +1452,8 @@ function addUnit()
 
 
 
-        <!-- end of user model -->
+        <!-- end of firm model -->
 
-
-            <!-- start of firm model -->
-
-        <div class="modal left fade" id="firm" data-backdrop="static" data-keyboard="false" tabindex="-1"
->>>>>>> 3acda78c8f4a15e05eaf9aa2b52d73d0302309c2
-=======
         <!-- start of users model -->
 
         <div class="modal left fade" id="users" data-backdrop="static" data-keyboard="false" tabindex="-1"
@@ -1494,12 +1484,6 @@ function addUnit()
                             <label for="yourName" class="form-label">پاسورد</label>
                             <input type="Password" name="user_password" class="form-control" id="" required>
                             <div class="invalid-feedback">Please,bill id!</div>
-
-                            
-
-
-
-
                             <label for="yourName" class="form-label">یوزر ټایپ</label>
                             <select class="form-control" id="userType" name="userType" onchange="userType(this.value)">
                               <?php
@@ -1518,9 +1502,6 @@ function addUnit()
 
                               ?>
                               </select>
-                            
-                
-                            
                             <div class="text-center mt-5">
                               <button class="btn btn-primary btn-submit" type="submit" name="addUsers">ثبتول</button>
                             </div>
@@ -1539,7 +1520,7 @@ function addUnit()
 
                             <?php
                             require_once('DBConnection.php');
-                            $sql = "SELECT user.name ,user_type.type_flag from user_type,user WHERE user.user_id=user_type.type_id";
+                            $sql = "SELECT name ,type_flag from user,user_type where user.user_type=user_type.type_id;";
                             $result = $conn->query($sql);
                             if ($result->num_rows > 0) {
                               while ($row = $result->fetch_assoc()) {
@@ -1579,9 +1560,9 @@ function addUnit()
 
             <!-- start of firm model -->
 
-        <div class="modal left fade" id="firm" data-backdrop="static" data-keyboard="false" tabindex="-1"
->>>>>>> Stashed changes
-              role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal left fade" id="firm" data-backdrop="static" data-keyboard="false" tabindex="-1">
+
+              <role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="col">
