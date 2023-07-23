@@ -29,16 +29,10 @@ function recentlly()
             WHERE customers_bys_goods.currency_id = currency.currency_id AND 
             customers_bys_goods.categ_id = category.categ_id AND customers_bys_goods.count_id = country.count_id
             AND person.person_id = customers_bys_goods.person_id  AND
-<<<<<<< HEAD
+
             company.comp_id = customers_bys_goods.comp_id ORDER BY customers_bys_goods.buy_date DESC LIMIT " . $lint;
-  include('DBConnection.php');
-=======
-            company.comp_id = customers_bys_goods.comp_id ORDER BY customers_bys_goods.buy_date DESC LIMIT ".$lint;
-              include('DBConnection.php');
-<<<<<<< Updated upstream
->>>>>>> 3acda78c8f4a15e05eaf9aa2b52d73d0302309c2
-=======
->>>>>>> Stashed changes
+             include('DBConnection.php');
+
   $result = $conn->query($sql);
   if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
@@ -1354,14 +1348,7 @@ function addUnit()
             }
             ?>
 
-<<<<<<< Updated upstream
-        <!-- start of user model -->
 
-<<<<<<< HEAD
-            <!-- start of firm model -->
-
-    <div class="modal left fade" id="firm" data-backdrop="static" data-keyboard="false" tabindex="-1"
-=======
         <div class="modal left fade" id="firm" data-backdrop="static" data-keyboard="false" tabindex="-1"
               role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
               <div class="modal-dialog">
