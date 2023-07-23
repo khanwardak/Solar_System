@@ -1303,6 +1303,7 @@ function addUnit()
 
             <!-- start of firm model -->
 
+<<<<<<< HEAD
             <div class="modal left fade" id="firm" data-backdrop="static" data-keyboard="false" tabindex="-1"
               role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
               <div class="modal-dialog">
@@ -1397,13 +1398,53 @@ function addUnit()
                   </div>
 
 
+=======
+            <div class="modal left fade" id="firm" data-backdrop="statc" data-keyboard="false" tabindex="-1"
+              role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+
+                  <div class="col">
+                    <div class="modal-body ">
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                      <div class="px-4 py-5">
+                        <form class="row g-3 needs-validation" novalidate style="text-align:right;" method="post">
+                          <div class="col-12">
+                            <label for="yourName" class="form-label">شرکت نوم</label>
+                            <input type="text" name="currency_name" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+                          </div>
+                          <div class="col-12">
+                            <label for="yourName" class="form-label">سمبول</label>
+                            <input type="text" name="currency_sign" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+                          </div>
+                          <div class="text-center mt-5">
+
+                            <button class="btn btn-primary btn-submit" type="submit" name="addFirm">ثبتول</button>
+
+                          </div>
+                        </form>
+
+                      </div>
+                    </div>
+                  </div>
+>>>>>>> f61b6d7fe0692fa4521446b0c9b3767d342509fe
                 </div>
               </div>
             </div>
             <?php
+<<<<<<< HEAD
             if (isset($_POST['addFirm'])) {
               addFirm();
             }
+=======
+            if (isset($_POST['addCurrency'])) {
+              addCurrency();
+            }
+
+>>>>>>> f61b6d7fe0692fa4521446b0c9b3767d342509fe
             ?>
 
 
