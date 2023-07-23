@@ -29,13 +29,8 @@ function recentlly()
             WHERE customers_bys_goods.currency_id = currency.currency_id AND 
             customers_bys_goods.categ_id = category.categ_id AND customers_bys_goods.count_id = country.count_id
             AND person.person_id = customers_bys_goods.person_id  AND
-<<<<<<< HEAD
             company.comp_id = customers_bys_goods.comp_id ORDER BY customers_bys_goods.buy_date DESC LIMIT " . $lint;
   include('DBConnection.php');
-=======
-            company.comp_id = customers_bys_goods.comp_id ORDER BY customers_bys_goods.buy_date DESC LIMIT ".$lint;
-              include('DBConnection.php');
->>>>>>> 3acda78c8f4a15e05eaf9aa2b52d73d0302309c2
   $result = $conn->query($sql);
   if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
@@ -1315,125 +1310,9 @@ function addUnit()
 
         <!-- start of user model -->
 
-<<<<<<< HEAD
             <!-- start of firm model -->
 
     <div class="modal left fade" id="firm" data-backdrop="static" data-keyboard="false" tabindex="-1"
-=======
-        <div class="modal left fade" id="firm" data-backdrop="static" data-keyboard="false" tabindex="-1"
-              role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="col">
-                    <div class="modal-body ">
-                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                      <h5 class="card-title text-center"><span>Add firm</span></h5>
-                      <div class="px-4 py-5">
-                        <form class="row g-3 needs-validation" novalidate style="text-align:right;" method="post">
-                          <div class="col-12">
-                            <label for="yourName" class="form-label">نوم</label>
-                            <input type="text" name="firm_name" class="form-control" id="" required>
-                            <div class="invalid-feedback">Please,bill id!</div>
-                            <label for="yourName" class="form-label">ولایت</label>
-                            <select class="form-control" id="address" name="address" onchange="address(this.value)">
-                              <?php
-                              require_once('DBConnection.php');
-
-                              $sql = "SELECT * FROM `province`";
-                              $result = $conn->query($sql);
-                              if ($result->num_rows > 0) {
-
-                                while ($row = $result->fetch_assoc()) {
-                                  echo '<option value="' . $row["province_id"] . '">' . $row["province_name"] . '</option>';
-                                }
-
-                              }
-
-                              ?>
-                            </select>
-                            <script type="text/javascript">
-                              $(document).ready(function () {
-                                $('#address').on('change', function () {
-                                  var prov_id = $(this).val();
-                                  $.ajax({
-                                    url: 'store.php',
-                                    method: 'POST',
-                                    data: { provID: prov_id },
-                                    dataType: "text",
-                                    success: function (html) {
-                                      $('#district').html(html);
-                                    }
-                                  });
-                                });
-                              });
-                            </script>
-                            <label for="for add" class="form-label">ولسوالی</label>
-                            <select id="district" name="district" class="form-control">
-                              <option value="">ولسوالی</option>
-                            </select>
-                            <label for="yourName" class="form-label">کلی</label>
-                            <input type="text" name="location_name" class="form-control" id="" required>
-                            <div class="invalid-feedback">Please,bill id!</div>
-
-                            <div class="text-center mt-5">
-                              <button class="btn btn-primary btn-submit" type="submit" name="addFirm">ثبتول</button>
-                            </div>
-                          </div>
-                        </form>
-                        <table class="table table-borderless align-middle mb-0 bg-white table-hover mt-2"
-                          style="direction:rtl" class="card">
-                          <thead>
-                            <tr>
-                              <th>د شرکت نوم</th>
-                              <th>عملیات</th>
-
-                            </tr>
-                          </thead>
-                          <tbody>
-
-                            <?php
-                            require_once('DBConnection.php');
-                            $sql = "SELECT * FROM `firm`";
-                            $result = $conn->query($sql);
-                            if ($result->num_rows > 0) {
-                              while ($row = $result->fetch_assoc()) {
-                                echo '   <tr><td>' . $row["firm_name"] . '</td>
-                                    <td><a class="fa fa-edit text-decoration-none" href=""></a>
-
-                                    </td>
-                                     <td><a class="fa fa-trash text-decoration-none" href=""></a></td>
-                                      </tr>
-                                    ';
-                              }
-                            }
-                            ?>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-
-
-                </div>
-              </div>
-            </div>
-            <?php
-            if (isset($_POST['addUsers'])) {
-              addUsers();
-            }
-            ?>
-
-
-
-
-
-        <!-- end of user model -->
-
-
-            <!-- start of firm model -->
-
-        <div class="modal left fade" id="firm" data-backdrop="static" data-keyboard="false" tabindex="-1"
->>>>>>> 3acda78c8f4a15e05eaf9aa2b52d73d0302309c2
               role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
@@ -2017,7 +1896,7 @@ function addUnit()
                         
                         <div class="col-sm-9 col-xs-12 text-right" style=" background: #2980b9;">
                             <div class="btn_group">
-                                <input type="text" class="form-control" placeholder="Search">
+                                <input type="text" class="form-control" placeholder="Search"id="recentTableSearch">
                                 <button class="btn btn-default" title="Reload"><i class="fa fa-refresh"></i></button>
                                 <!-- <button class="btn btn-default" title="Pdf"><i class="fa fa-file-pdf"></i></button>
                                 <button class="btn btn-default" title="Excel"><i class="fas fa-file-excel"></i></button> -->
@@ -2026,7 +1905,7 @@ function addUnit()
                     </div>
                 </div>
                 <div class="panel-body table-responsive">
-                    <table class="table">
+                    <table class="table" id="recentlySellItemsTable>
                         <thead>
                         <tr class="">
 
@@ -2038,7 +1917,7 @@ function addUnit()
                             <th>عملیات</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="ttbody">
                             <tr>
                             <?php recentlly(); ?>
 
@@ -2072,6 +1951,32 @@ function addUnit()
         </div>
     </div>
 
+    <!-- live sarch on recentlly sell items table -->
+    <script>
+      $(document).ready(function() {
+  $('#recentTableSearch').keyup(function() {
+    var searchTerm = $(this).val();
+
+    // Make an AJAX call to recentlly sell items passing the search term as a GET parameter
+    $.ajax({
+      url: 'recentllySellItems.php',
+      type: 'GET',
+      data: { search_term: searchTerm },
+      dataType: 'html',
+      success: function(data) {
+        $('#ttbody').empty();
+        // Replace the table body with the new data
+        $('#ttbody').append(data);
+          
+      },
+      error: function(xhr, status, error) {
+        console.log("Error:", error);
+      }
+    });
+  });
+});
+
+    </script>
           
 
               <!-- ================================================================================================================================================chart start here -->
