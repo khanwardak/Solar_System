@@ -20,27 +20,17 @@ function recentlly()
   $lint = 1;
   if (isset($_GET['view'])) {
     $lint = $_GET['view'];
-   
-    
+
+
   }
   $sql = "SELECT category.categ_name, country.count_name,customers_bys_goods.buy_date, company.comp_name, customers_bys_goods.price, currency.currency_name, 
-<<<<<<< HEAD
             unit.unit_name, customers_bys_goods.unit_amount, person.person_name FROM customers_bys_goods, 
             currency, category, country, unit, person, company
             WHERE customers_bys_goods.currency_id = currency.currency_id AND 
             customers_bys_goods.categ_id = category.categ_id AND customers_bys_goods.count_id = country.count_id
             AND person.person_id = customers_bys_goods.person_id  AND
-            company.comp_id = customers_bys_goods.comp_id ORDER BY customers_bys_goods.buy_date DESC LIMIT ".$lint;
-              include('DBConnection.php');
-=======
-unit.unit_name, customers_bys_goods.unit_amount, person.person_name FROM customers_bys_goods, 
-currency, category, country, unit, person, company
- WHERE customers_bys_goods.currency_id = currency.currency_id AND 
-customers_bys_goods.categ_id = category.categ_id AND customers_bys_goods.count_id = country.count_id
- AND person.person_id = customers_bys_goods.person_id AND customers_bys_goods.unit_id = unit.unit_id AND
- company.comp_id = customers_bys_goods.comp_id ORDER BY customers_bys_goods.buy_date DESC LIMIT 1;";
+            company.comp_id = customers_bys_goods.comp_id ORDER BY customers_bys_goods.buy_date DESC LIMIT " . $lint;
   include('DBConnection.php');
->>>>>>> d88f3396061ac39d253e3b15174b604525a6d2bd
   $result = $conn->query($sql);
   if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
@@ -50,8 +40,13 @@ customers_bys_goods.categ_id = category.categ_id AND customers_bys_goods.count_i
 
                      <td> ' . $row["price"] . '</td>
                      <td>' . $row["buy_date"] . '</td>
-                     <td><a href="admin.php?customer=' . $row["person_name"] . '">' . $row["person_name"] . '</a></td>
-
+                     <td><a href="admin.php?customer=' . $row["person_name"] . '"style="color:#fff" >' . $row["person_name"] . '</a></td>
+                     <td>
+                     <ul class="action-list" style="color:#fff">
+                         <li><a href="#" data-tip="edit"><i class="fa fa-edit"></i></a></li>
+                         <li><a href="#" data-tip="delete"><i class="fa fa-trash"></i></a></li>
+                     </ul>
+                 </td>
                  </tr>';
     }
   }
@@ -183,43 +178,44 @@ function addco()
 }
 
 // start of addingform function
-function addFirm(){
+function addFirm()
+{
 
   try {
-        include('DBConnection.php');
-        $location = $_POST['location_name'];
-        $dist = $_POST['district'];
-        $province = $_POST['address'];
-        $sql2 = "INSERT INTO `address` (`adress_vilage`, `address_province`, `address_district`) VALUES ( '$location', '$province', '$dist');";
-        if (!$conn->query($sql2)) {
-          echo "opps!";
-        }
+    include('DBConnection.php');
+    $location = $_POST['location_name'];
+    $dist = $_POST['district'];
+    $province = $_POST['address'];
+    $sql2 = "INSERT INTO `address` (`adress_vilage`, `address_province`, `address_district`) VALUES ( '$location', '$province', '$dist');";
+    if (!$conn->query($sql2)) {
+      echo "opps!";
+    }
 
-        $sql = "SELECT * FROM `address` ORDER BY address_id desc limit 1";
-        $id = $conn->query($sql);
-        $addres = "";
-        while ($row = $id->fetch_assoc()) {
-          $addres = $row["address_id"];
-        }
-        $store_name = $_POST['firm_name'];
-        //$store_address = $_POST['store_address'];
-        $sqlfirm = "INSERT INTO `firm` (`firm_id`, `firm_name`, `address_id`) VALUES (NULL, '$store_name', '$addres');";
-        if ($conn->query($sqlfirm)) {
-    
-          $conn->query($sqlfirm);
-          echo ' <script LANGUAGE="JavaScript">
+    $sql = "SELECT * FROM `address` ORDER BY address_id desc limit 1";
+    $id = $conn->query($sql);
+    $addres = "";
+    while ($row = $id->fetch_assoc()) {
+      $addres = $row["address_id"];
+    }
+    $store_name = $_POST['firm_name'];
+    //$store_address = $_POST['store_address'];
+    $sqlfirm = "INSERT INTO `firm` (`firm_id`, `firm_name`, `address_id`) VALUES (NULL, '$store_name', '$addres');";
+    if ($conn->query($sqlfirm)) {
+
+      $conn->query($sqlfirm);
+      echo ' <script LANGUAGE="JavaScript">
                      swal("په بریالی توګه !", "د شرکت معلومات اضافه شول!", "success");
     
                    </script>;';
-        } else {
-          echo ' ("<script LANGUAGE="JavaScript">
+    } else {
+      echo ' ("<script LANGUAGE="JavaScript">
                          window.alert("Opps");
     
                        </script>");';
-        }
-}catch(Exception $e){
- echo "error in adding firm ".$e;
-}
+    }
+  } catch (Exception $e) {
+    echo "error in adding firm " . $e;
+  }
 }
 
 
@@ -388,7 +384,7 @@ function addUnit()
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Admin</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
-  <link rel="stylesheet" type="text/css" href="admin.css?verssion=4">
+  <link rel="stylesheet" type="text/css" href="admin.css?verssion=5">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.32/dist/sweetalert2.all.min.js"></script>
@@ -488,14 +484,14 @@ function addUnit()
             </div><!-- End Revenue Card -->
 
             <div class="col-xxl-4 col-md-4 " style="direction: rtl; text-align: right;">
-              <div class="card info-card sales-card ss">
+              <div class="card info-card sales-card ss" style="background-color:#4154f1">
 
 
                 <div class="filter" style="direction: rtl; text-align: right; background-color:;">
                   <a class="dropdown-item" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
                   <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow uu">
                     <li class="dropdown-header text-start">
-                      <h6>پلټنه</h6>
+                      <h6 style="color:#fff">پلټنه</h6>
                     </li>
 
                     <li><a class="dropdown-item" href="#">نن</a></li>
@@ -505,16 +501,16 @@ function addUnit()
                 </div>
 
                 <div class="card-body" style="direction:rtl; background-color:;">
-                  <h5 class="card-title">خرڅ شوی <span>| نن</span></h5>
+                  <h5 class="card-title" style="color:#fff">خرڅ شوی <span style="color:#fff">| نن</span></h5>
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                       <i class="bi bi-cart"></i>
                     </div>
-                    <div class="ps-3">
-                      <h6>145</h6>
-                      <span class="text-success small pt-1 fw-bold">12%</span> <span
-                        class="text-muted small pt-2 ps-1">ریات شوی</span>
+                    <div class="ps-3" style="color:#fff">
+                      <h6 style="color:#fff">145</h6>
+                      <span class=" small pt-1 fw-bold" style="color:#fff">12%</span> <span
+                        class="small pt-2 ps-1" style="color:#fff">ریات شوی</span>
 
                     </div>
                   </div>
@@ -525,7 +521,7 @@ function addUnit()
             <!-- Customers Card -->
             <div class="col-xxl-4 col-md-4" style="direction:rtl; text-align: right;">
 
-              <div class="card info-card customers-card">
+              <div class="card info-card customers-card" style="background-color: #3289a8">
 
                 <div class="filter">
                   <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
@@ -548,7 +544,7 @@ function addUnit()
                 </div>
 
                 <div class="card-body">
-                  <h5 class="card-title">مشتریان <span>| کال</span></h5>
+                  <h5 class="card-title" style="color:#fff">مشتریان <span style="color:#fff">| کال</span></h5>
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -565,7 +561,7 @@ function addUnit()
                         if ($result->num_rows > 0) {
 
                           $row = $result->fetch_assoc();
-                          echo '<h6>' . $row['NumberOfcustomer'] . '</h6>';
+                          echo '<h6 style="color:#fff">' . $row['NumberOfcustomer'] . '</h6>';
                         }
 
                       } catch (Exception $e) {
@@ -573,7 +569,7 @@ function addUnit()
                       ?>
 
                       <span class="text-danger small pt-1 fw-bold">12%</span> <span
-                        class="text-muted small pt-2 ps-1">ریات شوی</span>
+                        class="small pt-2 ps-1" style="color:#fff">ریات شوی</span>
 
                     </div>
                   </div>
@@ -1315,8 +1311,7 @@ function addUnit()
 
             <!-- start of firm model -->
 
-<<<<<<< HEAD
-            <div class="modal left fade" id="firm" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    <div class="modal left fade" id="firm" data-backdrop="static" data-keyboard="false" tabindex="-1"
               role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
@@ -1410,53 +1405,13 @@ function addUnit()
                   </div>
 
 
-=======
-            <div class="modal left fade" id="firm" data-backdrop="statc" data-keyboard="false" tabindex="-1"
-              role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-
-                  <div class="col">
-                    <div class="modal-body ">
-                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-
-                      <div class="px-4 py-5">
-                        <form class="row g-3 needs-validation" novalidate style="text-align:right;" method="post">
-                          <div class="col-12">
-                            <label for="yourName" class="form-label">شرکت نوم</label>
-                            <input type="text" name="currency_name" class="form-control" id="" required>
-                            <div class="invalid-feedback">Please,bill id!</div>
-                          </div>
-                          <div class="col-12">
-                            <label for="yourName" class="form-label">سمبول</label>
-                            <input type="text" name="currency_sign" class="form-control" id="" required>
-                            <div class="invalid-feedback">Please,bill id!</div>
-                          </div>
-                          <div class="text-center mt-5">
-
-                            <button class="btn btn-primary btn-submit" type="submit" name="addFirm">ثبتول</button>
-
-                          </div>
-                        </form>
-
-                      </div>
-                    </div>
-                  </div>
->>>>>>> f61b6d7fe0692fa4521446b0c9b3767d342509fe
                 </div>
               </div>
             </div>
             <?php
-<<<<<<< HEAD
             if (isset($_POST['addFirm'])) {
               addFirm();
             }
-=======
-            if (isset($_POST['addCurrency'])) {
-              addCurrency();
-            }
-
->>>>>>> f61b6d7fe0692fa4521446b0c9b3767d342509fe
             ?>
 
 
@@ -1907,10 +1862,11 @@ function addUnit()
 
                   </tbody>
                 </table>
+
               </div>
               <div class="col-lg-6 card" style="direction:rtl; text-align: right;">
                 <h5 class="card-title">وروستی خرڅ شوی مخصولات<span>| نن</span></h5>
-                <table class="table table-bordered border-primary ">
+                <!-- <table class="table table-bordered border-primary ">
                   <thead class="overflow-auto h-100">
                     <tr class="">
 
@@ -1919,17 +1875,82 @@ function addUnit()
                       <th>د خرځ بیه</th>
                       <th>تاریخ</th>
                       <th>دمشتری آیدی</th>
+                      <th>عملیات</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <?php recentlly(); ?>
+                     <?php// recentlly(); ?>
 
 
                     </tr>
                   </tbody>
-                </table>
-              </div>
+                </table> -->
+                
+   
+       
+            <div class="panel">
+                <div class="panel-heading">
+                    <div class="row" style=" background: ;">
+                        
+                        <div class="col-sm-9 col-xs-12 text-right" style=" background: #2980b9;">
+                            <div class="btn_group">
+                                <input type="text" class="form-control" placeholder="Search">
+                                <button class="btn btn-default" title="Reload"><i class="fa fa-refresh"></i></button>
+                                <!-- <button class="btn btn-default" title="Pdf"><i class="fa fa-file-pdf"></i></button>
+                                <button class="btn btn-default" title="Excel"><i class="fas fa-file-excel"></i></button> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr class="">
+
+                            <th>نوم</th>
+
+                            <th>د خرځ بیه</th>
+                            <th>تاریخ</th>
+                            <th>دمشتری آیدی</th>
+                            <th>عملیات</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                            <?php recentlly(); ?>
+
+
+                            </tr>
+                              
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                   
+                        
+                        <!-- <div class="col-sm-6 col-xs-6" style="background-color:#2980b9">
+                            <ul class="pagination hidden-xs pull-right">
+                                <li><a href="#"><</a></li>
+                                <li class="active"><a href="#">1</a></li>
+                                <li><a href="#">2</a></li>
+                                <li><a href="#">3</a></li>
+                                <li><a href="#">4</a></li>
+                                <li><a href="#">5</a></li>
+                                <li><a href="#">></a></li>
+                            </ul>
+                            <ul class="pagination visible-xs pull-right">
+                                <li><a href="#"><</a></li>
+                                <li><a href="#">></a></li>
+                            </ul>
+                       
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+          
 
               <!-- ================================================================================================================================================chart start here -->
               <div class="col-lg-6 card">
@@ -2247,28 +2268,27 @@ function addUnit()
                 <label class="custom-control-label" for="size-all">ټول مخصولات</label>
                 <span class="badge border font-weight-normal" style="color:black;">1000</span>
               </div>
-              <?php 
-                try{
-                    include('DBConnection.php');
-                    $sql ="SELECT SUM(goods.goods_qunatity) as quantity, category.categ_name FROM goods,category WHERE goods.categ_id = category.categ_id GROUP bY category.categ_name";
-                    $result = $conn->query($sql);
-                    if($result->num_rows>0){
-                      while($row = $result->fetch_assoc()){
-                        echo '
+              <?php
+              try {
+                include('DBConnection.php');
+                $sql = "SELECT SUM(goods.goods_qunatity) as quantity, category.categ_name FROM goods,category WHERE goods.categ_id = category.categ_id GROUP bY category.categ_name";
+                $result = $conn->query($sql);
+                if ($result->num_rows > 0) {
+                  while ($row = $result->fetch_assoc()) {
+                    echo '
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <input type="checkbox" class="custom-control-input" id="size-1">
-                        <label class="custom-control-label" for="size-1">'.$row["categ_name"].'</label>
-                        <span class="badge border font-weight-normal" style="color:black;">'.$row["quantity"].'</span>
+                        <label class="custom-control-label" for="size-1">' . $row["categ_name"] . '</label>
+                        <span class="badge border font-weight-normal" style="color:black;">' . $row["quantity"] . '</span>
                       </div>
                         ';
-                      }
-                    }
-                    else{
-                      echo "No data found";
-                    }
-                }catch(Exception $e){
-                  echo $e."some things wrong search by category";
+                  }
+                } else {
+                  echo "No data found";
                 }
+              } catch (Exception $e) {
+                echo $e . "some things wrong search by category";
+              }
 
               ?>
             </form>
