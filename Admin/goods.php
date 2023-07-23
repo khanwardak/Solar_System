@@ -1,4 +1,13 @@
 <?php
+session_start();
+include('DBConnection.php');
+
+if (!isset($_SESSION['login_user']) && $_SESSION['login_user']['role'] != 2) {
+  header("Location: Login.php");
+  exit;
+}
+?>
+<?php
 
 function addproduct()
 {
@@ -150,18 +159,13 @@ function addproduct()
 
                 <tr class="">
 
-                  <th>نمبر</th>
-                  <th>د محصول نوم</th>
-                  <th>جزیات</th>
-                  <th>د اخستلو بیه</th>
-                  <th>تاریخ</th>
-                  <th>مقدار</th>
+                  
                   <th>ګټګوری</th>
                   <th>کمپنی</th>
                   <th> هیواد</th>
                   <th>پولی واحد</th>
                   <th>یونېټ</th>
-                  <th>عملیات</th>
+                  <th>اندازه</th>
                 </tr>
 
               </thead>
