@@ -24,6 +24,7 @@ function recentlly()
     
   }
   $sql = "SELECT category.categ_name, country.count_name,customers_bys_goods.buy_date, company.comp_name, customers_bys_goods.price, currency.currency_name, 
+<<<<<<< HEAD
             unit.unit_name, customers_bys_goods.unit_amount, person.person_name FROM customers_bys_goods, 
             currency, category, country, unit, person, company
             WHERE customers_bys_goods.currency_id = currency.currency_id AND 
@@ -31,6 +32,15 @@ function recentlly()
             AND person.person_id = customers_bys_goods.person_id  AND
             company.comp_id = customers_bys_goods.comp_id ORDER BY customers_bys_goods.buy_date DESC LIMIT ".$lint;
               include('DBConnection.php');
+=======
+unit.unit_name, customers_bys_goods.unit_amount, person.person_name FROM customers_bys_goods, 
+currency, category, country, unit, person, company
+ WHERE customers_bys_goods.currency_id = currency.currency_id AND 
+customers_bys_goods.categ_id = category.categ_id AND customers_bys_goods.count_id = country.count_id
+ AND person.person_id = customers_bys_goods.person_id AND customers_bys_goods.unit_id = unit.unit_id AND
+ company.comp_id = customers_bys_goods.comp_id ORDER BY customers_bys_goods.buy_date DESC LIMIT 1;";
+  include('DBConnection.php');
+>>>>>>> d88f3396061ac39d253e3b15174b604525a6d2bd
   $result = $conn->query($sql);
   if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
@@ -171,6 +181,51 @@ function addco()
   }
 
 }
+
+// start of addingform function
+function addFirm(){
+
+  try {
+        include('DBConnection.php');
+        $location = $_POST['location_name'];
+        $dist = $_POST['district'];
+        $province = $_POST['address'];
+        $sql2 = "INSERT INTO `address` (`adress_vilage`, `address_province`, `address_district`) VALUES ( '$location', '$province', '$dist');";
+        if (!$conn->query($sql2)) {
+          echo "opps!";
+        }
+
+        $sql = "SELECT * FROM `address` ORDER BY address_id desc limit 1";
+        $id = $conn->query($sql);
+        $addres = "";
+        while ($row = $id->fetch_assoc()) {
+          $addres = $row["address_id"];
+        }
+        $store_name = $_POST['firm_name'];
+        //$store_address = $_POST['store_address'];
+        $sqlfirm = "INSERT INTO `firm` (`firm_id`, `firm_name`, `address_id`) VALUES (NULL, '$store_name', '$addres');";
+        if ($conn->query($sqlfirm)) {
+    
+          $conn->query($sqlfirm);
+          echo ' <script LANGUAGE="JavaScript">
+                     swal("په بریالی توګه !", "د شرکت معلومات اضافه شول!", "success");
+    
+                   </script>;';
+        } else {
+          echo ' ("<script LANGUAGE="JavaScript">
+                         window.alert("Opps");
+    
+                       </script>");';
+        }
+}catch(Exception $e){
+ echo "error in adding firm ".$e;
+}
+}
+
+
+
+
+// end of addingform function
 // add countery
 function addcounter()
 {
@@ -1260,6 +1315,102 @@ function addUnit()
 
             <!-- start of firm model -->
 
+<<<<<<< HEAD
+            <div class="modal left fade" id="firm" data-backdrop="static" data-keyboard="false" tabindex="-1"
+              role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="col">
+                    <div class="modal-body ">
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                      <h5 class="card-title text-center"><span>Add firm</span></h5>
+                      <div class="px-4 py-5">
+                        <form class="row g-3 needs-validation" novalidate style="text-align:right;" method="post">
+                          <div class="col-12">
+                            <label for="yourName" class="form-label">نوم</label>
+                            <input type="text" name="firm_name" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+                            <label for="yourName" class="form-label">ولایت</label>
+                            <select class="form-control" id="address" name="address" onchange="address(this.value)">
+                              <?php
+                              require_once('DBConnection.php');
+
+                              $sql = "SELECT * FROM `province`";
+                              $result = $conn->query($sql);
+                              if ($result->num_rows > 0) {
+
+                                while ($row = $result->fetch_assoc()) {
+                                  echo '<option value="' . $row["province_id"] . '">' . $row["province_name"] . '</option>';
+                                }
+
+                              }
+
+                              ?>
+                            </select>
+                            <script type="text/javascript">
+                              $(document).ready(function () {
+                                $('#address').on('change', function () {
+                                  var prov_id = $(this).val();
+                                  $.ajax({
+                                    url: 'store.php',
+                                    method: 'POST',
+                                    data: { provID: prov_id },
+                                    dataType: "text",
+                                    success: function (html) {
+                                      $('#district').html(html);
+                                    }
+                                  });
+                                });
+                              });
+                            </script>
+                            <label for="for add" class="form-label">ولسوالی</label>
+                            <select id="district" name="district" class="form-control">
+                              <option value="">ولسوالی</option>
+                            </select>
+                            <label for="yourName" class="form-label">کلی</label>
+                            <input type="text" name="location_name" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+
+                            <div class="text-center mt-5">
+                              <button class="btn btn-primary btn-submit" type="submit" name="addFirm">ثبتول</button>
+                            </div>
+                          </div>
+                        </form>
+                        <table class="table table-borderless align-middle mb-0 bg-white table-hover mt-2"
+                          style="direction:rtl" class="card">
+                          <thead>
+                            <tr>
+                              <th>د شرکت نوم</th>
+                              <th>عملیات</th>
+
+                            </tr>
+                          </thead>
+                          <tbody>
+
+                            <?php
+                            require_once('DBConnection.php');
+                            $sql = "SELECT * FROM `firm`";
+                            $result = $conn->query($sql);
+                            if ($result->num_rows > 0) {
+                              while ($row = $result->fetch_assoc()) {
+                                echo '   <tr><td>' . $row["firm_name"] . '</td>
+                                    <td><a class="fa fa-edit text-decoration-none" href=""></a>
+
+                                    </td>
+                                     <td><a class="fa fa-trash text-decoration-none" href=""></a></td>
+                                      </tr>
+                                    ';
+                              }
+                            }
+                            ?>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+
+
+=======
             <div class="modal left fade" id="firm" data-backdrop="statc" data-keyboard="false" tabindex="-1"
               role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
               <div class="modal-dialog">
@@ -1291,14 +1442,21 @@ function addUnit()
                       </div>
                     </div>
                   </div>
+>>>>>>> f61b6d7fe0692fa4521446b0c9b3767d342509fe
                 </div>
               </div>
             </div>
             <?php
+<<<<<<< HEAD
+            if (isset($_POST['addFirm'])) {
+              addFirm();
+            }
+=======
             if (isset($_POST['addCurrency'])) {
               addCurrency();
             }
 
+>>>>>>> f61b6d7fe0692fa4521446b0c9b3767d342509fe
             ?>
 
 
