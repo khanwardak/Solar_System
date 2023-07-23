@@ -20,15 +20,17 @@ function recentlly()
   $lint = 1;
   if (isset($_GET['view'])) {
     $lint = $_GET['view'];
+   
+    
   }
   $sql = "SELECT category.categ_name, country.count_name,customers_bys_goods.buy_date, company.comp_name, customers_bys_goods.price, currency.currency_name, 
-unit.unit_name, customers_bys_goods.unit_amount, person.person_name FROM customers_bys_goods, 
-currency, category, country, unit, person, company
- WHERE customers_bys_goods.currency_id = currency.currency_id AND 
-customers_bys_goods.categ_id = category.categ_id AND customers_bys_goods.count_id = country.count_id
- AND person.person_id = customers_bys_goods.person_id  AND
- company.comp_id = customers_bys_goods.comp_id ORDER BY customers_bys_goods.buy_date DESC LIMIT 1;";
-  include('DBConnection.php');
+            unit.unit_name, customers_bys_goods.unit_amount, person.person_name FROM customers_bys_goods, 
+            currency, category, country, unit, person, company
+            WHERE customers_bys_goods.currency_id = currency.currency_id AND 
+            customers_bys_goods.categ_id = category.categ_id AND customers_bys_goods.count_id = country.count_id
+            AND person.person_id = customers_bys_goods.person_id  AND
+            company.comp_id = customers_bys_goods.comp_id ORDER BY customers_bys_goods.buy_date DESC LIMIT ".$lint;
+              include('DBConnection.php');
   $result = $conn->query($sql);
   if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
@@ -331,7 +333,7 @@ function addUnit()
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Admin</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
-  <link rel="stylesheet" type="text/css" href="admin.css?verssion=3">
+  <link rel="stylesheet" type="text/css" href="admin.css?verssion=4">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.32/dist/sweetalert2.all.min.js"></script>
@@ -395,8 +397,8 @@ function addUnit()
 
         <div class="bg-light border rounded-3 p-3">
           <div class="row">
-            <div class="col-xxl-4 col-md-4" style="direction:rtl; text-align: right;">
-              <div class="card info-card revenue-card" style="background-color: ">
+            <div class="col-xxl-4 col-md-4" style="direction:rtl; text-align: right; background-color: ">
+              <div class="card info-card revenue-card" style="background-color:089f6d;">
 
                 <div class="filter">
                   <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
@@ -412,16 +414,16 @@ function addUnit()
                 </div>
 
                 <div class="card-body">
-                  <h5 class="card-title">ګټه <span>| میاشت</span></h5>
+                  <h5 class="card-title" style="color:#fff">ګټه <span>| میاشت</span></h5>
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                       <i class="bi bi-currency-dollar"></i>
                     </div>
-                    <div class="ps-3">
-                      <h6>$3,264</h6>
-                      <span class="text-success small pt-1 fw-bold">8%</span> <span
-                        class="text-muted small pt-2 ps-1">کمه شوی</span>
+                    <div class="ps-3" style="color:#fff">
+                      <h6 style="color:#fff">$3,264</h6>
+                      <span class="text-success small pt-1 fw-bold" style="color:#fff">8%</span> <span
+                        class="text-muted small pt-2 ps-1" style="color:#fff">کمه شوی</span>
 
                     </div>
                   </div>
@@ -1063,12 +1065,12 @@ function addUnit()
                                               //   $result = $conn->query($sql2);
                                               //   $userid = "";
                                               //   $goods_id = "";
-
+                                              
                                               //   while ($row = $result->fetch_assoc()) {
                                               //     $userid = $row["person_id"];
                                               //     $goods_id = $row["goods_id"];
                                               //   }
-
+                                              
                                               //   $sql = "SELECT bill.bill_id, customer.customer_name,bill.quantity, goods.unit_id, goods.goods_name AS product, bill.price AS فی, bill.price*bill.quantity AS total, customer_buy_goods.currency_id,customer_buy_goods.buy_date FROM bill,customer,goods,customer_buy_goods WHERE customer.customer_id=$userid and goods.goods_id =$goods_id  ORDER by bill.bill_id DESC LIMIT 1;";
                                               //   $result = $conn->query($sql);
                                               //   if ($result->num_rows > 0) {
@@ -1079,7 +1081,7 @@ function addUnit()
                                               //       $quantity = mb_convert_encoding($row["quantity"], 'UTF-8');
                                               //       $price = mb_convert_encoding($row["فی"], 'UTF-8');
                                               //       $total = mb_convert_encoding($row["total"], 'UTF-8');
-
+                                              
 
                                               //       // Encode the data as JSON
                                               //       // $jsonData = json_encode($data);
@@ -1123,17 +1125,17 @@ function addUnit()
                                               //                 <td>' . $row["فی"] . '</td>
                                               //                 <td>10</td>
                                               //               </tr>
-
+                                              
                                               //             </tbody> ';
                                               //     }
                                               //   } else {
                                               //     echo "No data found!!";
                                               //   }
-
+                                              
                                               // } catch (Exception $e) {
                                               //   $e->getMessage();
                                               // }
-
+                                              
                                               ?>
 
                                             </table>
@@ -1569,7 +1571,7 @@ function addUnit()
                             //   while ($row = $result->fetch_assoc()) {
                             //     echo '   <tr><td>' . $row["store_name"] . '</td>
                             //         <td><a class="fa fa-edit text-decoration-none" href=""></a>
-
+                            
                             //         </td>
                             //          <td><a class="fa fa-trash text-decoration-none" href=""></a></td>
                             //           </tr>
@@ -1823,8 +1825,7 @@ function addUnit()
                       $data[] = $value["sum(customers_bys_goods.quantity)"];
                       $cate_name[] = $value["categ_name"];
                     }
-                  }
-                  else{
+                  } else {
                     echo "no data found";
                   }
                 } catch (Exception $e) {
@@ -2088,31 +2089,30 @@ function addUnit()
                 <label class="custom-control-label" for="size-all">ټول مخصولات</label>
                 <span class="badge border font-weight-normal" style="color:black;">1000</span>
               </div>
-              <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                <input type="checkbox" class="custom-control-input" id="size-1">
-                <label class="custom-control-label" for="size-1">بطری</label>
-                <span class="badge border font-weight-normal" style="color:black;">444</span>
-              </div>
-              <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                <input type="checkbox" class="custom-control-input" id="size-2">
-                <label class="custom-control-label" for="size-2">سنبر سیبل</label>
-                <span class="badge border font-weight-normal" style="color:black;">295</span>
-              </div>
-              <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                <input type="checkbox" class="custom-control-input" id="size-3">
-                <label class="custom-control-label" for="size-3">شمسی</label>
-                <span class="badge border font-weight-normal" style="color:black;">246</span>
-              </div>
-              <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                <input type="checkbox" class="custom-control-input" id="size-4">
-                <label class="custom-control-label" for="size-4">مولد</label>
-                <span class="badge border font-weight-normal" style="color:black;">145</span>
-              </div>
-              <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                <input type="checkbox" class="custom-control-input" id="size-5">
-                <label class="custom-control-label" for="size-5">واټر پمپ</label>
-                <span class="badge border font-weight-normal" style="color:black;">168</span>
-              </div>
+              <?php 
+                try{
+                    include('DBConnection.php');
+                    $sql ="SELECT SUM(goods.goods_qunatity) as quantity, category.categ_name FROM goods,category WHERE goods.categ_id = category.categ_id GROUP bY category.categ_name";
+                    $result = $conn->query($sql);
+                    if($result->num_rows>0){
+                      while($row = $result->fetch_assoc()){
+                        echo '
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                        <input type="checkbox" class="custom-control-input" id="size-1">
+                        <label class="custom-control-label" for="size-1">'.$row["categ_name"].'</label>
+                        <span class="badge border font-weight-normal" style="color:black;">'.$row["quantity"].'</span>
+                      </div>
+                        ';
+                      }
+                    }
+                    else{
+                      echo "No data found";
+                    }
+                }catch(Exception $e){
+                  echo $e."some things wrong search by category";
+                }
+
+              ?>
             </form>
           </div>
           <!-- category -->

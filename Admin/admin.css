@@ -17,12 +17,12 @@ main {
 }
 
 .row [class*='col'] {
-    background-color: #f6f9ff;
+    background-color: #eff1f4;
     background-clip: content-box;
 }
 
 .nav-item {
-    background-color:  #eef;
+    background-color:  rgb(61, 61, 173);
     background-clip: content-box;
 }
 .modal-body form input{
@@ -38,6 +38,7 @@ main {
 
 .table thead th {
   border: 1;
+  color: black;
 }
 
 .table tbody td {
@@ -110,6 +111,7 @@ main {
   position: absolute;
   right: 0px;
   top: 15px;
+  color:white;
 }
 
 .filter .icon {
@@ -134,7 +136,7 @@ main {
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 1px;
-  color: #aab7cf;
+  color: #d8dfec;
   margin-bottom: 0;
   padding: 0;
 }
@@ -150,18 +152,19 @@ main {
 
 .info-card h6 {
   font-size: 28px;
-  color: #012970;
+  color: #089f6d;
   font-weight: 700;
   margin: 0;
   padding: 0;
 }
 .revenue-card .card-icon {
-  color: #2eca6a;
-  background: #e0f8e9;
+  color: #2b322b;
+  background: #ffffff;
 }
 .customers-card .card-icon {
   color: #ff771d;
   background: #ffecdf;
+  
 }
 body {
   font-family: "Open Sans", sans-serif;
@@ -238,6 +241,7 @@ color: #ffffff;
 #billedcustoemr, p{
   
   color: blue;
+ 
 }
 
 #billedcustoemr, table td,

@@ -133,8 +133,8 @@ function addproduct()
             <div class="btn-group  d-flex justify-content-center">
               <button type="button" class="btn btn-sm  dropdown-toggle" data-toggle="dropdown">ترتیبول</button>
               <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item" href="#">وروستی مخصولات</a>
-                <a class="dropdown-item" href="#">نوی مخصولات </a>
+                <a class="dropdown-item" href="#">وروستی محصولات</a>
+                <a class="dropdown-item" href="#">نوی محصولات </a>
                 <a class="dropdown-item" href="#">تحفیف شوی محصولات</a>
               </div>
             </div>
@@ -246,12 +246,12 @@ function addproduct()
                         <?php
 
                         include('DBConnection.php');
-                        $sql = "SELECT * FROM `category`";
-                        $result = $conn->query($sql);
-                        if ($result->num_rows > 0) {
+                        $sqlcate = "SELECT * FROM `category`";
+                        $resultCate = $conn->query($sqlcate);
+                        if ($resultCate->num_rows > 0) {
 
-                          while ($row = $result->fetch_assoc()) {
-                            echo '<option value="' . $row["categ_id"] . '">' . $row["categ_name"] . '</option>';
+                          while ($row1 = $resultCate->fetch_assoc()) {
+                            echo '<option value="' . $row1["categ_id"] . '">' . $row1["categ_name"] . '</option>';
                           }
 
                         } else
@@ -336,7 +336,7 @@ function addproduct()
 
 
                     <div class="input-group mt-2">
-                      <input type="text" class="form-control" required placeholder="" name="sold_quantity">
+                      <input type="text" class="form-control" required placeholder="" name="soldd_quantity">
                       <span class="input-group-text">مقدار </span>
                     </div>
 
@@ -412,7 +412,7 @@ function addproduct()
               </div>
 
               <div class="modal-footer">
-                <button type="submit" class="btn btn-danger soldandbuy " name="close" id="soldandbuy">بندول</button>
+                <button type="submit" class="btn btn-danger  " name="close" id="soldandbuy">بندول</button>
               </div>
 
             </div>
@@ -455,7 +455,7 @@ function addproduct()
 
               <!-- Modal Header -->
               <div class="modal-header" style="text-align: right;">
-                <h4 class="modal-title text-center w-100 ">ْنوی محلول اضافه کړی</h4>
+                <h4 class="modal-title text-center w-100 ">نوی محصول اضافه کړئ!</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
               </div>
 
@@ -506,24 +506,7 @@ function addproduct()
                       <span class="input-group-text">پولی واحد</span>
                     </div>
                     <div class="input-group mt-2">
-                      <select class="form-select form-control " required name="category_id">
-                        <?php
-
-                        include('DBConnection.php');
-                        $sql = "SELECT * FROM `category`";
-                        $result = $conn->query($sql);
-                        if ($result->num_rows > 0) {
-
-                          while ($row = $result->fetch_assoc()) {
-                            echo '<option value="' . $row["categ_id"] . '">' . $row["categ_name"] . '</option>';
-                          }
-
-                        } else
-                          "no record found";
-
-                        ?>
-
-                      </select>
+                     
                       <span class="input-group-text">کټګوری</span>
                     </div>
 
@@ -700,31 +683,31 @@ function addproduct()
                 <label class="custom-control-label" for="size-all">ټول مخصولات</label>
                 <span class="badge border font-weight-normal" style="color:black;">1000</span>
               </div>
-              <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                <input type="checkbox" class="custom-control-input" id="size-1">
-                <label class="custom-control-label" for="size-1">بطری</label>
-                <span class="badge border font-weight-normal" style="color:black;">444</span>
-              </div>
-              <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                <input type="checkbox" class="custom-control-input" id="size-2">
-                <label class="custom-control-label" for="size-2">سنبر سیبل</label>
-                <span class="badge border font-weight-normal" style="color:black;">295</span>
-              </div>
-              <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                <input type="checkbox" class="custom-control-input" id="size-3">
-                <label class="custom-control-label" for="size-3">شمسی</label>
-                <span class="badge border font-weight-normal" style="color:black;">246</span>
-              </div>
-              <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                <input type="checkbox" class="custom-control-input" id="size-4">
-                <label class="custom-control-label" for="size-4">مولد</label>
-                <span class="badge border font-weight-normal" style="color:black;">145</span>
-              </div>
-              <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                <input type="checkbox" class="custom-control-input" id="size-5">
-                <label class="custom-control-label" for="size-5">واټر پمپ</label>
-                <span class="badge border font-weight-normal" style="color:black;">168</span>
-              </div>
+              <?php 
+                try{
+                    include('DBConnection.php');
+                    $sql ="SELECT SUM(goods.goods_qunatity) as quantity, category.categ_name FROM goods,category WHERE goods.categ_id = category.categ_id GROUP bY category.categ_name";
+                    $result = $conn->query($sql);
+                    if($result->num_rows>0){
+                      while($row = $result->fetch_assoc()){
+                        echo '
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                        <input type="checkbox" class="custom-control-input" id="size-1">
+                        <label class="custom-control-label" for="size-1">'.$row["categ_name"].'</label>
+                        <span class="badge border font-weight-normal" style="color:black;">'.$row["quantity"].'</span>
+                      </div>
+                        ';
+                      }
+                    }
+                    else{
+                      echo "No data found";
+                    }
+                }catch(Exception $e){
+                  echo $e."some things wrong search by category";
+                }
+
+              ?>
+
             </form>
           </div>
           <!-- category -->
