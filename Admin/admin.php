@@ -1367,7 +1367,8 @@ function addUnit()
 
             <!-- start of firm model -->
 
-    <div class="modal left fade" id="firm" data-backdrop="static" data-keyboard="false" tabindex="-1"
+   
+
 
         <div class="modal left fade" id="firm" data-backdrop="static" data-keyboard="false" tabindex="-1"
               role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
