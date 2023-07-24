@@ -253,7 +253,7 @@ function addproduct()
                   <form class="post" method="post" enctype="multipart/form-data">
 
                     <div class="input-group mt-2">
-                      <select class="form-select form-control " required name="category_id">
+                      <select class="form-select form-control " required name="sold_category_id">
                         <?php
 
                         include('DBConnection.php');
@@ -275,7 +275,7 @@ function addproduct()
                     </div>
 
                     <div class="input-group mt-2">
-                      <select class="form-select form-control " required name="company_id">
+                      <select class="form-select form-control " required name="sold_company_id">
                         <?php
 
                         include('DBConnection.php');
@@ -298,7 +298,7 @@ function addproduct()
 
 
                     <div class="input-group mt-2">
-                      <select class="form-select form-control " required name="country_id">
+                      <select class="form-select form-control " required name="sold_country_id">
                         <?php
 
                         include('DBConnection.php');
@@ -323,7 +323,7 @@ function addproduct()
 
                     <div class="input-group mt-2">
 
-                      <select class="form-select form-control " required name="currency_id">
+                      <select class="form-select form-control " required name="sold_currency_id">
 
                         <?php
                         //  $sql="SELECT * FROM `currency`";
@@ -348,13 +348,13 @@ function addproduct()
 
 
                     <div class="input-group mt-2">
-                      <input type="text" class="form-control" required placeholder="" name="soldd_quantity">
+                      <input type="text" class="form-control" required placeholder="" name="sold_quantity">
                       <span class="input-group-text">مقدار </span>
                     </div>
 
 
                     <div class="input-group mt-2">
-                      <select class="form-select form-control " required name="unit_id">
+                      <select class="form-select form-control " required name="sold_unit_id">
                         <?php
 
                         include('DBConnection.php');
@@ -376,17 +376,17 @@ function addproduct()
                     </div>
 
                     <div class="input-group mt-2">
-                      <input type="text" class="form-control" required placeholder="" name="unit_quantity">
+                      <input type="text" class="form-control" required placeholder="" name="sold_unit_quantity">
                       <span class="input-group-text">مقدار یونټ</span>
                     </div>
 
                     <div class="input-group ">
-                      <input type="text" class="form-control" required name="goods_name">
+                      <input type="text" class="form-control" required name="sold_goods_name">
                       <span class="input-group-text">د محصول نوم</span>
                     </div>
 
                     <div class="input-group mt-2">
-                      <select name="person_id" id="" class="form-control">
+                      <select name="sold_person_id" id="" class="form-control">
                         <option value="">No body</option>
                         <?php
 
@@ -410,7 +410,7 @@ function addproduct()
                     </div>
 
                     <div class="input-group mt-2">
-                      <input type="text" class="form-control" required name="product_price">
+                      <input type="text" class="form-control" required name="sold_price">
                       <span class="input-group-text">قمت فی دانه</span>
                     </div>
 
@@ -430,6 +430,7 @@ function addproduct()
             </div>
           </div>
         </div>
+        <!-- sole modle end here -->
         <?php
         //  if(isset($_POST['soldandbuy'])){
         //   echo "clicked";

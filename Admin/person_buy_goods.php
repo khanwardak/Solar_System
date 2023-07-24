@@ -2,21 +2,21 @@
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     include('DBConnection.php');
     echo "data will be submitted";
-    $company_id = $_POST['company_id'];
-    $country_id = $_POST['country_id'];
-    $unit_id = $_POST['unit_id'];
-    $cate_id_select =$_POST['category_id'];
-    $quantity = $_POST['soldd_quantity'];
+    $sold_company_id = $_POST['sold_company_id'];
+    $sold_country_id = $_POST['sold_country_id'];
+    $sold_unit_id = $_POST['sold_unit_id'];
+    $sold_cate_id_select =$_POST['sold_category_id'];
+    $sold_quantity = $_POST['sold_quantity'];
     // $quantity = $_POST['quantity'];
-    $unit_quantity =$_POST['unit_quantity'];
-    $goods_name = $_POST['goods_name'];
-    $person_id = $_POST['person_id'];
-    $currency_id = $_POST['currency_id'];
-    $buy_price = $_POST['product_price'];
+    $sold_unit_quantity =$_POST['sold_unit_quantity'];
+    $sold_goods_name = $_POST['sold_goods_name'];
+    $sold_person_id = $_POST['sold_person_id'];
+    $sold_currency_id = $_POST['sold_currency_id'];
+    $sold_buy_price = $_POST['sold_price'];
     
 
     $sql = "INSERT INTO `customers_bys_goods` (`currency_id`, `person_id`, `seller_id`, `price`, `quantity`, `buy_date`, `categ_id`, `comp_id`, `count_id`, `unit_amount`, `bill_number`, `goods_name`)
-     VALUES ('$currency_id', '$person_id', '1', '$buy_price', '$quantity', NOW(), '$cate_id_select', '$company_id', '$country_id', '$unit_quantity', '1', '$goods_name');";
+     VALUES ('$sold_currency_id', '$sold_person_id', '1', '$sold_buy_price', '$sold_quantity', NOW(), '$sold_cate_id_select', '$sold_company_id', '$sold_country_id', '$sold_unit_quantity', '1', '$sold_goods_name');";
 
 
     if ($conn->query($sql) === TRUE) {
