@@ -1,5 +1,7 @@
 <?php
 session_start();
+include('DBConnection.php');
+
 if (!isset($_SESSION['login_user']) && $_SESSION['login_user']['role'] != 2) {
   header("Location: Login.php");
   exit;
@@ -12,13 +14,16 @@ function addproduct()
   include('DBConnection.php');
   $goods_name = $_POST['goods_name'];
   $goods_discription = $_POST['goods_discription'];
-  $buy_price = $_POST['buy_price'];
-  $currency_id = $_POST['currency_id'];
-  $quantity = $_POST['quantity'];
-  $category_id = $_POST['category_id'];
-  $country_id = $_POST['country_id'];
+  $category_id = $_POST['categoryt_id'];
   $company_id = $_POST['company_id'];
+  $country_id = $_POST['country_id'];
   $unit_id = $_POST['unit_id'];
+  $currency_id = $_POST['currency_id'];
+  $company_id = $_POST['company_id'];
+  $firm =  $_POST['firm'];
+  $quantity = $_POST['quantity'];
+  $buy_price = $_POST['buy_price'];
+  $unit_quantity = $_POST['unit_quantity'];
   $uniquesavename = time() . uniqid(rand());
   $targetDir = "uploads/";
   $fileName = basename($_FILES["image"]["name"]);
@@ -36,8 +41,8 @@ function addproduct()
   }
   $sqll = "SET FOREIGN_KEY_CHECKS = 0;";
   $conn->query($sqll);
-  $sql2 = "INSERT INTO `goods` (`goods_id`, `goods_name`, `goods_description`, `goods_price`, `entry_date`, `image`, `categ_id`, `comp_id`, `count_id`, `unit_id`, `currency_id`,`goods_qunatity`)
-      VALUES (NULL, '$goods_name', '$goods_discription', '$buy_price', '2022-09-13', '$targetFilePath', '$category_id', '$company_id', '$country_id', '$unit_id', '$currency_id','$quantity');";
+  $sql2 = "INSERT INTO `goods` (`goods_name`, `goods_description`, `categ_id`, `comp_id`, `count_id`, `unit_id`, `entry_date`, `image`, `currency_id`, `firm_id`, `goods_qunatity`, `goods_price`, `unit_amount`) 
+  VALUES ('$goods_name', '$goods_discription', '$category_id', ' $company_id', '$country_id', '$unit_id', NOW(), '$targetFilePath', '$currency_id', '$firm', '$quantity', '$buy_price', '$unit_quantity');";
   if ($conn->query($sql2)) {
     echo ' <script LANGUAGE="JavaScript">
                  swal("په بریالی توګه !", "د محصول معلومات اضافه شول!", "success");
@@ -157,7 +162,7 @@ function addproduct()
 
                 <tr class="">
 
-                  
+
                   <th>ګټګوری</th>
                   <th>کمپنی</th>
                   <th> هیواد</th>
@@ -182,7 +187,7 @@ function addproduct()
                 if ($result->num_rows > 0) {
 
                   while ($row = $result->fetch_assoc()) {
-                   
+
 
                     echo '<tr>
                                         
@@ -234,7 +239,7 @@ function addproduct()
 
               <!-- Modal Header -->
               <div class="modal-header" style="text-align: right;">
-                <h4 class="modal-title text-center w-100 ">ْنوی جنس اضافه کړې</h4>
+                <h4 class="modal-title text-center w-100 ">ْنوی محلول اضافه کړی</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
               </div>
 
@@ -308,11 +313,7 @@ function addproduct()
 
                       </select>
                       <span class="input-group-text">هیواد</span>
-                    </div>
 
-                    <div class="input-group mt-2">
-                      <input type="text" class="form-control" required name="product_price">
-                      <span class="input-group-text">قمت فی دانه</span>
                     </div>
 
 
@@ -349,12 +350,6 @@ function addproduct()
 
 
                     <div class="input-group mt-2">
-                      <input type="text" class="form-control" required placeholder="" name="unit_quantity">
-                      <span class="input-group-text">اندازه</span>
-                    </div>
-
-
-                    <div class="input-group mt-2">
                       <select class="form-select form-control " required name="unit_id">
                         <?php
 
@@ -376,9 +371,15 @@ function addproduct()
                       <span class="input-group-text">یونټ</span>
                     </div>
 
-                    
+                    <div class="input-group mt-2">
+                      <input type="text" class="form-control" required placeholder="" name="unit_quantity">
+                      <span class="input-group-text">مقدار یونټ</span>
+                    </div>
 
-                   
+                    <div class="input-group ">
+                      <input type="text" class="form-control" required name="goods_name">
+                      <span class="input-group-text">د محصول نوم</span>
+                    </div>
 
                     <div class="input-group mt-2">
                       <select name="person_id" id="" class="form-control">
@@ -425,35 +426,35 @@ function addproduct()
             </div>
           </div>
         </div>
-       <?php 
-      //  if(isset($_POST['soldandbuy'])){
-      //   echo "clicked";
-      //  }
-       ?>
- <script>
-  
-  $(document).ready(function() {
-    $('.soldandbuy').click(function(event) {
-      event.preventDefault();
+        <?php
+        //  if(isset($_POST['soldandbuy'])){
+        //   echo "clicked";
+        //  }
+        ?>
+        <script>
 
-      $.ajax({
-        url: 'person_buy_goods.php',
-        type: 'POST',
-        data: $('.post').serialize(),
-        success: function(response) {
-          
-          alert(response);
-        },
-        error: function(error) {
-         
-          alert('Please try again.');
-        }
-      });
-    });
-  });
-</script>
+          $(document).ready(function () {
+            $('.soldandbuy').click(function (event) {
+              event.preventDefault();
 
-        
+              $.ajax({
+                url: 'person_buy_goods.php',
+                type: 'POST',
+                data: $('.post').serialize(),
+                success: function (response) {
+
+                  alert(response);
+                },
+                error: function (error) {
+
+                  alert('Please try again.');
+                }
+              });
+            });
+          });
+        </script>
+
+
         <!-- sold model end -->
         <!-- add product modal =================================================================================================================================strat-->
         <div class="modal fade" id="product">
@@ -513,7 +514,24 @@ function addproduct()
                       <span class="input-group-text">پولی واحد</span>
                     </div>
                     <div class="input-group mt-2">
-                     
+                      <select class=" form-select form-control" name="categoryt_id">
+                        <?php
+
+                        include('DBConnection.php');
+                        $sql = "SELECT * FROM `category`";
+                        $result = $conn->query($sql);
+                        if ($result->num_rows > 0) {
+
+                          while ($row = $result->fetch_assoc()) {
+                            echo '<option value="' . $row["categ_id"] . '">' . $row["categ_name"] . '</option>';
+                          }
+
+                        } else
+                          "no record found";
+
+                        ?>
+
+                      </select>
                       <span class="input-group-text">کټګوری</span>
                     </div>
 
@@ -537,6 +555,25 @@ function addproduct()
 
                       </select>
                       <span class="input-group-text">هیواد</span>
+
+                      <select class="form-select form-control" name="firm">
+                        <?php
+
+                        include('DBConnection.php');
+                        $sql = "SELECT * FROM `firm`;                        ";
+                        $result = $conn->query($sql);
+                        if ($result->num_rows > 0) {
+
+                          while ($row = $result->fetch_assoc()) {
+                            echo '<option value="' . $row["firm_id"] . '">' . $row["firm_name"] . '</option>';
+                          }
+
+                        } else
+                          "no record found";
+
+                        ?>
+                      </select>
+                      <span class="input-group-text">شرکت</span>
                     </div>
 
                     <div class="input-group mt-2">
@@ -561,7 +598,11 @@ function addproduct()
                       <span class="input-group-text">کمپنی</span>
                     </div>
                     <div class="input-group mt-2">
-                      <select class="form-select form-control " required name="unit_id">
+                    <span class="input-group-text">یونټ مقدار</span>
+                    
+                        <input type="text" class="form-control"  name="unit_quantity">
+                     
+                      <select class="form-select form-control "  name="unit_id">
                         <?php
 
                         include('DBConnection.php');
@@ -690,28 +731,27 @@ function addproduct()
                 <label class="custom-control-label" for="size-all">ټول مخصولات</label>
                 <span class="badge border font-weight-normal" style="color:black;">1000</span>
               </div>
-              <?php 
-                try{
-                    include('DBConnection.php');
-                    $sql ="SELECT SUM(goods.goods_qunatity) as quantity, category.categ_name FROM goods,category WHERE goods.categ_id = category.categ_id GROUP bY category.categ_name";
-                    $result = $conn->query($sql);
-                    if($result->num_rows>0){
-                      while($row = $result->fetch_assoc()){
-                        echo '
+              <?php
+              try {
+                include('DBConnection.php');
+                $sql = "SELECT SUM(goods.goods_qunatity) as quantity, category.categ_name FROM goods,category WHERE goods.categ_id = category.categ_id GROUP bY category.categ_name";
+                $result = $conn->query($sql);
+                if ($result->num_rows > 0) {
+                  while ($row = $result->fetch_assoc()) {
+                    echo '
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <input type="checkbox" class="custom-control-input" id="size-1">
-                        <label class="custom-control-label" for="size-1">'.$row["categ_name"].'</label>
-                        <span class="badge border font-weight-normal" style="color:black;">'.$row["quantity"].'</span>
+                        <label class="custom-control-label" for="size-1">' . $row["categ_name"] . '</label>
+                        <span class="badge border font-weight-normal" style="color:black;">' . $row["quantity"] . '</span>
                       </div>
                         ';
-                      }
-                    }
-                    else{
-                      echo "No data found";
-                    }
-                }catch(Exception $e){
-                  echo $e."some things wrong search by category";
+                  }
+                } else {
+                  echo "No data found";
                 }
+              } catch (Exception $e) {
+                echo $e . "some things wrong search by category";
+              }
 
               ?>
 
