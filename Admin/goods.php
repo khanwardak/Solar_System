@@ -3,10 +3,10 @@ session_start();
 include('DBConnection.php');
 
 if (!isset($_SESSION['login_user']) && $_SESSION['login_user']['role'] != 2) {
-if (!isset($_SESSION['login_user']) || (isset($_SESSION['role']) && $_SESSION['role'] != 2)) {
-  header("Location: Login.php");
-  exit;
-}
+  if (!isset($_SESSION['login_user']) || (isset($_SESSION['role']) && $_SESSION['role'] != 2)) {
+    header("Location: Login.php");
+    exit;
+  }
 }
 ?>
 
@@ -23,7 +23,7 @@ function addproduct()
   $unit_id = $_POST['unit_id'];
   $currency_id = $_POST['currency_id'];
   $company_id = $_POST['company_id'];
-  $firm =  $_POST['firm'];
+  $firm = $_POST['firm'];
   $quantity = $_POST['quantity'];
   $buy_price = $_POST['buy_price'];
   $unit_quantity = $_POST['unit_quantity'];
@@ -419,17 +419,50 @@ function addproduct()
                     </div>
 
                   </form>
-
+                        
                 </div>
+                <?php 
+                $queryBillNo ="SELECT bill_number FROM `bill` ORDER by bill_number DESC LIMIT 1";
+                $billNoResult = $conn->query($queryBillNo);
+                if($billNoResult ->num_rows>0){
+                    while($sold_bill_NO = $billNoResult->fetch_assoc()){
+                   echo $bill_number =$sold_bill_NO ["bill_number"]+1;
+                    }
+                  }
+                ?>
               </div>
 
               <div class="modal-footer">
                 <button type="submit" class="btn btn-danger  " name="close" id="soldandbuy">بندول</button>
+                <button type="submit" class="btn btn-success" style="border: 2px solid green" id="printBill">پرنېټ بیل</button>
               </div>
 
             </div>
           </div>
         </div>
+        <script>
+
+          $(document).ready(function () {
+            $('#printBill').click(function (event) {
+              event.preventDefault();
+              var session = "unset";
+              $.ajax({
+                url: 'person_buy_goods.php',
+                type: 'GET',
+                data: {session:session},
+                success: function (response) {
+
+                  alert("Bill Created");
+                  window.location.replace('goods.php');
+                },
+                error: function (error) {
+
+                  alert('Please try again.');
+                }
+              });
+            });
+          });
+        </script>
         <!-- //sole modle end here -->
         <?php
         //  if(isset($_POST['soldandbuy'])){
@@ -603,11 +636,11 @@ function addproduct()
                       <span class="input-group-text">کمپنی</span>
                     </div>
                     <div class="input-group mt-2">
-                    <span class="input-group-text">یونټ مقدار</span>
-                    
-                        <input type="text" class="form-control"  name="unit_quantity">
-                     
-                      <select class="form-select form-control "  name="unit_id">
+                      <span class="input-group-text">یونټ مقدار</span>
+
+                      <input type="text" class="form-control" name="unit_quantity">
+
+                      <select class="form-select form-control " name="unit_id">
                         <?php
 
                         include('DBConnection.php');
