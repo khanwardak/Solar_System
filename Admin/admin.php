@@ -1,6 +1,14 @@
 <?php
 session_start();
+include('DBConnection.php');
+
+if (!isset($_SESSION['login_user']) && $_SESSION['login_user']['role'] != 1) {
+  header("Location: login.php");
+  exit;
+}
 ?>
+
+
 <script type="text/javascript">
 
 
