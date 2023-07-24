@@ -2073,7 +2073,7 @@ function addUnit()
             <div class="col d-flex justify-content-end">
 
               <div class="btn-group  d-flex justify-content-center">
-                <button type="button" class="bi- btn btn-sm  dropdown-toggle" data-toggle="dropdown" id="viewbtn">ښکاره
+                <button type="button" class="bi- btn btn-sm  dropdown-toggle" data-toggle="dropdown" id="viewbtn" style="border: 2px solid #f5bf42; margin-right:10px;">ښکاره
                   کول</button>
                 <div class="dropdown-menu dropdown-menu-right" id="view">
                   <a class="dropdown-item" href="admin.php?view=1">1</a>
@@ -2093,7 +2093,7 @@ function addUnit()
                 });
               </script>
               <div class="btn-group  d-flex justify-content-center">
-                <button type="button" class="btn btn-sm  dropdown-toggle" data-toggle="dropdown">ترتیبول</button>
+                <button type="button" class="btn btn-sm  dropdown-toggle" data-toggle="dropdown" style="border: 2px solid #f5bf42;">ترتیبول</button>
                 <div class="dropdown-menu dropdown-menu-right">
                   <a class="dropdown-item" href="#">وروستی مخصولات</a>
                   <a class="dropdown-item" href="#">نوی مخصولات </a>
@@ -2463,7 +2463,7 @@ function addUnit()
         style="text-align:right; b">
         <div class="rounded-3 p-1 h-100 sticky-top" style="height: 100%; ">
           <ul class="nav nav-pills flex-sm-column flex-row mb-auto justify-content-between "
-            style="background-color:#282646; color:#ffffff">
+            style="background-color:#07264a; color:#ffffff">
 
             <li  style="color:#ff;">
               <a href="#" class="nav-link px-2 " style="color:#fff;">
