@@ -236,7 +236,7 @@ function addproduct()
 
               <!-- Modal Header -->
               <div class="modal-header" style="text-align: right;">
-                <h4 class="modal-title text-center w-100 ">ْنوی محلول اضافه کړی</h4>
+                <h4 class="modal-title text-center w-100 ">ْنوی جنس اضافه کړې</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
               </div>
 
@@ -312,6 +312,11 @@ function addproduct()
                       <span class="input-group-text">هیواد</span>
                     </div>
 
+                    <div class="input-group mt-2">
+                      <input type="text" class="form-control" required name="product_price">
+                      <span class="input-group-text">قمت فی دانه</span>
+                    </div>
+
 
                     <div class="input-group mt-2">
 
@@ -346,6 +351,12 @@ function addproduct()
 
 
                     <div class="input-group mt-2">
+                      <input type="text" class="form-control" required placeholder="" name="unit_quantity">
+                      <span class="input-group-text">اندازه</span>
+                    </div>
+
+
+                    <div class="input-group mt-2">
                       <select class="form-select form-control " required name="unit_id">
                         <?php
 
@@ -367,15 +378,9 @@ function addproduct()
                       <span class="input-group-text">یونټ</span>
                     </div>
 
-                    <div class="input-group mt-2">
-                      <input type="text" class="form-control" required placeholder="" name="unit_quantity">
-                      <span class="input-group-text">مقدار یونټ</span>
-                    </div>
+                    
 
-                    <div class="input-group ">
-                      <input type="text" class="form-control" required name="goods_name">
-                      <span class="input-group-text">د محصول نوم</span>
-                    </div>
+                   
 
                     <div class="input-group mt-2">
                       <select name="person_id" id="" class="form-control">
