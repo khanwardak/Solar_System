@@ -1,10 +1,13 @@
 <?php
 session_start();
-if (!isset($_SESSION['login_user']) || (isset($_SESSION['role']) && $_SESSION['role'] != 1)) {
+include('DBConnection.php');
+
+if (!isset($_SESSION['login_user']) && $_SESSION['login_user']['role'] != 2) {
+if (!isset($_SESSION['login_user']) || (isset($_SESSION['role']) && $_SESSION['role'] != 2)) {
   header("Location: Login.php");
   exit;
 }
-
+}
 ?>
 
 <?php
@@ -232,13 +235,14 @@ function addproduct()
             });
           </script>
         </div>
-       <!-- sold modle start -->
-       <div class="modal fade" id="sold">
+        <!-- sold modle start -->
+        <div class="modal fade" id="sold">
           <div class="modal-dialog ">
             <div class="modal-content">
 
               <!-- Modal Header -->
               <div class="modal-header" style="text-align: right;">
+                <h4 class="modal-title text-center w-100 ">ْنوی محلول اضافه کړی</h4>
                 <h4 class="modal-title text-center w-100 ">ْجنس خرڅول</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
               </div>
@@ -313,11 +317,7 @@ function addproduct()
 
                       </select>
                       <span class="input-group-text">هیواد</span>
-                    </div>
 
-                    <div class="input-group mt-2">
-                      <input type="text" class="form-control" required name="product_price">
-                      <span class="input-group-text">قمت فی دانه</span>
                     </div>
 
 
@@ -354,12 +354,6 @@ function addproduct()
 
 
                     <div class="input-group mt-2">
-                      <input type="text" class="form-control" required placeholder="" name="unit_quantity">
-                      <span class="input-group-text">اندازه</span>
-                    </div>
-
-
-                    <div class="input-group mt-2">
                       <select class="form-select form-control " required name="sold_unit_id">
                         <?php
 
@@ -382,12 +376,12 @@ function addproduct()
                     </div>
 
                     <div class="input-group mt-2">
-                      <input type="text" class="form-control" required placeholder="" name="unit_quantity">
+                      <input type="text" class="form-control" required placeholder="" name="sold_unit_quantity">
                       <span class="input-group-text">مقدار یونټ</span>
                     </div>
 
                     <div class="input-group ">
-                      <input type="text" class="form-control" required name="goods_name">
+                      <input type="text" class="form-control" required name="sold_goods_name">
                       <span class="input-group-text">د محصول نوم</span>
                     </div>
 
@@ -436,6 +430,7 @@ function addproduct()
             </div>
           </div>
         </div>
+        sole modle end here
         <?php
         //  if(isset($_POST['soldandbuy'])){
         //   echo "clicked";
@@ -447,24 +442,25 @@ function addproduct()
             $('.soldandbuy').click(function (event) {
               event.preventDefault();
 
-      $.ajax({
-        url: 'person_buy_goods.php',
-        type: 'POST',
-        data: $('.post').serialize(),
-        success: function(response) {
-          
-          alert(response);
-        },
-        error: function(error) {
-         
-          alert('Please try again.');
-        }
-      });
-    });
-  });
-</script>
+              $.ajax({
+                url: 'person_buy_goods.php',
+                type: 'POST',
+                data: $('.post').serialize(),
+                success: function (response) {
 
-        <!-- end of sold model -->
+                  alert(response);
+                },
+                error: function (error) {
+
+                  alert('Please try again.');
+                }
+              });
+            });
+          });
+        </script>
+
+
+        <!-- sold model end -->
         <!-- add product modal =================================================================================================================================strat-->
         <div class="modal fade" id="product">
           <div class="modal-dialog ">
