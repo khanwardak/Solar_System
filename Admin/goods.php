@@ -430,7 +430,7 @@ function addproduct()
             </div>
           </div>
         </div>
-        sole modle end here
+        <!-- //sole modle end here -->
         <?php
         //  if(isset($_POST['soldandbuy'])){
         //   echo "clicked";
