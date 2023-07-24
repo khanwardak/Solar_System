@@ -1,50 +1,42 @@
 <?php
- $error='';
-   if (isset($_POST["login"])) {
-   
-   	 session_start();
-   include('DBConnection.php');
-    
-      // username and password sent from form 
-      $username = mysqli_real_escape_string($conn,$_POST['user_name']);
-      $password = mysqli_real_escape_string($conn,$_POST['password']); 
-      $sql = "SELECT username,password,user_type FROM user WHERE username = '$username' and password = '$password'";
-      $result =$conn->query($sql);
+$error = '';
 
+if (isset($_POST["login"])) {
+    session_start();
+    include('DBConnection.php');
 
-      // If result matched $myusername and $mypassword, table row must be 1 row
- if($result->num_rows) {
-  while ($row = $result->fetch_assoc()){
-    $role = $row["user_type"];
-       $_SESSION['login_user'] = $username;
-        if ($role==1) {
-          
-          header("location:admin.php");
+    // username and password sent from form 
+    $username = mysqli_real_escape_string($conn, $_POST['user_name']);
+    $password = mysqli_real_escape_string($conn, $_POST['password']);
+    $sql = "SELECT username, password, user_type FROM user WHERE username = '$username' AND password = '$password'";
+    $result = $conn->query($sql);
 
+    // If result matched $myusername and $mypassword, table row must be 1 row
+    if ($result->num_rows) {
+        while ($row = $result->fetch_assoc()) {
+            $role = $row["user_type"];
+            $_SESSION['login_user'] = $username;
+            $_SESSION['role'] = $role; // Set the 'role' information in the session
+            if ($role == 1) {
+                header("Location: admin.php");
+                exit();
+            } elseif ($role == 2) {
+                header("Location: goods.php");
+                exit();
+            } else {
+                echo $error = '<div class="alert alert-danger" role="alert">
+                              Invalid User Type!
+                            </div>';
+            }
         }
-        else {
-        echo $error = '<div class="alert alert-danger" role="alert">
-  A simple danger alert—check it out!
-</div>';
-      }if($role==2){
+    } else {
+        $error = '<div class="alert alert-danger" role="alert" id="alert-danger">
+                      Invalid Username or Password!
+                  </div>';
+    }
+}
+?>
 
-          header("location:goods.php");
-        
-      }
-        }
-  }
-  else {
-         $error = '<div class="alert alert-danger" role="alert" id="alert-danger">
-                      Invalid User Nmae or password!
-                      </div>';
-      }
- 
-      
-   
-   }
-
-
-  ?>
 
 
 
