@@ -13,7 +13,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sold_person_id = $_POST['sold_person_id'];
     $sold_currency_id = $_POST['sold_currency_id'];
     $sold_buy_price = $_POST['sold_price'];
-    
+    $sold_bill_NO ="";
+    $queryBillNo ="SELECT bill_number FROM `bill` ORDER by bill_number DESC LIMIT 1";
+    $billNoResult = $conn->query($queryBillNo);
+    if($billNoResult ->num_rows>0){
+        while($$sold_bill_NO = $billNoResult->fetch_assoc());
+       echo $$sold_bill_NO = $$sold_bill_NO+1;
+    }
 
     $sql = "INSERT INTO `customers_bys_goods` (`currency_id`, `person_id`, `seller_id`, `price`, `quantity`, `buy_date`, `categ_id`, `comp_id`, `count_id`, `unit_amount`, `bill_number`, `goods_name`)
      VALUES ('$sold_currency_id', '$sold_person_id', '1', '$sold_buy_price', '$sold_quantity', NOW(), '$sold_cate_id_select', '$sold_company_id', '$sold_country_id', '$sold_unit_quantity', '1', '$sold_goods_name');";
