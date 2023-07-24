@@ -1,9 +1,7 @@
 <?php
 session_start();
-include('DBConnection.php');
-
-if (!isset($_SESSION['login_user']) && $_SESSION['login_user']['role'] != 1) {
-  header("Location: login.php");
+if (!isset($_SESSION['login_user']) || (isset($_SESSION['role']) && $_SESSION['role'] != 1)) {
+  header("Location: Login.php");
   exit;
 }
 ?>
