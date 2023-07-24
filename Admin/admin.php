@@ -29,7 +29,6 @@ function recentlly()
             WHERE customers_bys_goods.currency_id = currency.currency_id AND 
             customers_bys_goods.categ_id = category.categ_id AND customers_bys_goods.count_id = country.count_id
             AND person.person_id = customers_bys_goods.person_id  AND
-
             company.comp_id = customers_bys_goods.comp_id ORDER BY customers_bys_goods.buy_date DESC LIMIT " . $lint;
   include('DBConnection.php');
 
@@ -42,7 +41,12 @@ function recentlly()
 
                      <td> ' . $row["price"] . '</td>
                      <td>' . $row["buy_date"] . '</td>
-                     <td><a href="admin.php?customer=' . $row["person_name"] . '">' . $row["person_name"] . '</a></td>
+                     <td><a style="color:#fff" href="admin.php?customer=' . $row["person_name"] . '">' . $row["person_name"] . '</a></td>
+                     <td> <ul class="action-list" style="color:#fff">
+                     <li><a href="#" data-tip="edit" ><i class="fa fa-edit"></i></a></li>
+                     <li><a href="#" data-tip="delete"><i class="fa fa-trash"></i></a></li>
+                      </ul>
+                      </td>
 
                  </tr>';
     }
@@ -51,6 +55,7 @@ function recentlly()
 
 
 ?>
+
 <?php
 if (isset($_POST["provID"])) {
   require_once('DBConnection.php');
@@ -231,6 +236,8 @@ function addUsers(){
 
 
 // }
+
+// end of user adding function
 
 // start of addingfirm function
 function addFirm(){
@@ -438,7 +445,7 @@ function addUnit()
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Admin</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
-  <link rel="stylesheet" type="text/css" href="admin.css?verssion=4">
+  <link rel="stylesheet" type="text/css" href="admin.css?verssion=6">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.32/dist/sweetalert2.all.min.js"></script>
@@ -519,7 +526,7 @@ function addUnit()
                 </div>
 
                 <div class="card-body">
-                  <h5 class="card-title" style="color:#fff">ګټه <span>| میاشت</span></h5>
+                  <h5 class="card-title" style="color:#fff">ګټه <span  style="color:#fff">| میاشت</span></h5>
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -527,8 +534,8 @@ function addUnit()
                     </div>
                     <div class="ps-3" style="color:#fff">
                       <h6 style="color:#fff">$3,264</h6>
-                      <span class="text-success small pt-1 fw-bold" style="color:#fff">8%</span> <span
-                        class="text-muted small pt-2 ps-1" style="color:#fff">کمه شوی</span>
+                      <span class="small pt-1 fw-bold" style="color:#fff">8%</span> <span
+                        class="small pt-2 ps-1" style="color:#fff">کمه شوی</span>
 
                     </div>
                   </div>
@@ -538,7 +545,7 @@ function addUnit()
             </div><!-- End Revenue Card -->
 
             <div class="col-xxl-4 col-md-4 " style="direction: rtl; text-align: right;">
-              <div class="card info-card sales-card ss">
+              <div class="card info-card sales-card ss "style="background-color:#1353a2;">
 
 
                 <div class="filter" style="direction: rtl; text-align: right; background-color:;">
@@ -555,16 +562,16 @@ function addUnit()
                 </div>
 
                 <div class="card-body" style="direction:rtl; background-color:;">
-                  <h5 class="card-title">خرڅ شوی <span>| نن</span></h5>
+                  <h5 class="card-title" style="color:#fff">خرڅ شوی <span  style="color:#fff">| نن</span></h5>
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                       <i class="bi bi-cart"></i>
                     </div>
                     <div class="ps-3">
-                      <h6>145</h6>
-                      <span class="text-success small pt-1 fw-bold">12%</span> <span
-                        class="text-muted small pt-2 ps-1">ریات شوی</span>
+                      <h6  style="color:#fff">145</h6>
+                      <span class=" small pt-1 fw-bold" style="color:#fff">12%</span> <span
+                        class=" small pt-2 ps-1" style="color:#fff">ریات شوی</span>
 
                     </div>
                   </div>
@@ -575,10 +582,10 @@ function addUnit()
             <!-- Customers Card -->
             <div class="col-xxl-4 col-md-4" style="direction:rtl; text-align: right;">
 
-              <div class="card info-card customers-card">
+              <div class="card info-card customers-card"  style="background-color:#ce5e13">
 
                 <div class="filter">
-                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots" style="background-color:#ce5e13"></i></a>
                   <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                     <li class="dropdown-header text-start">
                       <h6>پلټنه</h6>
@@ -598,7 +605,7 @@ function addUnit()
                 </div>
 
                 <div class="card-body">
-                  <h5 class="card-title">مشتریان <span>| کال</span></h5>
+                  <h5 class="card-title" style="color:#fff">مشتریان <span style="color:#fff">| کال</span></h5>
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -615,15 +622,15 @@ function addUnit()
                         if ($result->num_rows > 0) {
 
                           $row = $result->fetch_assoc();
-                          echo '<h6>' . $row['NumberOfcustomer'] . '</h6>';
+                          echo '<h6 style="color:#fff">' . $row['NumberOfcustomer'] . '</h6>';
                         }
 
                       } catch (Exception $e) {
                       }
                       ?>
 
-                      <span class="text-danger small pt-1 fw-bold">12%</span> <span
-                        class="text-muted small pt-2 ps-1">ریات شوی</span>
+                      <span class="text-white small pt-1 fw-bold" >12%</span> <span
+                        class="text-white small pt-2 ps-1">ریات شوی</span>
 
                     </div>
                   </div>
@@ -1362,14 +1369,7 @@ function addUnit()
             }
             ?>
 
-
-        <!-- start of user model -->
-
-            <!-- start of firm model -->
-
-   
-
-
+<!-- start of firm model -->
         <div class="modal left fade" id="firm" data-backdrop="static" data-keyboard="false" tabindex="-1"
               role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
               <div class="modal-dialog">
@@ -1477,12 +1477,7 @@ function addUnit()
 
 
 
-        <!-- end of user model -->
-
-
-            <!-- start of firm model -->
-
-        <div class="modal left fade" id="firm" data-backdrop="static" data-keyboard="false" tabindex="-1"
+        <!-- end of firm model -->
 
         <!-- start of users model -->
 
@@ -1514,12 +1509,6 @@ function addUnit()
                             <label for="yourName" class="form-label">پاسورد</label>
                             <input type="Password" name="user_password" class="form-control" id="" required>
                             <div class="invalid-feedback">Please,bill id!</div>
-
-                            
-
-
-
-
                             <label for="yourName" class="form-label">یوزر ټایپ</label>
                             <select class="form-control" id="userType" name="userType" onchange="userType(this.value)">
                               <?php
@@ -1538,9 +1527,6 @@ function addUnit()
 
                               ?>
                               </select>
-                            
-                
-                            
                             <div class="text-center mt-5">
                               <button class="btn btn-primary btn-submit" type="submit" name="addUsers">ثبتول</button>
                             </div>
@@ -1559,7 +1545,7 @@ function addUnit()
 
                             <?php
                             require_once('DBConnection.php');
-                            $sql = "SELECT user.name ,user_type.type_flag from user_type,user WHERE user.user_id=user_type.type_id";
+                            $sql = "SELECT name ,type_flag from user,user_type where user.user_type=user_type.type_id;";
                             $result = $conn->query($sql);
                             if ($result->num_rows > 0) {
                               while ($row = $result->fetch_assoc()) {
@@ -1599,13 +1585,13 @@ function addUnit()
 
             <!-- start of firm model -->
 
-        <div class="modal left fade" id="firm" data-backdrop="static" data-keyboard="false" tabindex="-1"
-<<<<<<< HEAD
 
-=======
->>>>>>> Stashed changes
-              role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
->>>>>>> 5016940f9e72140137dbdc529bdba5add8496cac
+       
+
+        <div class="modal left fade" id="firm" data-backdrop="static" data-keyboard="false" tabindex="-1">
+
+              <role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="col">
@@ -2158,7 +2144,7 @@ function addUnit()
               </div>
               <div class="col-lg-6 card" style="direction:rtl; text-align: right;">
                 <h5 class="card-title">وروستی خرڅ شوی مخصولات<span>| نن</span></h5>
-                <table class="table table-bordered border-primary ">
+                <!-- <table class="table table-bordered border-primary ">
                   <thead class="overflow-auto h-100">
                     <tr class="">
 
@@ -2177,7 +2163,7 @@ function addUnit()
 
                     </tr>
                   </tbody>
-                </table> -->
+                </table>  -->
                 
    
        
@@ -2187,7 +2173,7 @@ function addUnit()
                         
                         <div class="col-sm-9 col-xs-12 text-right" style=" background: #2980b9;">
                             <div class="btn_group">
-                                <input type="text" class="form-control" placeholder="Search">
+                                <input type="text" class="form-control" placeholder="Search" id="searchOnrecent">
                                 <button class="btn btn-default" title="Reload"><i class="fa fa-refresh"></i></button>
                                 <!-- <button class="btn btn-default" title="Pdf"><i class="fa fa-file-pdf"></i></button>
                                 <button class="btn btn-default" title="Excel"><i class="fas fa-file-excel"></i></button> -->
@@ -2208,16 +2194,35 @@ function addUnit()
                             <th>عملیات</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="recentTableBody">
                             <tr>
                             <?php recentlly(); ?>
 
-
+                           
                             </tr>
                               
                         </tbody>
                     </table>
                 </div>
+                <script type="text/javascript">
+              $(document).ready(function () {
+                $('#searchOnrecent').keyup(function () {
+                  var search_term = $(this).val();
+                  // alert(customerhistory);
+                  $.ajax({
+                    url: "recentllySellItems.php",
+                    method: "GET",
+                    data: { search_term: search_term },
+                    success: function (data) {
+                      $("#recentTableBody").empty();
+                      $("#recentTableBody").append(data);
+                    
+                      
+                    }
+                  });
+                });
+              });
+            </script>
                 <div class="panel-footer">
                    
                         
@@ -2448,12 +2453,12 @@ function addUnit()
       </main>
       <aside class="col-sm-3 flex-grow-sm-1 flex-shrink-1 flex-grow-0 sticky-top pb-sm-0 pb-3"
         style="text-align:right; b">
-        <div class="bg-light border rounded-3 p-1 h-100 sticky-top" style="height: 100%;">
-          <ul class="nav nav-pills flex-sm-column flex-row mb-auto justify-content-between text-truncate"
-            style="background-color:#fff; color:#ffffff">
+        <div class="rounded-3 p-1 h-100 sticky-top" style="height: 100%; ">
+          <ul class="nav nav-pills flex-sm-column flex-row mb-auto justify-content-between "
+            style="background-color:#282646; color:#ffffff">
 
-            <li>
-              <a href="#" class="nav-link px-2 text-truncate">
+            <li  style="color:#ff;">
+              <a href="#" class="nav-link px-2 " style="color:#fff;">
                 <span class="d-none d-sm-inline">Dashboard</span>
                 <i class="bi bi-speedometer fs-5"></i>
 
@@ -2461,7 +2466,7 @@ function addUnit()
             </li>
             <li>
               <a href="#" class=" nav-link px-2 text-truncate" data-bs-toggle="modal" data-bs-target="#catagory"
-                style="text-align:righ;">
+                style="text-align:righ; color:#c8c8d2">
                 <span class="d-none d-sm-inline">Catagory</span>
                 <i class="bi bi-diagram-3" style="font-size:22px;"></i>
               </a>
@@ -2469,7 +2474,7 @@ function addUnit()
             <li>
 
               <a href="#" class=" nav-link px-2 text-truncate" data-bs-toggle="modal" data-bs-target="#company"
-                style="text-align:righ;">
+                style="text-align:righ;color:#c8c8d2">
                 <span class="d-none d-sm-inline">Company</span>
                 <i class="bi bi-c-square-fill" style="font-size:22px;"></i>
               </a>
@@ -2477,7 +2482,7 @@ function addUnit()
             <li>
 
               <a href="admin/" class=" nav-link px-2 text-truncate" data-bs-toggle="modal"
-                data-bs-target="#countryModal" style="text-align:righ;">
+                data-bs-target="#countryModal" style="text-align:righ;color:#c8c8d2">
                 <span class="d-none d-sm-inline">Country</span>
                 <i class="bi bi-bricks fs-5"></i>
               </a>
@@ -2485,7 +2490,7 @@ function addUnit()
             <li>
 
               <a href="#" class=" nav-link px-2 text-truncate" data-bs-toggle="modal" data-bs-target="#currency"
-                style="text-align:righ;">
+                style="text-align:righ; color:#c8c8d2">
                 <span class="d-none d-sm-inline">currency</span>
                 <i class="fa fa-money" style="font-size:22px;"></i>
               </a>
@@ -2493,7 +2498,7 @@ function addUnit()
             <li>
 
               <a href="#" class=" nav-link px-2 text-truncate" data-bs-toggle="modal" data-bs-target="#unit"
-                style="text-align:righ;">
+                style="text-align:righ;color:#c8c8d2">
                 <span class="d-none d-sm-inline">unit</span>
                 <i class="bi bi-bricks fs-5"></i>
               </a>
@@ -2501,7 +2506,7 @@ function addUnit()
             <li>
 
               <a href="#" class=" nav-link px-2 text-truncate" data-bs-toggle="modal" data-bs-target="#store"
-                style="text-align:righ;">
+                style="text-align:righ;color:#c8c8d2">
                 <span class="d-none d-sm-inline">Store</span>
                 <i class="bi bi-shop fs-5"></i>
               </a>
@@ -2511,7 +2516,7 @@ function addUnit()
             <li>
 
               <a href="#" class=" nav-link px-2 text-truncate" data-bs-toggle="modal" data-bs-target="#users"
-                style="text-align:righ;">
+                style="text-align:righ;color:#c8c8d2">
                 <span class="d-none d-sm-inline">Users</span>
                 <i class="bi bi-shop fs-5"></i>
               </a>
@@ -2521,21 +2526,21 @@ function addUnit()
             <li>
 
               <a href="#" class=" nav-link px-2 text-truncate" data-bs-toggle="modal" data-bs-target="#firm"
-                style="text-align:righ;">
+                style="text-align:righ;color:#c8c8d2">
                 <span class="d-none d-sm-inline">Firm</span>
                 <i class="bi bi-shop fs-5"></i>
               </a>
             </li>
 
             <li>
-              <a href="goods.php" class="nav-link px-2 text-truncate">
+              <a href="goods.php" class="nav-link px-2 text-truncate" style="color:#c8c8d2">
                 <span class="d-none d-sm-inline">Products</span>
                 <i class="bi bi-cart-plus fs-5" style=""></i>
               </a>
             </li>
 
             <li>
-              <a href="#" class="nav-link px-2 text-truncate" data-bs-toggle="modal" data-bs-target="#bill">
+              <a href="#" class="nav-link px-2 text-truncate" data-bs-toggle="modal" data-bs-target="#bill" style="color:#c8c8d2">
                 <span class="d-none d-sm-inline">Bill</span>
                 <i class="bi bi-receipt fs-5"></i>
               </a>
@@ -2544,7 +2549,7 @@ function addUnit()
             <li>
 
               <a href="#" class=" nav-link px-2 text-truncate" data-bs-toggle="modal" data-bs-target="#loan"
-                style="text-align:righ;">
+                style="text-align:righ; color:#c8c8d2">
                 <span class="d-none d-sm-inline">Loan</span>
                 <i class="bi bi-shop fs-5"></i>
               </a>
@@ -2552,7 +2557,7 @@ function addUnit()
             <li>
 
               <a href="#" class=" nav-link px-2 text-truncate" data-bs-toggle="modal" data-bs-target="#showcustomers"
-                style="text-align:righ;">
+                style="text-align:righ;color:#c8c8d2">
                 <span class="d-none d-sm-inline">Customers</span>
                 <i class="fa fa-user fs-5"></i>
               </a>

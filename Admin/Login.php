@@ -8,14 +8,14 @@
       // username and password sent from form 
       $username = mysqli_real_escape_string($conn,$_POST['user_name']);
       $password = mysqli_real_escape_string($conn,$_POST['password']); 
-      $sql = "SELECT seller_user_name,seller_password,role FROM seller WHERE seller_user_name = '$username' and seller_password = '$password'";
+      $sql = "SELECT username,password,user_type FROM user WHERE username = '$username' and password = '$password'";
       $result =$conn->query($sql);
 
 
       // If result matched $myusername and $mypassword, table row must be 1 row
  if($result->num_rows) {
   while ($row = $result->fetch_assoc()){
-    $role = $row["role"];
+    $role = $row["user_type"];
        $_SESSION['login_user'] = $username;
         if ($role==1) {
           
@@ -28,7 +28,7 @@
 </div>';
       }if($role==2){
 
-          header("location:seller.php");
+          header("location:goods.php");
         
       }
         }
