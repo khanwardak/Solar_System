@@ -146,10 +146,7 @@ function addproduct()
                 <a class="dropdown-item" href="#">تحفیف شوی محصولات</a>
               </div>
             </div>
-            <a class=" d-flex justify-content-end text-decoration-none" data-bs-toggle="modal" data-bs-target="#product"
-              style="text-align:right;">
-              Add new product <i class="bi-plus"></i>
-            </a>
+           
 
           </div>
           <div class="card table-responsive">
@@ -456,159 +453,9 @@ function addproduct()
 
         
         <!-- sold model end -->
+
         <!-- add product modal =================================================================================================================================strat-->
-        <div class="modal fade" id="product">
-          <div class="modal-dialog ">
-            <div class="modal-content">
-
-              <!-- Modal Header -->
-              <div class="modal-header" style="text-align: right;">
-                <h4 class="modal-title text-center w-100 ">نوی محصول اضافه کړئ!</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-              </div>
-
-
-              <div class="modal-body">
-                <div class="card">
-                  <form class="post" method="post" enctype="multipart/form-data">
-                    <div class="input-group ">
-                      <input type="text" class="form-control" required placeholder="" name="goods_name">
-                      <span class="input-group-text">د حصول نوم</span>
-                    </div>
-
-                    <div class="input-group mt-2">
-                      <input type="text" class="form-control" required placeholder="" name="goods_discription">
-                      <span class="input-group-text"> جزیات</span>
-                    </div>
-
-                    <div class="input-group mt-2">
-                      <input type="text" class="form-control" required placeholder="" name="buy_price">
-                      <span class="input-group-text">د اخستلو بیه</span>
-                    </div>
-                    <div class="input-group mt-2">
-                      <input type="text" class="form-control" required placeholder="" name="quantity">
-                      <span class="input-group-text">مقدار</span>
-                    </div>
-                    <div class="input-group mt-2">
-
-                      <select class="form-select form-control " required name="currency_id">
-
-                        <?php
-                        //  $sql="SELECT * FROM `currency`";
-                        include('DBConnection.php');
-                        $sql = "SELECT * FROM `currency`";
-                        $result = $conn->query($sql);
-                        if ($result->num_rows > 0) {
-
-                          while ($row = $result->fetch_assoc()) {
-                            echo '<option value="' . $row["currency_id"] . '">' . $row["currency_name"] . '</option>';
-                          }
-
-                        } else
-                          "no record found";
-
-                        ?>
-
-
-                      </select>
-                      <span class="input-group-text">پولی واحد</span>
-                    </div>
-                    <div class="input-group mt-2">
-                     
-                      <span class="input-group-text">کټګوری</span>
-                    </div>
-
-                    <div class="input-group mt-2">
-                      <select class="form-select form-control " required name="country_id">
-                        <?php
-
-                        include('DBConnection.php');
-                        $sql = "SELECT * FROM `country`";
-                        $result = $conn->query($sql);
-                        if ($result->num_rows > 0) {
-
-                          while ($row = $result->fetch_assoc()) {
-                            echo '<option value="' . $row["count_id"] . '">' . $row["count_name"] . '</option>';
-                          }
-
-                        } else
-                          "no record found";
-
-                        ?>
-
-                      </select>
-                      <span class="input-group-text">هیواد</span>
-                    </div>
-
-                    <div class="input-group mt-2">
-                      <select class="form-select form-control " required name="company_id">
-                        <?php
-
-                        include('DBConnection.php');
-                        $sql = "SELECT * FROM `company`";
-                        $result = $conn->query($sql);
-                        if ($result->num_rows > 0) {
-
-                          while ($row = $result->fetch_assoc()) {
-                            echo '<option value="' . $row["comp_id"] . '">' . $row["comp_name"] . '</option>';
-                          }
-
-                        } else
-                          "no record found";
-
-                        ?>
-
-                      </select>
-                      <span class="input-group-text">کمپنی</span>
-                    </div>
-                    <div class="input-group mt-2">
-                      <select class="form-select form-control " required name="unit_id">
-                        <?php
-
-                        include('DBConnection.php');
-                        $sql = "SELECT * FROM `unit`";
-                        $result = $conn->query($sql);
-                        if ($result->num_rows > 0) {
-
-                          while ($row = $result->fetch_assoc()) {
-                            echo '<option value="' . $row["unit_id"] . '">' . $row["unit_name"] . '</option>';
-                          }
-
-                        } else
-                          "no record found";
-
-                        ?>
-
-                      </select>
-                      <span class="input-group-text">یونټ</span>
-                    </div>
-
-                    <div class="input-group mt-2">
-                      <input type="file" class="form-control" required placeholder="" name="image">
-                      <span class="input-group-text">انځور</span>
-                    </div>
-
-                    <div class="input-group mt-2">
-                      <button class="form-control btn btn-success" name="addproduct">ثبتول</button>
-                    </div>
-
-                  </form>
-
-                </div>
-              </div>
-
-              <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">بندول</button>
-              </div>
-
-            </div>
-          </div>
-        </div>
-        <?php
-        if (isset($_POST['addproduct'])) {
-          echo addproduct();
-        }
-        ?>
+        
         <!-- add product modal  =================================== end============================================================================= -->
 
         <!--   Sell product s modle ================================================================================================================= -->
