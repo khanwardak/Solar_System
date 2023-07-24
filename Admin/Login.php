@@ -21,7 +21,7 @@ if (isset($_POST["login"])) {
                 header("Location: admin.php");
                 exit();
             } elseif ($role == 2) {
-                header("Location: goods.php");
+                header("Location: second_goods.php");
                 exit();
             } else {
                 echo $error = '<div class="alert alert-danger" role="alert">
