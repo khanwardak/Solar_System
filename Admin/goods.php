@@ -457,14 +457,16 @@ function addproduct()
 
               <div class="modal-body">
                     <?php 
-                      // include('DBConnection.php');
-                      // $checkBill ="SELECT * FROM `customers_bys_goods` WHERE bill_number='$bill_number'";
-                      // $showbillResult = $conn->query($checkBill);
-                      // if($showbillResult -> num_rows>0){
-                      //   while($row = $showbillResult->fetch_assoc()){
-                      //     echo $row["bill_number"];
-                      //   }
-                      // }
+                    $bill_generate =$bill_number-1;
+                      include('DBConnection.php');
+                      
+                      $checkBill ="SELECT * FROM `customers_bys_goods` WHERE bill_number='$bill_generate'";
+                      $showbillResult = $conn->query($checkBill);
+                      if($showbillResult -> num_rows>0){
+                        while($row = $showbillResult->fetch_assoc()){
+                          echo $row["bill_number"];
+                        }
+                      }
                     ?>
               </div>
             </div>
