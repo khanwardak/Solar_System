@@ -63,8 +63,6 @@ function addproduct()
 }
 
 ?>
-
-
 <!DOCTYPE html>
 <html>
 
@@ -80,13 +78,21 @@ function addproduct()
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>admin</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
-  <link rel="stylesheet" type="text/css" href="admin.css?verssion=8">
+  <link rel="stylesheet" type="text/css" href="admin.css?verssion=9">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
     integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <link href="../style.css?verssion=4" rel="stylesheet">
+  <script src="pdfmake/build/pdfmake.min.js"></script>
+  <script src="pdfmake/build/vfs_fonts.js"></script>
+  <script src="jsPDF/dist/jspdf.es.min.js"></script>
+  <script src="jsPDF/dist/jspdf.umd.min.js"></script>
+  <script src="jsPDF/src/jspdf.js"></script>
+  <script src="jsPDF/jsPDFAutoTable/dist/jspdf.plugin.autotable.js"></script>
+  <script src="jsPDF/html2canvas/html2canvas.js"></script>
+  <script src="jsPDF/html2canvas/html2canvas.min.js"></script>
 </head>
 
 <body>
@@ -123,7 +129,7 @@ function addproduct()
     </div>
   </header>
   <div class="container-fluid ">
-    <div class="id"> </div>
+    
     <div class="row ">
 
       <main class="col-lg-9 col-md-8 col-sm-3 overflow-auto h-100">
@@ -135,6 +141,8 @@ function addproduct()
 
             <div class="btn-group  d-flex justify-content-center">
               <button type="button" class="bi- btn btn-sm  dropdown-toggle" data-toggle="dropdown">ښکاره کول</button>
+              <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#BillModal"
+                  style="text-align:right;">بېل چکول</button>
               <div class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item" href="#">10</a>
                 <a class="dropdown-item" href="#">20</a>
@@ -153,8 +161,8 @@ function addproduct()
                 <a class="dropdown-item" href="#">تحفیف شوی محصولات</a>
               </div>
             </div>
-            <a class=" d-flex justify-content-end text-decoration-none" data-bs-toggle="modal" data-bs-target="#product"
-              style="text-align:right;">
+            <a class=" d-flex justify-content-end text-decoration-none" data-bs-toggle="modal"
+              data-bs-target="#productffff" style="text-align:right; color: blue;">
               Add new product <i class="bi-plus"></i>
             </a>
 
@@ -242,7 +250,7 @@ function addproduct()
 
               <!-- Modal Header -->
               <div class="modal-header" style="text-align: right;">
-                
+                <h4 class="modal-title text-center w-100 ">نوی محصول اضافه کړئ!</h4>
                 <h4 class="modal-title text-center w-100 ">ْجنس خرڅول</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
               </div>
@@ -419,60 +427,31 @@ function addproduct()
                     </div>
 
                   </form>
-                        
+
                 </div>
-                <?php 
-                $queryBillNo ="SELECT bill_number FROM `bill` ORDER by bill_number DESC LIMIT 1";
+                <?php
+                $queryBillNo = "SELECT bill_number FROM `bill` ORDER by bill_number DESC LIMIT 1";
                 $billNoResult = $conn->query($queryBillNo);
-                if($billNoResult ->num_rows>0){
-                    while($sold_bill_NO = $billNoResult->fetch_assoc()){
-                   echo $bill_number =$sold_bill_NO ["bill_number"]+1;
-                    }
+                if ($billNoResult->num_rows > 0) {
+                  while ($sold_bill_NO = $billNoResult->fetch_assoc()) {
+                    echo $bill_number = $sold_bill_NO["bill_number"] + 1;
                   }
+                }
                 ?>
               </div>
 
               <div class="modal-footer">
                 <button type="submit" class="btn btn-danger  " name="close" id="soldandbuy">بندول</button>
-                <button type="submit" class="btn btn-success" style="border: 2px solid green" id="printBill">پرنېټ بیل</button>
+                <button type="submit" class="btn btn-success" style="border: 2px solid green" id="printBill">بېل جوړول
+                  بیل</button>
                 <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#BillModal"
-                  style="text-align:right;">بیل چکول</button>
+                  style="text-align:right;"></button>
               </div>
 
             </div>
           </div>
         </div>
-      <!-- print bill modal start -->
-        <div class="modal fade" id="BillModal">
-          <div class="modal-dialog ">
-            <div class="modal-content">
 
-              <!-- Modal Header -->
-              <div class="modal-header" style="text-align: right;">
-              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                <h4 class="modal-title text-center w-100 ">ْجنس خرڅول</h4>
-               
-              </div>
-
-
-              <div class="modal-body">
-                    <?php 
-                    $bill_generate =$bill_number-1;
-                      include('DBConnection.php');
-                      
-                      $checkBill ="SELECT * FROM `customers_bys_goods` WHERE bill_number='$bill_generate'";
-                      $showbillResult = $conn->query($checkBill);
-                      if($showbillResult -> num_rows>0){
-                        while($row = $showbillResult->fetch_assoc()){
-                          echo $row["bill_number"];
-                        }
-                      }
-                    ?>
-              </div>
-            </div>
-          </div>
-          <div>
-          <!-- print bill modle end  -->
         <script>
 
           $(document).ready(function () {
@@ -482,7 +461,7 @@ function addproduct()
               $.ajax({
                 url: 'person_buy_goods.php',
                 type: 'GET',
-                data: {session:session},
+                data: { session: session },
                 success: function (response) {
 
                   alert("Bill Created");
@@ -528,7 +507,7 @@ function addproduct()
 
         <!-- sold model end -->
         <!-- add product modal =================================================================================================================================strat-->
-        <div class="modal fade" id="product">
+        <div class="modal fade" id="productffff">
           <div class="modal-dialog ">
             <div class="modal-content">
 
@@ -631,7 +610,7 @@ function addproduct()
                         <?php
 
                         include('DBConnection.php');
-                        $sql = "SELECT * FROM `firm`;                        ";
+                        $sql = "SELECT * FROM `firm`";
                         $result = $conn->query($sql);
                         if ($result->num_rows > 0) {
 
@@ -715,77 +694,185 @@ function addproduct()
             </div>
           </div>
         </div>
+
         <?php
         if (isset($_POST['addproduct'])) {
           echo addproduct();
         }
         ?>
-        <!-- add product modal  =================================== end============================================================================= -->
-
-        <!--   Sell product s modle ================================================================================================================= -->
-
-
-
-        <div class="modal fade" id="showAndSell">
-
+        <!-- add product modal  =================================== end================================================== -->
+        <!-- print and check bill Modal start -->
+        <div class="modal fade" id="BillModal" style="direction:rtl">
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title text-center" id="exampleModalLabel" style="text-align:center">Sell And Show</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <!-- Modal Header -->
+              <div class="modal-header" style="text-align: right;">
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <h4 class="modal-title text-center w-100 "> د بېل مالومات</h4>
               </div>
               <div class="modal-body">
 
-                <div class="container-fluid">
-                  <div class="row">
-                    <div class="col-md-6">.col-md-4</div>
-                    <div class="col-md-6 ms-auto">.col-md-4 .ms-auto</div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-3 ms-auto">.col-md-3 .ms-auto</div>
-                    <div class="col-md-2 ms-auto">.col-md-2 .ms-auto</div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6 ms-auto">.col-md-6 .ms-auto</div>
-                  </div>
-                  <div class="row">
-                    <div class="col-sm-9">
+                <div class="col" id="billedcustoemr">
+                  <div class="row" style="text-align: right;">
 
+                    <div class="receipt-main col" style="text-align: right; height: 980px; ">
                       <div class="row">
-                        <div class="col-8 col-sm-6">
-                          Level 2: .col-8 .col-sm-6
+
+                        <div class="col-lg-8 justify-content-start text-align" style="text-align: right; ">
+                          <div class="receipt-left">
+                            <img class="img-responsive" alt="iamgurdeeposahan"
+                              src="https://bootdey.com/img/Content/avatar/avatar6.png"
+                              style="width: 71px; border-radius: 43px;">
+                          </div>
+                          <div class="receipt-right" style="text-align: right;">
+                            <h5>Solar Tech</h5>
+                            <p>0778885555 <i class="fa fa-phone"></i></p>
+                            <p>solar-tech@solar-tech.energy <i class="fa fa-envelope-o"></i></p>
+                            <p>Kabul <i class="fa fa-location-arrow"></i></p>
+                          </div>
                         </div>
-                        <div class="col-4 col-sm-6">
-                          Level 2: .col-4 .col-sm-6
+                        <div class="col-lg-4 text-right  justify-content-end" style="text-align: right;">
+                          <div class="receipt-right" style="text-align: right;">
+                            <h5>دمشتر نوم: اخمد</h5>
+
+                            <h3 style="">Bill NO: # 102</h3>
+                          </div>
                         </div>
+
+                        <div>
+                          <table class="table table-bordered">
+                            <thead>
+                              <tr>
+                                <th>کتګوری</th>
+                                <th>هیواد</th>
+                                <th>کمپنی</th>
+                                <th>واحد</th>
+                                <th>واحد اندازه</th>
+                                <th>مقدار</th>
+                                <th>قمت</th>
+                                <th>پولی واحد</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+
+                              <?php
+                              $bill_generate = $bill_number - 1;
+                              include('DBConnection.php');
+
+                              $checkBill = "SELECT category.categ_name, customers_bys_goods.bill_number,country.count_name,company.comp_name,customers_bys_goods.unit_amount,unit.unit_name,customers_bys_goods.price,customers_bys_goods.quantity,person.person_name,currency.currency_name 
+                                  from customers_bys_goods,category,country,company,currency,person,unit 
+                                  WHERE customers_bys_goods.categ_id=category.categ_id 
+                                  and country.count_id=customers_bys_goods.count_id 
+                                  and customers_bys_goods.comp_id=company.comp_id 
+                                  and customers_bys_goods.currency_id=currency.currency_id 
+                                  and customers_bys_goods.unit_id=unit.unit_id 
+                                  and customers_bys_goods.person_id=person.person_id 
+                                  and customers_bys_goods.bill_number='$bill_generate'";
+                                  $showbillResult = $conn->query($checkBill);
+                                  if ($showbillResult->num_rows > 0) {
+                                  while ($row = $showbillResult->fetch_assoc()) {
+                                   echo '<tr><td>' . $row["categ_name"] . '</td>
+                                  <td>' . $row["count_name"] . '</td>
+                                  <td>' . $row["comp_name"] . '</td>
+                                  <td>' . $row["unit_name"] . '</td>
+                                  <td>' . $row["unit_amount"] . '</td>
+                                  <td>' . $row["quantity"] . '</td>
+                                  <td>' . $row["price"] . '</td>
+                                  <td>' . $row["currency_name"] . '</td>
+                                </tr>';
+                                }
+                              }
+                              ?>
+                              <td class="text-right">
+                                <h2><strong>Total: </strong></h2>
+                              </td>
+                              <td class="text-left text-danger">
+                                <h2><strong><i class="fa fa-inr"></i> 31.566/-</strong></h2>
+                              </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <div class="row">
+                          <div class="receipt-header receipt-header-mid receipt-footer">
+                            <div class="col-xs-8 col-sm-8 col-md-8 text-left">
+                              <div class="receipt-right">
+                                <p><b>Date :</b> 15 Aug 2016</p>
+                                <h5 style="color: rgb(140, 140, 140);">Thanks for shopping.!</h5>
+                              </div>
+                            </div>
+                            <div class="col-xs-4 col-sm-4 col-md-4">
+                              <div class="receipt-left">
+                                <h1>Stamp</h1>
+
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
                       </div>
                     </div>
                   </div>
                 </div>
-
               </div>
-              <div class="user"></div>
-
-              <form method="post">
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                  <a href="liveSearch.php" type="submit" class="btn btn-primary" name="confirm" value="confirm"></a>
-                </div>
-              </form>
-
+              <button class="btn btn-success" onclick="generatePDF();">Print</button>
             </div>
-          </div>
-        </div>
+            <div>
 
-        <!--   Sell product s modle ================================================================================================================= -->
+              <!-- check bill modal end here -->
+            
+              <script type="text/javascript">
+                window.jsPDF = window.jspdf.jsPDF;
+
+                function generatePDF() {
+                  var table = document.getElementById('billedcustoemr');
+                  var progressBar = document.getElementById('progress');
+                  var progressContainer = document.getElementById('progressBar');
+
+                  // Show the progress bar and reset progress to 0
+                  progressBar.style.width = '0%';
+                  progressContainer.style.display = 'block';
+
+                  // Use the full page size for the PDF
+                  var pdf = new jsPDF('p', 'pt', 'a4');
+
+                  html2canvas(table, {
+                    scale: 2,
+                    dpi: 400,
+                    onprogress: function (progress) {
+                      // Update the progress bar based on the current progress
+                      progressBar.style.width = progress * 100 + '%';
+
+                      // Add a console.log to show the progress value
+                      console.log('Progress: ' + progress * 100 + '%');
+                    },
+                  }).then(function (canvas) {
+                    var imgData = canvas.toDataURL('image/png');
+                    var imgProps = pdf.getImageProperties(imgData);
+                    var pdfWidth = pdf.internal.pageSize.getWidth();
+                    var pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+                    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                    pdf.save('downloaded_table.pdf');
+
+                    // Hide the progress bar once the PDF is generated
+                    setTimeout(function () {
+                      progressContainer.style.display = 'none';
+                    }, 500); // Adjust the delay time as needed
+                  });
+                }
+
+              </script>
       </main>
       <aside class="col-sm-3 flex-grow-sm-1 flex-shrink-1 flex-grow-0 sticky-top pb-sm-0 pb-3"
         style="text-align:right;">
         <div class="bg-light border rounded-3 p-1 h-100 sticky-top">
-          <ul class="nav nav-pills flex-sm-column flex-row mb-auto justify-content-between text-truncate">
+          <ul class="nav nav-pills flex-sm-column flex-row mb-auto justify-content-between text-truncate"
+          style="background-color:#07264a;"
+          >
 
             <li>
-              <a href="admin.php" class="nav-link px-2 text-truncate">
+              <a href="admin.php" class="nav-link px-2" style="color:#fff">
                 <span class="d-none d-sm-inline">Dashboard</span>
                 <i class="bi bi-speedometer fs-5"></i>
 
@@ -799,7 +886,7 @@ function addproduct()
             <form>
               <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                 <input type="checkbox" class="custom-control-input" checked id="size-all">
-                <label class="custom-control-label" for="size-all">ټول مخصولات</label>
+                <label class="custom-control-label" for="size-all">ټول محصولات</label>
                 <span class="badge border font-weight-normal" style="color:black;">1000</span>
               </div>
               <?php
@@ -875,7 +962,9 @@ function addproduct()
       }
     });
   </script>
-
+  <div id="progressBar" style="width: 100%; background-color: #f1f1f1;">
+    <div id="progress" style="width: 0%; height: 30px; background-color: #4CAF50;"></div>
+  </div>
 </body>
 
 </html>
