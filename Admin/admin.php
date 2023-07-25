@@ -186,62 +186,44 @@ function addco()
 }
 // strat of adding Users
 function addUsers(){
-
-}
-// start of addingform function
-// function addFirm()
-// {
-
-//   try{
-//     include('DBConnection.php');
-//     $name=$_POST['first_name'];
-//     $lastname=$_POST['last_name'];
-//     $username=$_POST['user_name'];
-//     $userpassword=$_POST['user_password'];
-//     $usertype=$_POST['userType'];
-//     $useremails=$_POST['user_email'];
-//     $sqlusertype = "SELECT * FROM `user_type` WHERE type_flag = '$usertype'";
-//     $id = $conn->query($sqlusertype);
-//     $type_id = "";
-//     while ($row = $id->fetch_assoc()) {
-//       $type_id = $row["type_id"];
-//       echo ' ("<script LANGUAGE="JavaScript">
-//       window.alert("Opps");
-//       window.alert("' . $type_id . '");
-
-//     </script>");';
-//     }
+  try{
+    include('DBConnection.php');
+    $name=$_POST['first_name'];
+    $lastname=$_POST['last_name'];
+    $username=$_POST['user_name'];
+    $userpassword=$_POST['user_password'];
+    $usertype=$_POST['userType'];
+    $useremails=$_POST['user_email'];
+    
 
     
 
-//     $sqluser = "INSERT INTO `user`(user_id,`username`, `password`, `name`, `last_name`,  `email`, `user_type`) 
-//     VALUES (NULL,'$username','$userpassword','$name','$lastname','$useremails','$type_id')";
-//         if ($conn->query($sqluser)) {
+    $sqluser = "INSERT INTO `user`(user_id,`username`, `password`, `name`, `last_name`,  `email`, `user_type`) 
+    VALUES (NULL,'$username','$userpassword','$name','$lastname','$useremails','$usertype')";
+        if ($conn->query($sqluser)) {
     
-//           $conn->query($sqluser);
-//           echo ' <script LANGUAGE="JavaScript">
-//                      swal("په بریالی توګه !", "د شرکت معلومات اضافه شول!", "success");
+         // $conn->query($sqluser);
+          echo ' <script LANGUAGE="JavaScript">
+                     swal("په بریالی توګه !", "د شرکت معلومات اضافه شول!", "success");
     
-//                    </script>;';
-//         } else {
-//           echo ' ("<script LANGUAGE="JavaScript">
-//                          window.alert("Opps");
+                   </script>;';
+        } else if(!$conn->query($sqluser)) {
+          echo ' ("<script LANGUAGE="JavaScript">
+                         window.alert("Opps");
                         
     
-//                        </script>");';
+                       </script>");';
                        
                       
-//         }
+        }
+
+  }catch(Exception $e){
+
+  }
+}
 
 
 
-
-//   }catch(Exception $e){
-
-//   }
-
-
-// }
 
 // end of user adding function
 

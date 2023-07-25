@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Rest of the code for inserting data into the "customers_bys_goods" table
     $sql = "INSERT INTO `customers_bys_goods` (`currency_id`, `person_id`, `seller_id`, `price`, `quantity`, `buy_date`, `categ_id`, `comp_id`, `count_id`, `unit_amount`, `bill_number`,`unit_id`, `goods_name`)
-    VALUES ('$sold_currency_id', '$sold_person_id', '3', '$sold_buy_price', '$sold_quantity', NOW(), '$sold_cate_id_select', '$sold_company_id', '$sold_country_id', '$sold_unit_quantity', '$bill_number',$sold_unit_id, '$sold_goods_name');";
+    VALUES ('$sold_currency_id', '$sold_person_id', 2, '$sold_buy_price', '$sold_quantity', NOW(), '$sold_cate_id_select', '$sold_company_id', '$sold_country_id', '$sold_unit_quantity', '$bill_number',$sold_unit_id, '$sold_goods_name');";
 
     if ($conn->query($sql) === TRUE) {
         // Query was successful, display a success message
