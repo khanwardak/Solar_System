@@ -242,7 +242,7 @@ function addproduct()
 
               <!-- Modal Header -->
               <div class="modal-header" style="text-align: right;">
-                <h4 class="modal-title text-center w-100 ">ْنوی محلول اضافه کړی</h4>
+                
                 <h4 class="modal-title text-center w-100 ">ْجنس خرڅول</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
               </div>
@@ -435,11 +435,42 @@ function addproduct()
               <div class="modal-footer">
                 <button type="submit" class="btn btn-danger  " name="close" id="soldandbuy">بندول</button>
                 <button type="submit" class="btn btn-success" style="border: 2px solid green" id="printBill">پرنېټ بیل</button>
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#BillModal"
+                  style="text-align:right;">بیل چکول</button>
               </div>
 
             </div>
           </div>
         </div>
+      <!-- print bill modal start -->
+        <div class="modal fade" id="BillModal">
+          <div class="modal-dialog ">
+            <div class="modal-content">
+
+              <!-- Modal Header -->
+              <div class="modal-header" style="text-align: right;">
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <h4 class="modal-title text-center w-100 ">ْجنس خرڅول</h4>
+               
+              </div>
+
+
+              <div class="modal-body">
+                    <?php 
+                      // include('DBConnection.php');
+                      // $checkBill ="SELECT * FROM `customers_bys_goods` WHERE bill_number='$bill_number'";
+                      // $showbillResult = $conn->query($checkBill);
+                      // if($showbillResult -> num_rows>0){
+                      //   while($row = $showbillResult->fetch_assoc()){
+                      //     echo $row["bill_number"];
+                      //   }
+                      // }
+                    ?>
+              </div>
+            </div>
+          </div>
+          <div>
+          <!-- print bill modle end  -->
         <script>
 
           $(document).ready(function () {
