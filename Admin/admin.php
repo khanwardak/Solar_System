@@ -251,22 +251,32 @@ function addUsers(){
 function EditUsers(){
   try {
     include('DBConnection.php');
+    $userId = $_POST['ed_user_id']; // Assuming you have a form field with the user_id
+
+    // Get the updated values from the form fields
     $name = $_POST['ed_first_name'];
     $lastname = $_POST['ed_last_name'];
     $username = $_POST['ed_user_name'];
     $userpassword = $_POST['ed_user_password'];
-    $usertype = $_POST['ed_userType'];
+    $usertype = $_POST['userType'];
     $useremails = $_POST['ed_user_email'];
 
     // Hash the password
     $hashedPassword = password_hash($userpassword, PASSWORD_BCRYPT);
 
-    $sqluser = "INSERT INTO `user` (user_id, `username`, `password`, `name`, `last_name`,  `email`, `user_type`) 
-                VALUES (NULL, '$username', '$hashedPassword', '$name', '$lastname', '$useremails', '$usertype')";
+    // Prepare the SQL update query
+    $sqluser = "UPDATE `user` SET 
+                `username` = '$username', 
+                `password` = '$hashedPassword', 
+                `name` = '$name', 
+                `last_name` = '$lastname',  
+                `email` = '$useremails', 
+                `user_type` = '$usertype' 
+                WHERE `user_id` = $userId";
 
     if ($conn->query($sqluser)) {
       echo '<script LANGUAGE="JavaScript">
-             swal("په بریالی توګه !", "دیوزر معلومات تغیر شول!", "success");
+             swal("په بریالی توګه !", "د شرکت معلومات تازه شول!", "success");
             </script>';
     } else {
       echo '<script LANGUAGE="JavaScript">
@@ -278,6 +288,7 @@ function EditUsers(){
     echo "Error: " . $e->getMessage();
   }
 }
+
 
 // end of user edit funtion
 
@@ -1584,6 +1595,7 @@ function addUnit()
                           style="direction:rtl" class="card">
                           <thead>
                             <tr>
+                           
                               <th>نوم</th>
                               <th>صلاحیت</th>
 
@@ -1591,39 +1603,64 @@ function addUnit()
                           </thead>
                           <tbody>
 
-                            <?php
-                            require_once('DBConnection.php');
-                            $sql = "SELECT name ,type_flag from user,user_type where user.user_type=user_type.type_id;";
-                            $result = $conn->query($sql);
-                            if ($result->num_rows > 0) {
-                              while ($row = $result->fetch_assoc()) {
-                                echo '   <tr><td>' . $row["name"] . '</td>
-                                <td>' . $row["type_flag"] . '</td>
-                                    
-                                    <td>
-                                    <a class="fa fa-edit text-decoration-none" id="editButton" href="#"></a></td>
+                          <?php
+require_once('DBConnection.php');
+$sql = "SELECT user_id, name, type_flag FROM user INNER JOIN user_type ON user.user_type = user_type.type_id";
+$result = $conn->query($sql);
+if ($result->num_rows > 0) {
+  while ($row = $result->fetch_assoc()) {
+    echo '<tr data-user-id="' . $row["user_id"] . '">';
+    echo '<td>' . $row["name"] . '</td>';
+    echo '<td>' . $row["type_flag"] . '</td>';
+    echo '<td><a class="fa fa-edit text-decoration-none editButton" href="#"></a></td>';
+    echo '<td><a class="fa fa-trash text-decoration-none" href=""></a></td>';
+    echo '</tr>';
+  }
+}
+?>
 
-                                    </td>
-                                     <td><a class="fa fa-trash text-decoration-none" href=""></a></td>
-                                      </tr>
-                                    ';
-                              }
-                            }
-                            ?>
                           </tbody>
                         </table>
                         <script>
   $(document).ready(function() {
-    // Handle click event for the editButton
-    $('#editButton').click(function(e) {
+    // Handle click event for the editButton using event delegation
+    $(document).on('click', '.editButton', function(e) {
       e.preventDefault(); // Prevent the default behavior of the anchor tag (navigating to the href)
 
-      // Show the modal with the specified ID
-      $('#ed_users').modal('show');
-      $('#users').modal('hide');
+      // Find the parent table row and get the user_id from the data attribute
+      var row = $(this).closest('tr');
+      var userId = row.data('user-id');
+
+      // Send an AJAX request to fetch the complete user information based on the user_id
+      $.ajax({
+        url: 'get_user_info.php', // Replace with the PHP script that fetches user info
+        method: 'POST',
+        data: { user_id: userId },
+        dataType: 'json',
+        success: function(data) {
+          // Now you have the complete user information in the 'data' variable
+          // Pre-populate the form in the edit modal with the fetched data
+          $('#ed_users').modal('show');
+          $('#users').modal('hide');
+
+          // Example: Pre-populate the form fields in the edit modal with the extracted data
+          $('#ed_users input[name="ed_user_id"]').val(data.user_id);
+          $('#ed_users input[name="ed_first_name"]').val(data.name);
+          $('#ed_users input[name="ed_last_name"]').val(data.last_name);
+          $('#ed_users input[name="ed_user_email"]').val(data.email);
+          $('#ed_users input[name="ed_user_name"]').val(data.username);
+          $('#ed_users input[name="ed_user_password"]').val(data.password);
+          $('#ed_users select[name="ed_userType"]').val(data.user_type);
+        },
+        error: function() {
+          alert('Error fetching user information.');
+        }
+      });
     });
   });
 </script>
+
+
           
 
                       </div>
@@ -1660,6 +1697,9 @@ function addUnit()
                       <div class="px-4 py-5">
                         <form class="row g-3 needs-validation" novalidate style="text-align:right;" method="post">
                           <div class="col-12">
+                          <label for="yourName" class="form-label">آیدی</label>
+                            <input type="text" name="ed_user_id" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
                             <label for="yourName" class="form-label">نوم</label>
                             <input type="text" name="ed_first_name" class="form-control" id="" required>
                             <div class="invalid-feedback">Please,bill id!</div>
@@ -1678,7 +1718,7 @@ function addUnit()
                             <input type="Password" name="ed_user_password" class="form-control" id="" required>
                             <div class="invalid-feedback">Please,bill id!</div>
                             <label for="yourName" class="form-label">یوزر ټایپ</label>
-                            <select class="form-control" id="ed_userType" name="userType" onchange="userType(this.value)">
+                            <select class="form-control" id="userType" name="userType" onchange="userType(this.value)">
                               <?php
                               require_once('DBConnection.php');
 
