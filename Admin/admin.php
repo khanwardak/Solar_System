@@ -2440,7 +2440,7 @@ function addUnit()
           <!-- product modal =================================== end============================================================================= -->
       </main>
       <aside class="col-sm-3 flex-grow-sm-1 flex-shrink-1 flex-grow-0 sticky-top pb-sm-0 pb-3"
-        style="text-align:right; b">
+        style="text-align:right; z-index: 1;">
         <div class="rounded-3 p-1 h-100 sticky-top" style="height: 100%; ">
           <ul class="nav nav-pills flex-sm-column flex-row mb-auto justify-content-between "
             style="background-color:#07264a; color:#ffffff">

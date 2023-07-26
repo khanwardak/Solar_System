@@ -115,7 +115,7 @@ function addproduct()
             data-bs-toggle="dropdown" aria-expanded="false">
             <img src="https://via.placeholder.com/28?text=!" alt="user" width="32" height="32" class="rounded-circle">
           </a>
-          <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownUser2" style="">
+          <ul class="dropdown-menu dropdown-menu-end " aria-labelledby="dropdownUser2" style="z-index:1000;">
 
             <li><a class="dropdown-item" href="#">Settings</a></li>
             <li><a class="dropdown-item" href="#">Profile</a></li>
@@ -867,7 +867,7 @@ function addproduct()
               </script>
     </main>
       <aside class="col-sm-3 flex-grow-sm-1 flex-shrink-1 flex-grow-0 sticky-top pb-sm-0 pb-3"
-        style="text-align:right;">
+        style="text-align:right; z-index: 1;">
         <div class="bg-light border rounded-3 p-1 h-100 sticky-top">
           <ul class="nav nav-pills flex-sm-column flex-row mb-auto justify-content-between text-truncate"
           style="background-color:#07264a;">
