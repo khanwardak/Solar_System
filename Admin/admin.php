@@ -236,59 +236,94 @@ function addUsers(){
             </script>';
     } else {
       echo '<script LANGUAGE="JavaScript">
-             window.alert("Opps");
+             window.alert("Opps: '. $conn->error .'");
            </script>';
     }
   } catch (Exception $e) {
     // Handle any exceptions here
+    echo "Error: " . $e->getMessage();
   }
 }
 
-
-
-
-
 // end of user adding function
+
+// start of user edit function
+function EditUsers(){
+  try {
+    include('DBConnection.php');
+    $name = $_POST['ed_first_name'];
+    $lastname = $_POST['ed_last_name'];
+    $username = $_POST['ed_user_name'];
+    $userpassword = $_POST['ed_user_password'];
+    $usertype = $_POST['ed_userType'];
+    $useremails = $_POST['ed_user_email'];
+
+    // Hash the password
+    $hashedPassword = password_hash($userpassword, PASSWORD_BCRYPT);
+
+    $sqluser = "INSERT INTO `user` (user_id, `username`, `password`, `name`, `last_name`,  `email`, `user_type`) 
+                VALUES (NULL, '$username', '$hashedPassword', '$name', '$lastname', '$useremails', '$usertype')";
+
+    if ($conn->query($sqluser)) {
+      echo '<script LANGUAGE="JavaScript">
+             swal("په بریالی توګه !", "دیوزر معلومات تغیر شول!", "success");
+            </script>';
+    } else {
+      echo '<script LANGUAGE="JavaScript">
+             window.alert("Opps: '. $conn->error .'");
+           </script>';
+    }
+  } catch (Exception $e) {
+    // Handle any exceptions here
+    echo "Error: " . $e->getMessage();
+  }
+}
+
+// end of user edit funtion
 
 // start of addingfirm function
 function addFirm(){
-
   try {
-        include('DBConnection.php');
-        $location = $_POST['location_name'];
-        $dist = $_POST['district'];
-        $province = $_POST['address'];
-        $sql2 = "INSERT INTO `address` (`adress_vilage`, `address_province`, `address_district`) VALUES ( '$location', '$province', '$dist');";
-        if (!$conn->query($sql2)) {
-          echo "opps!";
-        }
+    include('DBConnection.php');
+    $location = $_POST['location_name'];
+    $dist = $_POST['district'];
+    $province = $_POST['address'];
+    
+    // Insert address first
+    $sql2 = "INSERT INTO `address` (`adress_vilage`, `address_province`, `address_district`) 
+             VALUES ('$location', '$province', '$dist')";
+    
+    if (!$conn->query($sql2)) {
+      echo "Opps!";
+    }
 
-        $sql = "SELECT * FROM `address` ORDER BY address_id desc limit 1";
-        $id = $conn->query($sql);
-        $addres = "";
-        while ($row = $id->fetch_assoc()) {
-          $addres = $row["address_id"];
-        }
-        $store_name = $_POST['firm_name'];
-        //$store_address = $_POST['store_address'];
-        $sqlfirm = "INSERT INTO `firm` (`firm_id`, `firm_name`, `address_id`) VALUES (NULL, '$store_name', '$addres');";
-        if ($conn->query($sqlfirm)) {
-    
-          $conn->query($sqlfirm);
-          echo ' <script LANGUAGE="JavaScript">
-                     swal("په بریالی توګه !", "د شرکت معلومات اضافه شول!", "success");
-    
-                   </script>;';
-        } else {
-          echo ' ("<script LANGUAGE="JavaScript">
-                         window.alert("Opps");
-    
-                       </script>");';
-        }
-}catch(Exception $e){
- echo "error in adding firm ".$e;
+    // Get the inserted address_id
+    $sql = "SELECT * FROM `address` ORDER BY address_id DESC LIMIT 1";
+    $id = $conn->query($sql);
+    $addressId = "";
+    while ($row = $id->fetch_assoc()) {
+      $addressId = $row["address_id"];
+    }
+
+    $store_name = $_POST['firm_name'];
+    $sqlfirm = "INSERT INTO `firm` (`firm_id`, `firm_name`, `address_id`) 
+                VALUES (NULL, '$store_name', '$addressId')";
+
+    if ($conn->query($sqlfirm)) {
+      echo '<script LANGUAGE="JavaScript">
+             swal("په بریالی توګه !", "د شرکت معلومات اضافه شول!", "success");
+           </script>';
+    } else {
+      echo '<script LANGUAGE="JavaScript">
+             window.alert("Opps: '. $conn->error .'");
+           </script>';
+    }
+  } catch (Exception $e) {
+    // Handle any exceptions here
+    echo "Error in adding firm: " . $e->getMessage();
+  }
 }
-}
+
 
 
 
@@ -475,6 +510,8 @@ function addUnit()
   <script src="jsPDF/jsPDFAutoTable/dist/jspdf.plugin.autotable.js"></script>
   <script src="jsPDF/html2canvas/html2canvas.js"></script>
   <script src="jsPDF/html2canvas/html2canvas.min.js"></script>
+ 
+
 
   <link href="../style.css?verssion=4" rel="stylesheet">
 
@@ -1562,7 +1599,9 @@ function addUnit()
                               while ($row = $result->fetch_assoc()) {
                                 echo '   <tr><td>' . $row["name"] . '</td>
                                 <td>' . $row["type_flag"] . '</td>
-                                    <td><a class="fa fa-edit text-decoration-none" href=""></a>
+                                    
+                                    <td>
+                                    <a class="fa fa-edit text-decoration-none" id="editButton" href="#"></a></td>
 
                                     </td>
                                      <td><a class="fa fa-trash text-decoration-none" href=""></a></td>
@@ -1573,6 +1612,20 @@ function addUnit()
                             ?>
                           </tbody>
                         </table>
+                        <script>
+  $(document).ready(function() {
+    // Handle click event for the editButton
+    $('#editButton').click(function(e) {
+      e.preventDefault(); // Prevent the default behavior of the anchor tag (navigating to the href)
+
+      // Show the modal with the specified ID
+      $('#ed_users').modal('show');
+      $('#users').modal('hide');
+    });
+  });
+</script>
+          
+
                       </div>
                     </div>
                   </div>
@@ -1592,6 +1645,81 @@ function addUnit()
 
 
         <!-- end of user model -->
+
+
+
+        <!-- start of user editing function -->
+        <div class="modal left fade" id="ed_users" data-backdrop="static" data-keyboard="false" tabindex="-1"
+              role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="col">
+                    <div class="modal-body ">
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                      <h5 class="card-title text-center"><span>Edit User</span></h5>
+                      <div class="px-4 py-5">
+                        <form class="row g-3 needs-validation" novalidate style="text-align:right;" method="post">
+                          <div class="col-12">
+                            <label for="yourName" class="form-label">نوم</label>
+                            <input type="text" name="ed_first_name" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+                            <label for="yourName" class="form-label">تخلص</label>
+                            <input type="text" name="ed_last_name" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+                            <label for="yourName" class="form-label">ایمیل</label>
+                            <input type="text" name="ed_user_email" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+
+                            <label for="yourName" class="form-label">يوزر نوم</label>
+                            <input type="text" name="ed_user_name" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+
+                            <label for="yourName" class="form-label">پاسورد</label>
+                            <input type="Password" name="ed_user_password" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+                            <label for="yourName" class="form-label">یوزر ټایپ</label>
+                            <select class="form-control" id="ed_userType" name="userType" onchange="userType(this.value)">
+                              <?php
+                              require_once('DBConnection.php');
+
+                              $sql = "SELECT * FROM `user_type`";
+                              $result = $conn->query($sql);
+                              if ($result->num_rows > 0) {
+
+                                while ($row = $result->fetch_assoc()) {
+                                  echo '<option value="' . $row["type_id"] . '">' . $row["type_flag"] . '</option>';
+                                }
+
+                              }
+                              
+
+                              ?>
+                              </select>
+                            <div class="text-center mt-5">
+                              <button class="btn btn-primary btn-submit" type="submit" name="EditUsers">ثبتول</button>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+            <?php
+            if (isset($_POST['EditUsers'])) {
+              EditUsers();
+            }
+            ?>
+
+
+
+
+
+
+        <!-- end of editing user form -->
 
 
         <!-- start of ourloan model -->
@@ -2229,12 +2357,13 @@ function addUnit()
                   <thead class="overflow-auto h-100">
                     <h5 class="card-title">تر ټول ډیر خرڅ شوی <span>| نن</span></h5>
                     <tr class="">
-                      <th>نوم</th>
-                      <th>انځور</th>
+                      <th>کتګوري</th>
+                      <th>هیواد</th>
 
-                      <th>د اخسبلو بیه</th>
-                      <th>د خرځ بیه</th>
-                      <th>تاریخ</th>
+                      <th>کمپنی</th>
+                      <th>قدرت</th>
+                      <th>واحد</th>
+                      <th>ټوټل</th>
 
                     </tr>
 
@@ -2246,17 +2375,18 @@ function addUnit()
                       if (isset($_GET['view'])) {
                         $lint = $_GET['view'];
                       }
-                      $sql = "SELECT category.categ_name ,sum(customers_bys_goods.quantity) as summ FROM customers_bys_goods,category where customers_bys_goods.categ_id=category.categ_id GROUP by categ_name ORDER BY summ desc LIMIT 3; ";
+                      $sql = "SELECT category.categ_name, country.count_name,company.comp_name,customers_bys_goods.unit_amount,unit.unit_name,SUM(customers_bys_goods.quantity) as totalsaled from customers_bys_goods,category,country,company,currency,person,unit WHERE customers_bys_goods.categ_id=category.categ_id and country.count_id=customers_bys_goods.count_id and customers_bys_goods.comp_id=company.comp_id and customers_bys_goods.currency_id=currency.currency_id and customers_bys_goods.unit_id=unit.unit_id and customers_bys_goods.person_id=person.person_id GROUP BY categ_name,comp_name,count_name ORDER BY totalsaled DESC LIMIT 3;";
                       include('DBConnection.php');
                       $result = $conn->query($sql);
                       if ($result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
                           echo '  <tr>
                                                     <td>' . $row["categ_name"] . '</td>
-                                                    <td>data</td>
-                                                    <td>data</td>
-                                                    <td>data</td>
-                                                    <td>$12</td>
+                                                    <td>' . $row["count_name"] . '</td>
+                                                    <td>' . $row["comp_name"] . '</td>
+                                                    <td>' . $row["unit_amount"] . '</td>
+                                                    <td>' . $row["unit_name"] . '</td>
+                                                    <td>' . $row["totalsaled"] . '</td>
                                                  </tr>';
                         }
                       }
@@ -2751,6 +2881,10 @@ function addUnit()
 
   <!-- Template Javascript -->
   <script src="js/main.js"></script>
+  <script src="js/edit.js"></script>
+
+  // edit.js
+
 
 
 </body>
