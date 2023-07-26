@@ -2243,82 +2243,6 @@ function addUnit()
             //   addStore();
             // }
             ?>
-            <!-- store modal end here======================================================================================================================================================= -->
-
-            <!-- Revenue Card -->
-            <!--   <div class="col-xxl-4 col-md-4" style="direction:rtl; text-align: right;">
-            <div class="card info-card revenue-card" style="background-color: ">
-
-            <div class="filter">
-                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <li class="dropdown-header text-start">
-                      <h6>پلټنه</h6>
-                    </li>
-
-                    <li><a class="dropdown-item" href="#">نن</a></li>
-                    <li><a class="dropdown-item" href="#">میاشت</a></li>
-                    <li><a class="dropdown-item" href="#">کال</a></li>
-                  </ul>
-            </div>
-
-                <div class="card-body">
-                  <h5 class="card-title">ګټه <span>| میاشت</span></h5>
-
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-currency-dollar"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6>$3,264</h6>
-                      <span class="text-success small pt-1 fw-bold">8%</span> <span class="text-muted small pt-2 ps-1">کمه شوی</span>
-
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div> --><!-- End Revenue Card -->
-
-            <!--  <div class="col-xxl-4 col-md-4"style="direction: rtl; text-align: right;">
-              <div class="card info-card sales-card">
-
-
-                <div class="filter" style="direction: rtl; text-align: right; background-color:;">
-                  <a class="dropdown-item" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <li class="dropdown-header text-start">
-                      <h6>پلټنه</h6>
-                    </li>
-
-                    <li><a class="dropdown-item" href="#">نن</a></li>
-                    <li><a class="dropdown-item" href="#">میاشت</a></li>
-                    <li><a class="dropdown-item" href="#">کال</a></li>
-                  </ul>
-                </div>
-
-                <div class="card-body" style="direction:rtl; background-color:;">
-                  <h5 class="card-title">خرڅ شوی <span>| نن</span></h5>
-
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-cart"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6>145</h6>
-                      <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">ریات شوی</span>
-
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-              </div> -->
-            <!-- End Sales Card -->
-
-
-
             <div class="col d-flex justify-content-end">
 
               <div class="btn-group  d-flex justify-content-center">
@@ -2352,21 +2276,17 @@ function addUnit()
             </div>
             <div class="row" style="text-align: right;">
               <div class="col-lg-6 card " style="text-align: right;">
-
                 <table class="table table-bordered border-primary text-center" style="text-align:center">
                   <thead class="overflow-auto h-100">
                     <h5 class="card-title">تر ټول ډیر خرڅ شوی <span>| نن</span></h5>
                     <tr class="">
                       <th>کتګوري</th>
                       <th>هیواد</th>
-
                       <th>کمپنی</th>
                       <th>قدرت</th>
                       <th>واحد</th>
                       <th>ټوټل</th>
-
                     </tr>
-
                   </thead>
                   <tbody>
                     <?php
@@ -2395,9 +2315,6 @@ function addUnit()
 
                     }
                     ?>
-
-
-
                   </tbody>
                 </table>
               </div>
@@ -2440,13 +2357,11 @@ function addUnit()
                         </div>
                     </div>
                 </div>
-                <div class="panel-body table-responsive">
+                <div class="panel-body table-responsive" style="max-height: 200px; overflow-y: auto;">
                     <table class="table">
                         <thead>
                         <tr class="">
-
                             <th>نوم</th>
-
                             <th>د خرځ بیه</th>
                             <th>تاریخ</th>
                             <th>دمشتری آیدی</th>

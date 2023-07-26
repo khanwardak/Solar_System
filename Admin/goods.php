@@ -170,10 +170,7 @@ function addproduct()
           <div class="card table-responsive">
             <table id="sells" class="table mt-2 table-ligh table table-hover  " style="direction:rtl">
               <thead class="overflow-auto h-100">
-
                 <tr class="">
-
-
                   <th>ګټګوری</th>
                   <th>کمپنی</th>
                   <th> هیواد</th>
@@ -181,7 +178,6 @@ function addproduct()
                   <th>یونېټ</th>
                   <th>اندازه</th>
                 </tr>
-
               </thead>
               <tbody>
                 <?php
