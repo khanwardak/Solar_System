@@ -728,14 +728,14 @@ function addproduct()
                             <h5>Solar Tech</h5>
                             <p>0778885555 <i class="fa fa-phone"></i></p>
                             <p>solar-tech@solar-tech.energy <i class="fa fa-envelope-o"></i></p>
-                            <p>Kabul <i class="fa fa-location-arrow"></i></p>
+                            <p>Kabul, Afghanistan <i class="fa fa-location-arrow"></i></p>
                           </div>
                         </div>
                         <div class="col-lg-4 text-right  justify-content-end" style="text-align: right;">
                           <div class="receipt-right" style="text-align: right;">
-                            <h5>دمشتر نوم: اخمد</h5>
+                            <h5>دمشتر نوم:   <?php echo $_SESSION["username"] ; ?></h5>
 
-                            <h3 style="">Bill NO: # 102</h3>
+                            <h3 style="">Bill NO: #  <?php echo $_SESSION["billNumber"]; ?></h3>
                           </div>
                         </div>
 
@@ -780,6 +780,8 @@ function addproduct()
                                   <td>' . $row["price"] . '</td>
                                   <td>' . $row["currency_name"] . '</td>
                                 </tr>';
+                                $_SESSION["username"]=$row["person_name"];
+                                $_SESSION["billNumber"]=$bill_generate;
                                 }
                               }
                               ?>
@@ -838,7 +840,7 @@ function addproduct()
 
                   html2canvas(table, {
                     scale: 2,
-                    dpi: 400,
+                    dpi: 300,
                     onprogress: function (progress) {
                       // Update the progress bar based on the current progress
                       progressBar.style.width = progress * 100 + '%';
@@ -863,19 +865,16 @@ function addproduct()
                 }
 
               </script>
-      </main>
+    </main>
       <aside class="col-sm-3 flex-grow-sm-1 flex-shrink-1 flex-grow-0 sticky-top pb-sm-0 pb-3"
         style="text-align:right;">
         <div class="bg-light border rounded-3 p-1 h-100 sticky-top">
           <ul class="nav nav-pills flex-sm-column flex-row mb-auto justify-content-between text-truncate"
-          style="background-color:#07264a;"
-          >
-
+          style="background-color:#07264a;">
             <li>
               <a href="admin.php" class="nav-link px-2" style="color:#fff">
                 <span class="d-none d-sm-inline">Dashboard</span>
                 <i class="bi bi-speedometer fs-5"></i>
-
               </a>
             </li>
           </ul>
@@ -915,8 +914,7 @@ function addproduct()
 
             </form>
           </div>
-          <!-- category -->
-
+          <!-- category  end-->
         </div>
       </aside>
 
