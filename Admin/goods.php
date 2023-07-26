@@ -704,15 +704,15 @@ function addproduct()
         <!-- print and check bill Modal start -->
         <div class="modal fade" id="BillModal" style="direction:rtl">
           <div class="modal-dialog modal-xl">
-            <div class="modal-content">
+            <div class="modal-content" style=" background-color: #fff; ">
               <!-- Modal Header -->
               <div class="modal-header" style="text-align: right;">
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 <h4 class="modal-title text-center w-100 "> د بېل مالومات</h4>
               </div>
-              <div class="modal-body">
+              <div class="modal-body" style=" background-color: #fff;">
 
-                <div class="col" id="billedcustoemr">
+                <div class="col" id="billedcustoemr" style =" background-color: #fff; ">
                   <div class="row" style="text-align: right;">
 
                     <div class="receipt-main col" style="text-align: right; height: 1400px; ">
@@ -743,7 +743,7 @@ function addproduct()
                         </div>
 
                         <div>
-                          <table class="table table-bordered">
+                          <table class="table table-bordered" style =" background-color: #fff;">
                             <thead>
                               <tr>
                                 <th>کتګوری</th>
