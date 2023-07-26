@@ -2,39 +2,48 @@
 $error = '';
 
 if (isset($_POST["login"])) {
-    session_start();
-    include('DBConnection.php');
+  session_start();
+  include('DBConnection.php');
 
-    // username and password sent from form 
-    $username = mysqli_real_escape_string($conn, $_POST['user_name']);
-    $password = mysqli_real_escape_string($conn, $_POST['password']);
-    $sql = "SELECT username, password, user_type FROM user WHERE username = '$username' AND password = '$password'";
-    $result = $conn->query($sql);
+  $username = mysqli_real_escape_string($conn, $_POST['user_name']);
+  $password = mysqli_real_escape_string($conn, $_POST['password']);
 
-    // If result matched $myusername and $mypassword, table row must be 1 row
-    if ($result->num_rows) {
-        while ($row = $result->fetch_assoc()) {
-            $role = $row["user_type"];
-            $_SESSION['login_user'] = $username;
-            $_SESSION['role'] = $role; // Set the 'role' information in the session
-            if ($role == 1) {
-                header("Location: admin.php");
-                exit();
-            } elseif ($role == 2) {
-                header("Location: second_goods.php");
-                exit();
-            } else {
-                echo $error = '<div class="alert alert-danger" role="alert">
-                              Invalid User Type!
-                            </div>';
-            }
-        }
-    } else {
-        $error = '<div class="alert alert-danger" role="alert" id="alert-danger">
-                      Invalid Username or Password!
+  $sql = "SELECT username, password, user_type FROM user WHERE username = '$username'";
+  $result = $conn->query($sql);
+
+  if ($result->num_rows == 1) {
+    $row = $result->fetch_assoc();
+    $hashedPassword = $row["password"];
+    $role = $row["user_type"];
+
+    // Verify the password
+    if (password_verify($password, $hashedPassword)) {
+      $_SESSION['login_user'] = $username;
+      $_SESSION['role'] = $role;
+
+      if ($role == 1) {
+        header("Location: admin.php");
+        exit();
+      } elseif ($role == 2) {
+        header("Location: second_goods.php");
+        exit();
+      } else {
+        $error = '<div class="alert alert-danger" role="alert">
+                   Invalid User Type!
                   </div>';
+      }
+    } else {
+      $error = '<div class="alert alert-danger" role="alert" id="alert-danger">
+                 Invalid Username or Password!
+               </div>';
     }
+  } else {
+    $error = '<div class="alert alert-danger" role="alert" id="alert-danger">
+               Invalid Username or Password!
+             </div>';
+  }
 }
+
 ?>
 
 

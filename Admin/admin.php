@@ -184,43 +184,66 @@ function addco()
   }
 
 }
-// strat of adding Users
-function addUsers(){
-  try{
+// AddOurLoan start 
+// AddOurLoan start 
+function addOurLoan(){
+  try {
     include('DBConnection.php');
-    $name=$_POST['first_name'];
-    $lastname=$_POST['last_name'];
-    $username=$_POST['user_name'];
-    $userpassword=$_POST['user_password'];
-    $usertype=$_POST['userType'];
-    $useremails=$_POST['user_email'];
-    
+    $ourloanfirm = $_POST['ourloanfirm'];
+    $ourloancurency_id = $_POST['ourloancurrency_id'];
+    $ourloanamount = $_POST['ourloanamount'];
+   
+    $sqluser = "INSERT INTO `ourloan`(`loan_amount`, `loan_paid`, `firm_id`, `currency_id`) 
+    VALUES ('$ourloanamount', 0, '$ourloanfirm', $ourloancurency_id)";
 
-    
-
-    $sqluser = "INSERT INTO `user`(user_id,`username`, `password`, `name`, `last_name`,  `email`, `user_type`) 
-    VALUES (NULL,'$username','$userpassword','$name','$lastname','$useremails','$usertype')";
-        if ($conn->query($sqluser)) {
-    
-         // $conn->query($sqluser);
-          echo ' <script LANGUAGE="JavaScript">
-                     swal("په بریالی توګه !", "د شرکت معلومات اضافه شول!", "success");
-    
-                   </script>;';
-        } else if(!$conn->query($sqluser)) {
-          echo ' ("<script LANGUAGE="JavaScript">
-                         window.alert("Opps");
-                        
-    
-                       </script>");';
-                       
-                      
-        }
-
-  }catch(Exception $e){
-
+    if ($conn->query($sqluser)) {
+      echo '<script LANGUAGE="JavaScript">
+             swal("په بریالی توګه !", "د شرکت معلومات اضافه شول!", "success");
+            </script>';
+    } else {
+      echo '<script LANGUAGE="JavaScript">
+             window.alert("Opps: '. $conn->error .'");
+           </script>';
+    }
+  } catch (Exception $e) {
+    // Handle any exceptions here
+    echo "Error: " . $e->getMessage();
   }
 }
+
+// end of AddOurLoan
+
+// strat of adding Users
+function addUsers(){
+  try {
+    include('DBConnection.php');
+    $name = $_POST['first_name'];
+    $lastname = $_POST['last_name'];
+    $username = $_POST['user_name'];
+    $userpassword = $_POST['user_password'];
+    $usertype = $_POST['userType'];
+    $useremails = $_POST['user_email'];
+
+    // Hash the password
+    $hashedPassword = password_hash($userpassword, PASSWORD_BCRYPT);
+
+    $sqluser = "INSERT INTO `user` (user_id, `username`, `password`, `name`, `last_name`,  `email`, `user_type`) 
+                VALUES (NULL, '$username', '$hashedPassword', '$name', '$lastname', '$useremails', '$usertype')";
+
+    if ($conn->query($sqluser)) {
+      echo '<script LANGUAGE="JavaScript">
+             swal("په بریالی توګه !", "د شرکت معلومات اضافه شول!", "success");
+            </script>';
+    } else {
+      echo '<script LANGUAGE="JavaScript">
+             window.alert("Opps");
+           </script>';
+    }
+  } catch (Exception $e) {
+    // Handle any exceptions here
+  }
+}
+
 
 
 
@@ -1571,6 +1594,124 @@ function addUnit()
         <!-- end of user model -->
 
 
+        <!-- start of ourloan model -->
+      <div class="modal left fade" id="ourloan" data-backdrop="static" data-keyboard="false" tabindex="-1"
+              role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="col">
+                    <div class="modal-body ">
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                      <h5 class="card-title text-center"><span>Add Our Loan</span></h5>
+                      <div class="px-4 py-5">
+                        <form class="row g-3 needs-validation" novalidate style="text-align:right;" method="post">
+                          <div class="col-12">
+                          <div class="input-group mt-2">
+
+                          <select class="form-select form-control" name="ourloanfirm">
+                        <?php
+
+                        include('DBConnection.php');
+                        $sql = "SELECT * FROM `firm`;                        ";
+                        $result = $conn->query($sql);
+                        if ($result->num_rows > 0) {
+
+                          while ($row = $result->fetch_assoc()) {
+                            echo '<option value="' . $row["firm_id"] . '">' . $row["firm_name"] . '</option>';
+                          }
+
+                        } else
+                          "no record found";
+
+                        ?>
+                      </select>
+                      <span class="input-group-text">د شرکت نوم</span>
+                    </div>
+
+                      <div class="input-group mt-2">
+
+                      <select class="form-select form-control " required name="ourloancurrency_id">
+
+                        <?php
+                        //  $sql="SELECT * FROM `currency`";
+                        include('DBConnection.php');
+                        $sql = "SELECT * FROM `currency`";
+                        $result = $conn->query($sql);
+                        if ($result->num_rows > 0) {
+
+                          while ($row = $result->fetch_assoc()) {
+                            echo '<option value="' . $row["currency_id"] . '">' . $row["currency_name"] . '</option>';
+                          }
+
+                        } else
+                          "no record found";
+
+                        ?>
+
+
+                      </select>
+                      <span class="input-group-text">پولی واحد</span>
+                    </div>
+                            <label for="yourName" class="form-label">اندازه</label>
+                            <input type="text" name="ourloanamount" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+                       
+                            
+                            <div class="text-center mt-5">
+                              <button class="btn btn-primary btn-submit" type="submit" name="addOurLoan">ثبتول</button>
+                            </div>
+                          </div>
+                        </form>
+                        <table class="table table-borderless align-middle mb-0 bg-white table-hover mt-2"
+                          style="direction:rtl" class="card">
+                          <thead>
+                            <tr>
+                              <th>نوم</th>
+                              <th>صلاحیت</th>
+
+                            </tr>
+                          </thead>
+                          <tbody>
+
+                            <?php
+                            require_once('DBConnection.php');
+                            $sql = "SELECT name ,type_flag from user,user_type where user.user_type=user_type.type_id;";
+                            $result = $conn->query($sql);
+                            if ($result->num_rows > 0) {
+                              while ($row = $result->fetch_assoc()) {
+                                echo '   <tr><td>' . $row["name"] . '</td>
+                                <td>' . $row["type_flag"] . '</td>
+                                    <td><a class="fa fa-edit text-decoration-none" href=""></a>
+
+                                    </td>
+                                     <td><a class="fa fa-trash text-decoration-none" href=""></a></td>
+                                      </tr>
+                                    ';
+                              }
+                            }
+                            ?>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+            <?php
+            if (isset($_POST['addOurLoan'])) {
+              addOurLoan();
+            }
+            ?>
+
+
+
+
+        <!-- end of ourloan model -->
+
+
             <!-- start of firm model -->
 
 
@@ -2493,9 +2634,9 @@ function addUnit()
             </li>
             <li>
 
-              <a href="#" class=" nav-link px-2 text-truncate" data-bs-toggle="modal" data-bs-target="#store"
+              <a href="#" class=" nav-link px-2 text-truncate" data-bs-toggle="modal" data-bs-target="#ourloan"
                 style="text-align:righ;color:#c8c8d2">
-                <span class="d-none d-sm-inline">Store</span>
+                <span class="d-none d-sm-inline">OurLoan</span>
                 <i class="bi bi-shop fs-5"></i>
               </a>
             </li>
