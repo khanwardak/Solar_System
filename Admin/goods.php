@@ -129,7 +129,7 @@ function addproduct()
     </div>
   </header>
   <div class="container-fluid ">
-    
+
     <div class="row ">
 
       <main class="col-lg-9 col-md-8 col-sm-3 overflow-auto h-100">
@@ -142,7 +142,7 @@ function addproduct()
             <div class="btn-group  d-flex justify-content-center">
               <button type="button" class="bi- btn btn-sm  dropdown-toggle" data-toggle="dropdown">ښکاره کول</button>
               <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#BillModal"
-                  style="text-align:right;">بېل چکول</button>
+                style="text-align:right;">بېل چکول</button>
               <div class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item" href="#">10</a>
                 <a class="dropdown-item" href="#">20</a>
@@ -703,7 +703,7 @@ function addproduct()
         <!-- add product modal  =================================== end================================================== -->
         <!-- print and check bill Modal start -->
         <div class="modal fade" id="BillModal" style="direction:rtl">
-          <div class="modal-dialog modal-lg">
+          <div class="modal-dialog modal-xl">
             <div class="modal-content">
               <!-- Modal Header -->
               <div class="modal-header" style="text-align: right;">
@@ -715,14 +715,13 @@ function addproduct()
                 <div class="col" id="billedcustoemr">
                   <div class="row" style="text-align: right;">
 
-                    <div class="receipt-main col" style="text-align: right; height: 980px; ">
+                    <div class="receipt-main col" style="text-align: right; height: 1400px; ">
                       <div class="row">
 
                         <div class="col-lg-8 justify-content-start text-align" style="text-align: right; ">
                           <div class="receipt-left">
-                            <img class="img-responsive" alt="iamgurdeeposahan"
-                              src="https://bootdey.com/img/Content/avatar/avatar6.png"
-                              style="width: 71px; border-radius: 43px;">
+                            <img class="img-responsive" alt="solar-tech-logo"
+                              src="img/solar tech logo.png">
                           </div>
                           <div class="receipt-right" style="text-align: right;">
                             <h5>Solar Tech</h5>
@@ -733,9 +732,13 @@ function addproduct()
                         </div>
                         <div class="col-lg-4 text-right  justify-content-end" style="text-align: right;">
                           <div class="receipt-right" style="text-align: right;">
-                            <h5>دمشتر نوم:   <?php echo $_SESSION["username"] ; ?></h5>
+                            <h5>دمشتر نوم:
+                              <?php echo $_SESSION["username"]; ?>
+                            </h5>
 
-                            <h3 style="">Bill NO: #  <?php echo $_SESSION["billNumber"]; ?></h3>
+                            <h3 style="">Bill NO : #
+                              <?php echo $_SESSION["billNumber"]; ?>
+                            </h3>
                           </div>
                         </div>
 
@@ -750,6 +753,7 @@ function addproduct()
                                 <th>واحد اندازه</th>
                                 <th>مقدار</th>
                                 <th>قمت</th>
+                                <th>ټوټل قمت</th>
                                 <th>پولی واحد</th>
                               </tr>
                             </thead>
@@ -768,28 +772,39 @@ function addproduct()
                                   and customers_bys_goods.unit_id=unit.unit_id 
                                   and customers_bys_goods.person_id=person.person_id 
                                   and customers_bys_goods.bill_number='$bill_generate'";
-                                  $showbillResult = $conn->query($checkBill);
-                                  if ($showbillResult->num_rows > 0) {
-                                  while ($row = $showbillResult->fetch_assoc()) {
-                                   echo '<tr><td>' . $row["categ_name"] . '</td>
+                              $showbillResult = $conn->query($checkBill);
+                              $totalPrice =0;
+                              $subTotal =0;
+                              if ($showbillResult->num_rows > 0) {
+                                while ($row = $showbillResult->fetch_assoc()) {
+                                  $subTotal =$row["quantity"]*$row["price"];
+                                  echo '<tr><td>' . $row["categ_name"] . '</td>
                                   <td>' . $row["count_name"] . '</td>
                                   <td>' . $row["comp_name"] . '</td>
                                   <td>' . $row["unit_name"] . '</td>
                                   <td>' . $row["unit_amount"] . '</td>
                                   <td>' . $row["quantity"] . '</td>
                                   <td>' . $row["price"] . '</td>
+                                  <td>' .$subTotal.'
                                   <td>' . $row["currency_name"] . '</td>
+                                
                                 </tr>';
-                                $_SESSION["username"]=$row["person_name"];
-                                $_SESSION["billNumber"]=$bill_generate;
+                                 
+                                 
+                                //echo $subTotal =+$subTotal;           
+                                $totalPrice += $subTotal;
+                                  $_SESSION["username"] = $row["person_name"];
+                                  $_SESSION["billNumber"] = $bill_generate;
                                 }
+
+                               
                               }
                               ?>
                               <td class="text-right">
                                 <h2><strong>Total: </strong></h2>
                               </td>
                               <td class="text-left text-danger">
-                                <h2><strong><i class="fa fa-inr"></i> 31.566/-</strong></h2>
+                                <h2><strong><i class="fa fa-inr"></i><?php  echo $totalPrice; ?></strong></h2>
                               </td>
                               </tr>
                             </tbody>
@@ -799,13 +814,23 @@ function addproduct()
                           <div class="receipt-header receipt-header-mid receipt-footer">
                             <div class="col-xs-8 col-sm-8 col-md-8 text-left">
                               <div class="receipt-right">
-                                <p><b>Date :</b> 15 Aug 2016</p>
-                                <h5 style="color: rgb(140, 140, 140);">Thanks for shopping.!</h5>
+                                <p><b>Date & Time :</b>
+                                  <?php
+                                  // Set the timezone to your desired timezone
+                                  date_default_timezone_set('Asia/Kabul');
+
+                                  // Get the current date and time in your desired format
+                                  $currentDateTime = date('Y-m-d H:i:s');
+
+                                  echo $currentDateTime;
+                                  ?>
+                                </p>
+                                <h5 style="color: rgb(140, 140, 140);">مننه چې سولر تیک مو غوره کړ!</h5>
                               </div>
                             </div>
                             <div class="col-xs-4 col-sm-4 col-md-4">
                               <div class="receipt-left">
-                                <h1>Stamp</h1>
+                                <h1>امضا</h1>
 
                               </div>
                             </div>
@@ -816,61 +841,59 @@ function addproduct()
                     </div>
                   </div>
                 </div>
+                <div class="spinner-border text-success " id="spinnerContainer" style="display: none;"></div>
               </div>
               <button class="btn btn-success" onclick="generatePDF();">Print</button>
             </div>
             <div>
 
               <!-- check bill modal end here -->
-            
+
+              <!-- //<div class="circle-progress" id="progress-bar"></div> -->
+
               <script type="text/javascript">
                 window.jsPDF = window.jspdf.jsPDF;
 
+                function showSpinner() {
+                  const spinnerContainer = document.getElementById("spinnerContainer");
+                  spinnerContainer.style.display = "block";
+                }
+
+                function hideSpinner() {
+                  const spinnerContainer = document.getElementById("spinnerContainer");
+                  spinnerContainer.style.display = "none";
+                }
+
                 function generatePDF() {
-                  var table = document.getElementById('billedcustoemr');
-                  var progressBar = document.getElementById('progress');
-                  var progressContainer = document.getElementById('progressBar');
+                  var table = document.getElementById("billedcustoemr");
+                  showSpinner(); // Show the Bootstrap spinner
 
-                  // Show the progress bar and reset progress to 0
-                  progressBar.style.width = '0%';
-                  progressContainer.style.display = 'block';
-
-                  // Use the full page size for the PDF
-                  var pdf = new jsPDF('p', 'pt', 'a4');
+                  var pdf = new jsPDF("p", "pt", "a4");
 
                   html2canvas(table, {
                     scale: 2,
-                    dpi: 300,
-                    onprogress: function (progress) {
-                      // Update the progress bar based on the current progress
-                      progressBar.style.width = progress * 100 + '%';
-
-                      // Add a console.log to show the progress value
-                      console.log('Progress: ' + progress * 100 + '%');
-                    },
+                    dpi: 250,
                   }).then(function (canvas) {
-                    var imgData = canvas.toDataURL('image/png');
+                    var imgData = canvas.toDataURL("image/png");
                     var imgProps = pdf.getImageProperties(imgData);
                     var pdfWidth = pdf.internal.pageSize.getWidth();
                     var pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-                    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-                    pdf.save('downloaded_table.pdf');
+                    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+                    pdf.save("downloaded_table.pdf");
 
-                    // Hide the progress bar once the PDF is generated
-                    setTimeout(function () {
-                      progressContainer.style.display = 'none';
-                    }, 500); // Adjust the delay time as needed
+                    // Hide the Bootstrap spinner once the PDF is generated
+                    hideSpinner();
                   });
                 }
-
               </script>
-    </main>
+
+      </main>
       <aside class="col-sm-3 flex-grow-sm-1 flex-shrink-1 flex-grow-0 sticky-top pb-sm-0 pb-3"
         style="text-align:right; z-index: 1;">
         <div class="bg-light border rounded-3 p-1 h-100 sticky-top">
           <ul class="nav nav-pills flex-sm-column flex-row mb-auto justify-content-between text-truncate"
-          style="background-color:#07264a;">
+            style="background-color:#07264a;">
             <li>
               <a href="admin.php" class="nav-link px-2" style="color:#fff">
                 <span class="d-none d-sm-inline">Dashboard</span>
@@ -960,9 +983,32 @@ function addproduct()
       }
     });
   </script>
-  <div id="progressBar" style="width: 100%; background-color: #f1f1f1;">
-    <div id="progress" style="width: 0%; height: 30px; background-color: #4CAF50;"></div>
+  <div id="progressContainer" style="display: none;">
+    <div id="progress" style="width: 0%; background-color: #4CAF50; height: 30px;"></div>
   </div>
+  <style>
+    .circle-progress {
+      width: 100px;
+      height: 100px;
+      background-color: #f1f1f1;
+      border-radius: 50%;
+      position: relative;
+    }
+
+    .progress-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background-color: #007bff;
+      clip: rect(0, 50px, 100px, 0);
+      /* Initial clip is 0% */
+    }
+  </style>
+
+
 </body>
 
 </html>
