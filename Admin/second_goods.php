@@ -1,13 +1,32 @@
 <?php
 session_start();
-if (!isset($_SESSION['login_user']) || (isset($_SESSION['role']) && $_SESSION['role'] != 2)) {
-  header("Location: Login.php");
-  exit;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+require '../vendor/autoload.php'; 
+include('DBConnection.php');
+include('jdf.php');
+define("DATE", jdate('l - j / p / y / i : g a'));
+if (!isset($_COOKIE['access_token']) || empty($_COOKIE['access_token'])) {
+    header("Location: login.php");
+    exit();
+}elseif(!isset($_COOKIE['role_seller']) || $_COOKIE['role_seller']!=2){
+  header("Location: login.php");
+  exit();
+}
+$secret_key = "solar-tech-login-seretekeyLoginKey";
+$token = $_COOKIE['access_token'];
+
+try {
+    $decoded_token = JWT::decode($token,new Key($secret_key,'HS256'));
+    
+} catch (Exception $e) {
+    
+    header("Location: login.php");
+    echo $e;
+    exit();
 }
 ?>
-
 <?php
-
 function addproduct()
 {
   include('DBConnection.php');
@@ -57,10 +76,8 @@ function addproduct()
 
 ?>
 
-
 <!DOCTYPE html>
 <html>
-
 <head>
   <!-- CSS only -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -80,25 +97,35 @@ function addproduct()
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <link href="../style.css?verssion=4" rel="stylesheet">
+  <script src="pdfmake/build/pdfmake.min.js"></script>
+  <script src="pdfmake/build/vfs_fonts.js"></script>
+  <script src="jsPDF/dist/jspdf.es.min.js"></script>
+  <script src="jsPDF/dist/jspdf.umd.min.js"></script>
+  <script src="jsPDF/src/jspdf.js"></script>
+  <script src="jsPDF/jsPDFAutoTable/dist/jspdf.plugin.autotable.js"></script>
+  <script src="jsPDF/html2canvas/html2canvas.js"></script>
+  <script src="jsPDF/html2canvas/html2canvas.min.js"></script>
 </head>
-
 <body>
-  <header class="py-3 mb-4 border-bottom shadow">
+<header class="py-3 mb-4 border-bottom shadow" style="background-color:#122834">
     <div class="container-fluid align-items-center d-flex">
 
       <div class="col-lg-4 d-flex justify-content-start ">
 
         <a href="" class="text-decoration-none">
           <span class="h1 text-uppercase text-warning bg-dark px-2">SOLAR</span>
-          <span class="h1 text-uppercase text-dark bg-warning px-2 ml-n1">SYSTEM</span>
+          <span class="h1 text-uppercase text-dark bg-warning px-2 ml-n1">TECH</span>
         </a>
+      </div>
+      <div class="col-lg-4 d-flex justify-content-start ">
+        <b style="color:#fff"><?php echo DATE; ?></b>
       </div>
       <div class="flex-grow-1 d-flex align-items-center">
         <form class="w-100 me-3">
-          <input type="search" class="form-control" placeholder="Search...">
+          <!-- <input type="search" class="form-control" placeholder="Search..."> -->
         </form>
         <div class="flex-shrink-0 dropdown">
-          <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser2"
+          <a href="#" class="d-block link-light text-decoration-none dropdown-toggle" id="dropdownUser2"
             data-bs-toggle="dropdown" aria-expanded="false">
             <img src="https://via.placeholder.com/28?text=!" alt="user" width="32" height="32" class="rounded-circle">
           </a>
@@ -118,16 +145,13 @@ function addproduct()
   <div class="container-fluid ">
     <div class="id"> </div>
     <div class="row ">
-
       <main class="col-lg-9 col-md-8 col-sm-3 overflow-auto h-100">
-
         <div class="bg-light border rounded-3 p-3">
-
-
           <div class="col d-flex justify-content-end">
-
             <div class="btn-group  d-flex justify-content-center">
               <button type="button" class="bi- btn btn-sm  dropdown-toggle" data-toggle="dropdown">ښکاره کول</button>
+              <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#BillModal"
+                style="text-align:right;">بېل چکول</button>
               <div class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item" href="#">10</a>
                 <a class="dropdown-item" href="#">20</a>
@@ -146,16 +170,11 @@ function addproduct()
                 <a class="dropdown-item" href="#">تحفیف شوی محصولات</a>
               </div>
             </div>
-           
-
           </div>
           <div class="card table-responsive">
             <table id="sells" class="table mt-2 table-ligh table table-hover  " style="direction:rtl">
               <thead class="overflow-auto h-100">
-
                 <tr class="">
-
-                  
                   <th>ګټګوری</th>
                   <th>کمپنی</th>
                   <th> هیواد</th>
@@ -163,7 +182,6 @@ function addproduct()
                   <th>یونېټ</th>
                   <th>اندازه</th>
                 </tr>
-
               </thead>
               <tbody>
                 <?php
@@ -180,25 +198,14 @@ function addproduct()
                 if ($result->num_rows > 0) {
 
                   while ($row = $result->fetch_assoc()) {
-                   
-
-                    echo '<tr>
-                                        
-                                          
-                                          <td>' . $row["categ_name"] . '</td>
-                                          <td>' . $row["comp_name"] . '</td>
-                                          <td>' . $row["count_name"] . '</td>
-                                          <td>' . $row["unit_amount"] . '</td>
-                                           <td>' . $row["unit_name"] . '</td>
-                                           <td id="q">' . $row["Quantity"] . '</td>
-
-                                         
-                                       </tr>';
-
-
-                    echo '<script>
-
-                                              </script>';
+                    echo '<tr>             
+                            <td>' . $row["categ_name"] . '</td>
+                            <td>' . $row["comp_name"] . '</td>
+                            <td>' . $row["count_name"] . '</td>
+                            <td>' . $row["unit_amount"] . '</td>
+                            <td>' . $row["unit_name"] . '</td>
+                            <td id="q">' . $row["Quantity"] . '</td>              
+                          </tr>';
                   }
 
                 }
@@ -235,16 +242,31 @@ function addproduct()
                 <h4 class="modal-title text-center w-100 ">ْجنس خرڅول</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
               </div>
-
-
               <div class="modal-body">
                 <div class="card">
                   <form class="post" method="post" enctype="multipart/form-data">
 
                     <div class="input-group mt-2">
-                      <select class="form-select form-control " required name="category_id">
+                      <?php 
+                      include('DBConnection.php');
+                      $sellerID =null;
+                      if(isset($_COOKIE["userID_seller"])){
+                        $sellerID = $_COOKIE["userID_seller"];
+                      }
+                       $findUserId ="SELECT user_id FROM user WHERE user_id='$sellerID';";
+                       $result = $conn->query($findUserId);
+                       if($result->num_rows>0){
+                        while($row = $result->fetch_assoc()){
+                          $sellerID = $row["user_id"];
+                          echo '<input class="d-none" value="'.$sellerID.'" name="seller">';
+                        }
+                       }else{
+                        echo 'user id not fond';
+                       }
+                      ?>
+                      <input class="d-none">
+                      <select class="form-select form-control " required name="sold_category_id">
                         <?php
-
                         include('DBConnection.php');
                         $sqlcate = "SELECT * FROM `category`";
                         $resultCate = $conn->query($sqlcate);
@@ -258,15 +280,13 @@ function addproduct()
                           "no record found";
 
                         ?>
-
                       </select>
                       <span class="input-group-text">کټګوری</span>
                     </div>
 
                     <div class="input-group mt-2">
-                      <select class="form-select form-control " required name="company_id">
+                      <select class="form-select form-control " required name="sold_company_id">
                         <?php
-
                         include('DBConnection.php');
                         $sql = "SELECT * FROM `company`";
                         $result = $conn->query($sql);
@@ -284,10 +304,8 @@ function addproduct()
                       </select>
                       <span class="input-group-text">کمپنی</span>
                     </div>
-
-
                     <div class="input-group mt-2">
-                      <select class="form-select form-control " required name="country_id">
+                      <select class="form-select form-control " required name="sold_country_id">
                         <?php
 
                         include('DBConnection.php');
@@ -308,15 +326,13 @@ function addproduct()
                       <span class="input-group-text">هیواد</span>
                     </div>
 
-                    <div class="input-group mt-2">
-                      <input type="text" class="form-control" required name="product_price">
+                    <!-- <div class="input-group mt-2">
+                      <input type="text" class="form-control" required name="sold_product_price">
                       <span class="input-group-text">قمت فی دانه</span>
-                    </div>
-
-
+                    </div> -->
                     <div class="input-group mt-2">
 
-                      <select class="form-select form-control " required name="currency_id">
+                      <select class="form-select form-control " required name="sold_currency_id">
 
                         <?php
                         //  $sql="SELECT * FROM `currency`";
@@ -333,27 +349,24 @@ function addproduct()
                           "no record found";
 
                         ?>
-
-
                       </select>
                       <span class="input-group-text">پولی واحد</span>
                     </div>
-
-
                     <div class="input-group mt-2">
-                      <input type="text" class="form-control" required placeholder="" name="soldd_quantity">
+                      <input type="text" class="form-control" required placeholder="" name="sold_quantity">
                       <span class="input-group-text">مقدار </span>
                     </div>
-
-
-                    <div class="input-group mt-2">
-                      <input type="text" class="form-control" required placeholder="" name="unit_quantity">
-                      <span class="input-group-text">اندازه</span>
+                    <div class="input-group ">
+                      <input type="text" class="form-control" required name="sold_goods_name">
+                      <span class="input-group-text">د محصول نوم</span>
                     </div>
 
-
                     <div class="input-group mt-2">
-                      <select class="form-select form-control " required name="unit_id">
+                      <input type="text" class="form-control" required placeholder="" name="sold_unit_quantity">
+                      <span class="input-group-text">یونېټ مقدار</span>
+                    </div>
+                    <div class="input-group mt-2">
+                      <select class="form-select form-control " required name="sold_unit_id">
                         <?php
 
                         include('DBConnection.php');
@@ -373,13 +386,8 @@ function addproduct()
                       </select>
                       <span class="input-group-text">یونټ</span>
                     </div>
-
-                    
-
-                   
-
                     <div class="input-group mt-2">
-                      <select name="person_id" id="" class="form-control">
+                      <select name="sold_person_id" id="" class="form-control">
                         <option value="">No body</option>
                         <?php
 
@@ -398,26 +406,33 @@ function addproduct()
                         ?>
                       </select>
                       <span class="input-group-text">دمشتری نوم</span>
-
-
                     </div>
 
                     <div class="input-group mt-2">
-                      <input type="text" class="form-control" required name="product_price">
+                      <input type="text" class="form-control" required name="sold_price">
                       <span class="input-group-text">قمت فی دانه</span>
                     </div>
-
+               <?php
+                  $queryBillNo = "SELECT bill_number FROM `bill` ORDER by bill_number DESC LIMIT 1";
+                  $billNoResult = $conn->query($queryBillNo);
+                  if ($billNoResult->num_rows > 0) {
+                    while ($sold_bill_NO = $billNoResult->fetch_assoc()) {
+                      echo $bill_number = $sold_bill_NO["bill_number"] + 1;
+                    }
+                  }
+                ?>
                     <div class="input-group mt-2">
                       <button class="form-control btn btn-success soldandbuy" name="soldandbuy">اضافه کول</button>
                     </div>
 
                   </form>
-
                 </div>
               </div>
 
               <div class="modal-footer">
                 <button type="submit" class="btn btn-danger  " name="close" id="soldandbuy">بندول</button>
+                <button type="submit" class="btn btn-success" style="border: 2px solid green" id="printBill">بېل جوړول
+                  بیل</button>
               </div>
 
             </div>
@@ -451,72 +466,221 @@ function addproduct()
   });
 </script>
 
+<script>
+// create bill 
+$(document).ready(function () {
+  $('#printBill').click(function (event) {
+    event.preventDefault();
+    var session = "unset";
+    $.ajax({
+      url: 'person_buy_goods.php',
+      type: 'GET',
+      data: { session: session },
+      success: function (response) {
+
+        alert("Bill Created");
+        window.location.replace('second_goods.php');
+      },
+      error: function (error) {
+
+        alert('Please try again.');
+      }
+    });
+  });
+});
+</script>
+<!-- create bil end  -->
         
         <!-- sold model end -->
 
-        <!-- add product modal =================================================================================================================================strat-->
-        
-        <!-- add product modal  =================================== end============================================================================= -->
-
-        <!--   Sell product s modle ================================================================================================================= -->
-
-
-
-        <div class="modal fade" id="showAndSell">
-
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title text-center" id="exampleModalLabel" style="text-align:center">Sell And Show</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<!-- print and check bill Modal start -->
+<div class="modal fade" id="BillModal" style="direction:rtl">
+          <div class="modal-dialog modal-xl">
+            <div class="modal-content" style=" background-color: #fff; ">
+              <!-- Modal Header -->
+              <div class="modal-header" style="text-align: right;">
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <h4 class="modal-title text-center w-100 "> د بېل مالومات</h4>
               </div>
-              <div class="modal-body">
+              <div class="modal-body" style=" background-color: #fff;">
 
-                <div class="container-fluid">
-                  <div class="row">
-                    <div class="col-md-6">.col-md-4</div>
-                    <div class="col-md-6 ms-auto">.col-md-4 .ms-auto</div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-3 ms-auto">.col-md-3 .ms-auto</div>
-                    <div class="col-md-2 ms-auto">.col-md-2 .ms-auto</div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6 ms-auto">.col-md-6 .ms-auto</div>
-                  </div>
-                  <div class="row">
-                    <div class="col-sm-9">
+                <div class="col" id="billedcustoemr" style =" background-color: #fff; ">
+                  <div class="row" style="text-align: right;">
 
+                    <div class="receipt-main col" style="text-align: right; height: 1400px; ">
                       <div class="row">
-                        <div class="col-8 col-sm-6">
-                          Level 2: .col-8 .col-sm-6
+
+                        <div class="col-lg-8 justify-content-start text-align" style="text-align: right; ">
+                          <div class="receipt-left">
+                            <img class="img-responsive" alt="solar-tech-logo"
+                              src="img/solar tech logo.png">
+                          </div>
+                          <div class="receipt-right" style="text-align: right;">
+                            <h5>Solar Tech</h5>
+                            <p>0778885555 <i class="fa fa-phone"></i></p>
+                            <p>solar-tech@solar-tech.energy <i class="fa fa-envelope-o"></i></p>
+                            <p>Kabul, Afghanistan <i class="fa fa-location-arrow"></i></p>
+                          </div>
                         </div>
-                        <div class="col-4 col-sm-6">
-                          Level 2: .col-4 .col-sm-6
+                        <div class="col-lg-4 text-right  justify-content-end" style="text-align: right;">
+                          <div class="receipt-right" style="text-align: right;">
+                            <h5>دمشتر نوم:
+                              <?php echo $_SESSION["username"]; ?>
+                            </h5>
+
+                            <h3 style="">Bill NO : #
+                              <?php echo $_SESSION["billNumber"]; ?>
+                            </h3>
+                          </div>
                         </div>
+
+                        <div>
+                          <table class="table table-bordered" style =" background-color: #fff;">
+                            <thead>
+                              <tr>
+                                <th>کتګوری</th>
+                                <th>هیواد</th>
+                                <th>کمپنی</th>
+                                <th>واحد</th>
+                                <th>واحد اندازه</th>
+                                <th>مقدار</th>
+                                <th>قمت</th>
+                                <th>ټوټل قمت</th>
+                                <th>پولی واحد</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+
+                              <?php
+                              $bill_generate = $bill_number - 1;
+                              include('DBConnection.php');
+
+                              $checkBill = "SELECT category.categ_name, customers_bys_goods.bill_number,country.count_name,company.comp_name,customers_bys_goods.unit_amount,unit.unit_name,customers_bys_goods.price,customers_bys_goods.quantity,person.person_name,currency.currency_name 
+                                  from customers_bys_goods,category,country,company,currency,person,unit 
+                                  WHERE customers_bys_goods.categ_id=category.categ_id 
+                                  and country.count_id=customers_bys_goods.count_id 
+                                  and customers_bys_goods.comp_id=company.comp_id 
+                                  and customers_bys_goods.currency_id=currency.currency_id 
+                                  and customers_bys_goods.unit_id=unit.unit_id 
+                                  and customers_bys_goods.person_id=person.person_id
+                                  and customers_bys_goods.bill_number='$bill_generate'and customers_bys_goods.seller_id='$sellerID'";
+                              $showbillResult = $conn->query($checkBill);
+                              $totalPrice =0;
+                              $subTotal =0;
+                              echo $sellerID;
+                              if ($showbillResult->num_rows > 0) {
+                              
+                                while ($row = $showbillResult->fetch_assoc()) {
+                                  $subTotal =$row["quantity"]*$row["price"];
+                                  echo '<tr><td>' . $row["categ_name"] . '</td>
+                                  <td>' . $row["count_name"] . '</td>
+                                  <td>' . $row["comp_name"] . '</td>
+                                  <td>' . $row["unit_name"] . '</td>
+                                  <td>' . $row["unit_amount"] . '</td>
+                                  <td>' . $row["quantity"] . '</td>
+                                  <td>' . $row["price"] . '</td>
+                                  <td>' .$subTotal.'
+                                  <td>' . $row["currency_name"] . '</td>
+                                
+                                </tr>';
+                                 
+                                 
+                                //echo $subTotal =+$subTotal;           
+                                $totalPrice += $subTotal;
+                                  $_SESSION["username"] = $row["person_name"];
+                                  $_SESSION["billNumber"] = $bill_generate;
+                                }
+
+                               
+                              }
+                              ?>
+                              <td class="text-right">
+                                <h2><strong>Total: </strong></h2>
+                              </td>
+                              <td class="text-left text-danger">
+                                <h2><strong><i class="fa fa-inr"></i><?php  echo $totalPrice; ?></strong></h2>
+                              </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <div class="row">
+                          <div class="receipt-header receipt-header-mid receipt-footer">
+                            <div class="col-xs-8 col-sm-8 col-md-8 text-left">
+                              <div class="receipt-right">
+                                <p><b>Date & Time :</b>
+                                  <?php   
+                                  date_default_timezone_set('Asia/Kabul');
+                                  $currentDateTime = date('Y-m-d H:i:s');
+
+                                  echo $currentDateTime;
+                                  ?>
+                                </p>
+                                <h5 style="color: rgb(140, 140, 140);">مننه چې سولر تیک مو غوره کړ!</h5>
+                              </div>
+                            </div>
+                            <div class="col-xs-4 col-sm-4 col-md-4">
+                              <div class="receipt-left">
+                                <h1>امضا</h1>
+
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
                       </div>
                     </div>
                   </div>
                 </div>
-
+                <div class="spinner-border text-success " id="spinnerContainer" style="display: none;"></div>
               </div>
-              <div class="user"></div>
-
-              <form method="post">
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                  <a href="liveSearch.php" type="submit" class="btn btn-primary" name="confirm" value="confirm"></a>
-                </div>
-              </form>
-
+              <button class="btn btn-success" onclick="generatePDF();">Print</button>
             </div>
-          </div>
-        </div>
+            <div>
+
+              <!-- check bill modal end here -->
+
+              <!-- //<div class="circle-progress" id="progress-bar"></div> -->
+
+              <script type="text/javascript">
+                window.jsPDF = window.jspdf.jsPDF;
+
+                function showSpinner() {
+                  const spinnerContainer = document.getElementById("spinnerContainer");
+                  spinnerContainer.style.display = "block";
+                }
+
+                function hideSpinner() {
+                  const spinnerContainer = document.getElementById("spinnerContainer");
+                  spinnerContainer.style.display = "none";
+                }
+
+                function generatePDF() {
+                  var table = document.getElementById("billedcustoemr");
+                  showSpinner(); // Show the Bootstrap spinner
+
+                  var pdf = new jsPDF("p", "pt", "a4");
+
+                  html2canvas(table, {
+                    scale: 2,
+                    dpi: 250,
+                  }).then(function (canvas) {
+                    var imgData = canvas.toDataURL("image/png");
+                    var imgProps = pdf.getImageProperties(imgData);
+                    var pdfWidth = pdf.internal.pageSize.getWidth();
+                    var pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+                    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+                    pdf.save("downloaded_table.pdf");
+                    hideSpinner();
+                  });
+                }
+              </script>
 
         <!--   Sell product s modle ================================================================================================================= -->
       </main>
       <aside class="col-sm-3 flex-grow-sm-1 flex-shrink-1 flex-grow-0 sticky-top pb-sm-0 pb-3"
-        style="text-align:right;">
+        style="text-align:right;z-index:1">
         <div class="bg-light border rounded-3 p-1 h-100 sticky-top">
           <ul class="nav nav-pills flex-sm-column flex-row mb-auto justify-content-between text-truncate">
 
