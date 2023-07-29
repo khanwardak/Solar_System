@@ -186,6 +186,9 @@ function updateCategory()
     } else {
       echo ' <script LANGUAGE="JavaScript">
                  swal("په بریالی توګه !", "د محضول مغلومات تازه شول!", "success");
+                 setTimeout(function() {
+                  window.location.href = "admin.php";
+                }, 2000); // 2000 milliseconds (2 seconds)
                </script>;';
     }
 
@@ -213,6 +216,9 @@ function updateUnit()
     if ($conn->query($sql)) {
       echo ' <script LANGUAGE="JavaScript">
                  swal("په بریالی توګه !", "د محضول معلومات تازه شول!", "success");
+                 setTimeout(function() {
+                  window.location.href = "admin.php";
+                }, 2000); // 2000 milliseconds (2 seconds)
                 
                </script>;';
     } else {
@@ -273,6 +279,9 @@ function updateCompany()
     if ($conn->query($sql)) {
       echo ' <script LANGUAGE="JavaScript">
                  swal("په بریالی توګه !", "د محضول معلومات تازه شول!", "success");
+                 setTimeout(function() {
+                  window.location.href = "admin.php";
+                }, 2000); // 2000 milliseconds (2 seconds)
                  
                </script>;';
     } else {
@@ -319,6 +328,36 @@ function addOurLoan()
 }
 
 // end of AddOurLoan
+// start of updateourloan function
+function updateOurLoan()
+{
+  try {
+    include('DBConnection.php');
+    $ourloan_id = $_POST['update_ourloan_id']; // Added to get the ourloan_id of the loan to be updated
+    $ourloanfirm = $_POST['update_ourloan_firm_name'];
+    $ourloancurency_id = $_POST['update_ourloan_currency_id'];
+    $ourloanamount = $_POST['update_ourloan_amount'];
+
+    $sqluser = "UPDATE `ourloan` SET `loan_amount`='$ourloanamount', `firm_id`='$ourloanfirm', `currency_id`='$ourloancurency_id' WHERE `ourloan_id`='$ourloan_id'";
+
+    if ($conn->query($sqluser)) {
+      echo '<script LANGUAGE="JavaScript">
+        swal("په بریالی توګه !", "د قرضې معلومات تازه شو!", "success");
+        setTimeout(function() {
+          window.location.href = "admin.php";
+        }, 2000); // 2000 milliseconds (2 seconds)
+      </script>';
+    } else {
+      echo '<script LANGUAGE="JavaScript">
+        window.alert("Opps:");
+      </script>';
+    }
+  } catch (Exception $e) {
+    // Handle any exceptions here
+    echo "Error: " . $e->getMessage();
+  }
+}
+// end of edit ourLoan
 
 // strat of adding Users
 function addUsers()
@@ -455,6 +494,39 @@ function addFirm()
 }
 
 // end of addingfirm function
+
+// edit firm start 
+function updateFirm()
+{
+    try {
+        include('DBConnection.php');
+        $firm_id = $_POST['firm_id']; // Assuming you have a hidden input field named 'firm_id' to store the firm ID.
+        $location = $_POST['location_name'];
+        $dist = $_POST['district'];
+        $province = $_POST['address'];
+
+        // First, update the address
+        $sql_update_address = "UPDATE `address` SET `adress_vilage`='$location', `address_province`='$province', `address_district`='$dist' WHERE `address_id`='$firm_id'";
+
+        if ($conn->query($sql_update_address)) {
+            // Address update successful, now update other firm-specific information if needed
+            // ...
+
+            echo '<script LANGUAGE="JavaScript">
+                swal("په بریالی توګه !", "معلومات تازه شو!", "success");
+                setTimeout(function() {
+                    window.location.href = "admin.php";
+                }, 2000); // 2000 milliseconds (2 seconds)
+            </script>';
+        } else {
+            echo "Opps!";
+        }
+    } catch (Exception $e) {
+        // Handle any exceptions here
+        echo "Error: " . $e->getMessage();
+    }
+}
+
 // add countery
 function addcounter()
 {
@@ -499,6 +571,9 @@ function updateCountry()
     if ($conn->query($sql)) {
       echo ' <script LANGUAGE="JavaScript">
                  swal("په بریالی توګه !", "د محضول معلومات تازه شول!", "success");
+                 setTimeout(function() {
+                  window.location.href = "admin.php";
+                }, 2000); // 2000 milliseconds (2 seconds)
               
                </script>;';
     } else {
@@ -560,6 +635,9 @@ function updateCurrency()
     if ($conn->query($sql)) {
       echo ' <script LANGUAGE="JavaScript">
                  swal("په بریالی توګه !", "د محضول معلومات تازه شول!", "success");
+                 setTimeout(function() {
+                  window.location.href = "admin.php";
+                }, 2000); // 2000 milliseconds (2 seconds)
                 
                </script>;';
     } else {
@@ -1759,7 +1837,9 @@ try {
                           <thead>
                             <tr>
                               <th>د شرکت نوم</th>
-                              <th>عملیات</th>
+                              <th>ولایت</th>
+                              <th>ولسوالي</th>
+                              <th>کلی/ګذر</th>
 
                             </tr>
                           </thead>
@@ -1767,22 +1847,50 @@ try {
 
                             <?php
                             require_once('DBConnection.php');
-                            $sql = "SELECT * FROM `firm`";
+                            $sql = "SELECT firm.firm_id,province.province_name,district.district_name,firm.firm_name,address.adress_vilage FROM firm,province,address,district WHERE firm.address_id=address.address_id and address.address_province=province.province_id and address.address_district=district.district_id;";
                             $result = $conn->query($sql);
                             if ($result->num_rows > 0) {
                               while ($row = $result->fetch_assoc()) {
-                                echo '   <tr><td>' . $row["firm_name"] . '</td>
-                                    <td><a class="fa fa-edit text-decoration-none" href=""></a>
-
-                                    </td>
-                                     <td><a class="fa fa-trash text-decoration-none" href=""></a></td>
-                                      </tr>
-                                    ';
+                                echo '<tr data-firm-id="' . $row["firm_id"] . '" data-firm-name="' . $row["firm_name"] . '" data-province-name="' . $row["province_name"] . '" data-district-name="' . $row["district_name"] . '" data-village-name="' . $row["adress_vilage"] . '">';
+                                echo '<td>' . $row["firm_name"] . '</td>';
+                                echo '<td>' . $row["province_name"] . '</td>';
+                                echo '<td>' . $row["district_name"] . '</td>';
+                                echo '<td>' . $row["adress_vilage"] . '</td>';
+                                echo '<td>
+                                        <a class="fa fa-edit text-decoration-none editButtonFirm" href="javascript:void(0);"></a>
+                                      </td>';
+                                echo '<td><a class="fa fa-trash text-decoration-none" href=""></a></td>';
+                                echo '</tr>';
                               }
                             }
                             ?>
                           </tbody>
                         </table>
+
+                        <script>
+ $(document).ready(function() {
+  // Handle click event for the editButton using event delegation
+  $(document).on('click', '.editButtonFirm', function(e) {
+    e.preventDefault(); // Prevent the default behavior of the anchor tag (navigating to the href)
+
+    // Find the parent table row and get the category_id and category_name from the data attributes
+    var row = $(this).closest('tr');
+    var firm_id = row.data('firm-id');
+    var province_name = row.data('province-name');
+    var firm_name = row.data('firm-name');
+    var district_name = row.data('district-name');
+    var vilage_name = row.data('village-name');
+    $('#update_Firm_Modal').modal('show');
+    $('#firm').modal('hide');
+    $('#update_Firm_Modal input[name="update_firm_id"]').val(firm_id);
+    $('#update_Firm_Modal input[name="update_firm_name"]').val(firm_name);
+    $('#update_Firm_Modal input[name="update_firm_address"]').val(province_name);
+    $('#update_Firm_Modal input[name="update_firm_district_name"]').val(district_name);
+    $('#update_Firm_Modal input[name="update_firm_location_name"]').val(vilage_name);
+  });
+});
+
+</script>
                       </div>
                     </div>
                   </div>
@@ -1796,6 +1904,87 @@ try {
             ?>
 
         <!-- end of firm model -->
+
+        <!-- start of firm udating modal -->
+        <div class="modal left fade" id="update_Firm_Modal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+              role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="col">
+                    <div class="modal-body ">
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                      <h5 class="card-title text-center"><span>د شرکت تغیرول</span></h5>
+                      <div class="px-4 py-5">
+                        <form class="row g-3 needs-validation" novalidate style="text-align:right;" method="post">
+                          <div class="col-12">
+                          <input type="hidden" name="update_firm_id" id="update_firm_id">
+
+                            <label for="yourName" class="form-label">نوم</label>
+                            <input type="text" name="update_firm_name" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+                            <label for="yourName" class="form-label">ولایت</label>
+                            <select class="form-control" id="update_firm_address" name="update_firm_address" onchange="address(this.value)">
+                              <?php
+                              require_once('DBConnection.php');
+
+                              $sql = "SELECT * FROM `province`";
+                              $result = $conn->query($sql);
+                              if ($result->num_rows > 0) {
+
+                                while ($row = $result->fetch_assoc()) {
+                                  echo '<option value="' . $row["province_id"] . '">' . $row["province_name"] . '</option>';
+                                }
+
+                              }
+
+                              ?>
+                            </select>
+                            <script type="text/javascript">
+                              $(document).ready(function () {
+                                $('#address').on('change', function () {
+                                  var prov_id = $(this).val();
+                                  $.ajax({
+                                    url: 'store.php',
+                                    method: 'POST',
+                                    data: { provID: prov_id },
+                                    dataType: "text",
+                                    success: function (html) {
+                                      $('#district').html(html);
+                                    }
+                                  });
+                                });
+                              });
+                            </script>
+                            <label for="for add" class="form-label">ولسوالی</label>
+                            <select id="district" name="update_firm_district" class="form-control">
+                              <option value="">ولسوالی</option>
+                            </select>
+                            <label for="yourName" class="form-label">کلی</label>
+                            <input type="text" name="update_firm_location_name" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+
+                            <div class="text-center mt-5">
+                              <button class="btn btn-primary btn-submit" type="submit" name="updateFirm">ثبتول</button>
+                            </div>
+                          </div>
+                        </form>
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <?php
+            if (isset($_POST['updateFirm'])) {
+              updateFirm();
+            }
+            ?>
+
+
+
+
+        <!-- end of firm updating modal -->
 
         <!-- start of users model -->
 
@@ -2069,32 +2258,66 @@ try {
                           style="direction:rtl" class="card">
                           <thead>
                             <tr>
-                              <th>نوم</th>
-                              <th>صلاحیت</th>
+                              <th>د شرکت نوم</th>
+                              <th>پولي واحد</th>
+                              <th>اندازه </th>
+                              <th>عمليې</th>
 
                             </tr>
                           </thead>
                           <tbody>
 
                             <?php
-                            require_once('DBConnection.php');
-                            $sql = "SELECT name ,type_flag from user,user_type where user.user_type=user_type.type_id;";
-                            $result = $conn->query($sql);
-                            if ($result->num_rows > 0) {
-                              while ($row = $result->fetch_assoc()) {
-                                echo '   <tr><td>' . $row["name"] . '</td>
-                                <td>' . $row["type_flag"] . '</td>
-                                    <td><a class="fa fa-edit text-decoration-none" href=""></a>
-
-                                    </td>
-                                     <td><a class="fa fa-trash text-decoration-none" href=""></a></td>
-                                      </tr>
-                                    ';
+                            try {
+                              require_once('DBConnection.php');
+                              $sql = "SELECT ourloan.ourloan_id,firm.firm_name,ourloan.loan_amount,currency.currency_name from ourloan,firm,currency where ourloan.firm_id=firm.firm_id and ourloan.currency_id=currency.currency_id;";
+                              $result = $conn->query($sql);
+                              if ($result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                                  echo '<tr data-ourloan-id="' . $row["ourloan_id"] . '" data-ourloan-firm-name="' . $row["firm_name"] . '" data-ourloan-currency-name="' . $row["currency_name"] . '" data-ourloan-amount="' . $row["loan_amount"] . '">';
+                                  echo '<td>' . $row["firm_name"] . '</td>';
+                                  echo '<td>' . $row["currency_name"] . '</td>';
+                                  echo '<td>' . $row["loan_amount"] . '</td>';
+                                 
+                                  echo '<td>
+                                          <a class="fa fa-edit text-decoration-none editButtonOurloan" href="javascript:void(0);"></a>
+                                        </td>';
+                                  echo '<td><a class="fa fa-trash text-decoration-none" href=""></a></td>';
+                                  echo '</tr>';
+                                }
                               }
+                              
+                            } catch (Exception $e) {
+
                             }
+
                             ?>
                           </tbody>
                         </table>
+                        <script>
+  $(document).ready(function() {
+    // Handle click event for the editButton using event delegation
+    $(document).on('click', '.editButtonOurloan', function(e) {
+      e.preventDefault(); // Prevent the default behavior of the anchor tag (navigating to the href)
+
+      // Find the parent table row and get the ourloan_id, firm_name, currency_name, and loan_amount from the data attributes
+      var row = $(this).closest('tr');
+      var ourloan_id = row.data('ourloan-id');
+      var firm_name = row.data('ourloan-firm-name');
+      var currency_name = row.data('ourloan-currency-name');
+      var loan_amount = row.data('ourloan-amount'); // Corrected data attribute name
+      
+      $('#update_Ourloan_Modal').modal('show');
+      $('#ourloan').modal('hide');
+      
+      $('#update_Ourloan_Modal input[name="update_ourloan_id"]').val(ourloan_id);
+      $('#update_Ourloan_Modal input[name="update_ourloan_firm_name"]').val(firm_name);
+      $('#update_Ourloan_Modal input[name="update_ourloan_currency_name"]').val(currency_name);
+      $('#update_Ourloan_Modal input[name="update_ourloan_amount"]').val(loan_amount);
+    });
+  });
+</script>
+
                       </div>
                     </div>
                   </div>
@@ -2107,6 +2330,90 @@ try {
             }
             ?>
         <!-- end of ourloan model -->
+
+
+        <!-- start of edit ourloan modal -->
+
+        <div class="modal left fade" id="update_Ourloan_Modal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+              role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="col">
+                    <div class="modal-body ">
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                      <h5 class="card-title text-center"><span>زموږ د قرض تغیر کول</span></h5>
+                      <div class="px-4 py-5">
+                        <form class="row g-3 needs-validation" novalidate style="text-align:right;" method="post">
+                          <div class="col-12">
+                          <input type="hidden" name="update_ourloan_id" id="update_ourloan_id">
+
+                          <div class="input-group mt-2">
+                         
+          
+
+                          <select class="form-select form-control" name="update_ourloan_firm_name">
+                        <?php
+
+                        include('DBConnection.php');
+                        $sql = "SELECT * FROM `firm`;                        ";
+                        $result = $conn->query($sql);
+                        if ($result->num_rows > 0) {
+
+                          while ($row = $result->fetch_assoc()) {
+                            echo '<option value="' . $row["firm_id"] . '">' . $row["firm_name"] . '</option>';
+                          }
+
+                        } else
+                          "no record found";
+
+                        ?>
+                      </select>
+                      <span class="input-group-text">د شرکت نوم</span>
+                    </div>
+
+                      <div class="input-group mt-2">
+                      <select class="form-select form-control " required name="update_ourloan_currency_id">
+                        <?php
+                        //  $sql="SELECT * FROM `currency`";
+                        include('DBConnection.php');
+                        $sql = "SELECT * FROM `currency`";
+                        $result = $conn->query($sql);
+                        if ($result->num_rows > 0) {
+
+                          while ($row = $result->fetch_assoc()) {
+                            echo '<option value="' . $row["currency_id"] . '">' . $row["currency_name"] . '</option>';
+                          }
+
+                        } else
+                          "no record found";
+
+                        ?>
+                      </select>
+                      <span class="input-group-text">پولی واحد</span>
+                    </div>
+                            <label for="yourName" class="form-label">اندازه</label>
+                            <input type="text" name="update_ourloan_amount" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+                            <div class="text-center mt-5">
+                              <button class="btn btn-primary btn-submit" type="submit" name="updateOurLoan">ثبتول</button>
+                            </div>
+                          </div>
+                        </form>
+                    
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <?php
+            if (isset($_POST['updateOurLoan'])) {
+              updateOurLoan();
+            }
+            ?>
+
+
+        <!-- end of edit ourloan modal -->
 
 
             <!-- start of firm model -->
