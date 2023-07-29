@@ -524,12 +524,26 @@ $(document).ready(function () {
                         </div>
                         <div class="col-lg-4 text-right  justify-content-end" style="text-align: right;">
                           <div class="receipt-right" style="text-align: right;">
-                            <h5>دمشتر نوم:
-                              <?php echo $_SESSION["username"]; ?>
+                          <h5>دمشتر نوم:
+                              
+                              <?php 
+                                if(isset($_SESSION["username"])){
+                                  echo $_SESSION["username"]; 
+                                }
+                                else{
+                                  echo'<div class="alert alert-danger">
+                                  <strong>Danger!</strong> مهربانی وکړی لوموړی بیل جوړ کړی!
+                                </div>';
+                                }
+                                ?>
                             </h5>
 
                             <h3 style="">Bill NO : #
-                              <?php echo $_SESSION["billNumber"]; ?>
+                              <?php 
+                              if(isset($_SESSION["billNumber"])){
+                              echo $_SESSION["billNumber"]; 
+                              }
+                              ?>
                             </h3>
                           </div>
                         </div>

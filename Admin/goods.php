@@ -267,12 +267,10 @@ function addproduct()
 
               <!-- Modal Header -->
               <div class="modal-header" style="text-align: right;">
-                <h4 class="modal-title text-center w-100 ">نوی محصول اضافه کړئ!</h4>
+                
                 <h4 class="modal-title text-center w-100 ">ْجنس خرڅول</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
               </div>
-
-
               <div class="modal-body">
                 <div class="card">
                   <form class="post" method="post" enctype="multipart/form-data">
@@ -484,7 +482,14 @@ function addproduct()
             </div>
           </div>
         </div>
-
+<!-- sell form validation -->
+<script>
+  function validateGender() {
+  const quantity = document.getElementsByName('sold_price'[9];)
+  alert(quantity);
+}
+</script>
+<!-- sell form validation -->
         <script>
 
           $(document).ready(function () {
@@ -549,8 +554,6 @@ function addproduct()
                 <h4 class="modal-title text-center w-100 ">نوی محصول اضافه کړئ!</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
               </div>
-
-
               <div class="modal-body">
                 <div class="card">
                   <form class="post" method="post" enctype="multipart/form-data">
@@ -683,9 +686,9 @@ function addproduct()
                     <div class="input-group mt-2">
                       <span class="input-group-text">یونټ مقدار</span>
 
-                      <input type="text" class="form-control" name="unit_quantity">
+                      <input type="text" class="form-control" name="unit_quantity" required>
 
-                      <select class="form-select form-control " name="unit_id">
+                      <select class="form-select form-control " name="unit_id" required>
                         <?php
 
                         include('DBConnection.php');
@@ -766,11 +769,25 @@ function addproduct()
                         <div class="col-lg-4 text-right  justify-content-end" style="text-align: right;">
                           <div class="receipt-right" style="text-align: right;">
                             <h5>دمشتر نوم:
-                              <?php echo $_SESSION["username"]; ?>
+                              
+                              <?php 
+                                if(isset($_SESSION["username"])){
+                                  echo $_SESSION["username"]; 
+                                }
+                                else{
+                                  echo'<div class="alert alert-danger">
+                                  <strong>Danger!</strong> مهربانی وکړی لوموړی بیل جوړ کړی!
+                                </div>';
+                                }
+                                ?>
                             </h5>
 
                             <h3 style="">Bill NO : #
-                              <?php echo $_SESSION["billNumber"]; ?>
+                              <?php 
+                              if(isset($_SESSION["billNumber"])){
+                              echo $_SESSION["billNumber"]; 
+                              }
+                              ?>
                             </h3>
                           </div>
                         </div>
