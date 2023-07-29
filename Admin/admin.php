@@ -197,6 +197,40 @@ function updateCategory()
 
 
 
+// editing unit function start here
+
+function updateUnit()
+{
+  try {
+    $unit_id = $_POST['update_unit_id']; // Assuming you have a form field with the unit ID
+    $unit_name = $_POST['update_unit_name'];
+
+    include('DBConnection.php');
+
+    // Prepare the SQL update query
+    $sql = "UPDATE `unit` SET `unit_name` = '$unit_name' WHERE `unit_id` = $unit_id";
+
+    if ($conn->query($sql)) {
+      echo ' <script LANGUAGE="JavaScript">
+                 swal("په بریالی توګه !", "د محضول معلومات تازه شول!", "success");
+                
+               </script>;';
+    } else {
+      echo ' <script LANGUAGE="JavaScript">
+                 window.alert("Opps: ' . $conn->error . '");
+                 
+               </script>";';
+    }
+  } catch (Exception $e) {
+    // Handle any exceptions here
+    echo $e->getMessage();
+  }
+}
+
+// editing unit function end here
+
+
+
 // add company function
 function addco()
 {
