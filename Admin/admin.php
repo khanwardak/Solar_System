@@ -185,7 +185,10 @@ function updateCategory()
       echo 'opps!';
     } else {
       echo ' <script LANGUAGE="JavaScript">
-                 swal("په بریالی توګه !", "د محضول مغلومات تازه شول!", "success");
+      swal("په بریالی توګه !", "د کټګوری معلومات اضافه شول!", "success");
+      setTimeout(function() {
+      window.location.href = "admin.php";
+      }, 2000); // 2000 milliseconds (2 seconds)
                </script>;';
     }
 
@@ -193,6 +196,36 @@ function updateCategory()
     echo $e->getMessage();
   }
 }
+function updateUnit()
+{
+  try {
+    $unit_id = $_POST['update_unit_id']; // Assuming you have a form field with the unit ID
+    $unit_name = $_POST['update_unit_name'];
+
+    include('DBConnection.php');
+
+    // Prepare the SQL update query
+    $sql = "UPDATE `unit` SET `unit_name` = '$unit_name' WHERE `unit_id` = $unit_id";
+
+    if ($conn->query($sql)) {
+      echo ' <script LANGUAGE="JavaScript">
+      swal("په بریالی توګه !", "د یونیټ معلومات اضافه شول!", "success");
+      setTimeout(function() {
+      window.location.href = "admin.php";
+      }, 2000); // 2000 milliseconds (2 seconds)
+               </script>;';
+    } else {
+      echo ' <script LANGUAGE="JavaScript">
+                 window.alert("Opps: ' . $conn->error . '");
+                 
+               </script>";';
+    }
+  } catch (Exception $e) {
+    // Handle any exceptions here
+    echo $e->getMessage();
+  }
+}
+
 // end of update category function
 
 
@@ -238,8 +271,10 @@ function updateCompany()
 
     if ($conn->query($sql)) {
       echo ' <script LANGUAGE="JavaScript">
-                 swal("په بریالی توګه !", "د محضول معلومات تازه شول!", "success");
-                 
+      swal("په بریالی توګه !", "د کمپنۍ معلومات اضافه شول!", "success");
+      setTimeout(function() {
+      window.location.href = "admin.php";
+      }, 2000); // 2000 milliseconds (2 seconds)
                </script>;';
     } else {
       throw new Exception('Database update error: ' . $conn->error);
@@ -354,7 +389,7 @@ function EditUsers()
 
     if ($conn->query($sqluser)) {
       echo ' <script LANGUAGE="JavaScript">
-      swal("په بریالی توګه !", "د شرکت معلومات اضافه شول!", "success");
+      swal("په بریالی توګه !", "د یوزر مالومات تازه شول!", "success");
       setTimeout(function() {
       window.location.href = "admin.php";
       }, 2000); // 2000 milliseconds (2 seconds)
@@ -464,8 +499,10 @@ function updateCountry()
 
     if ($conn->query($sql)) {
       echo ' <script LANGUAGE="JavaScript">
-                 swal("په بریالی توګه !", "د محضول معلومات تازه شول!", "success");
-              
+      swal("په بریالی توګه !", "د هیواد معلومات اضافه شول!", "success");
+      setTimeout(function() {
+      window.location.href = "admin.php";
+      }, 2000); // 2000 milliseconds (2 seconds)
                </script>;';
     } else {
       echo ' <script LANGUAGE="JavaScript">
@@ -525,8 +562,10 @@ function updateCurrency()
 
     if ($conn->query($sql)) {
       echo ' <script LANGUAGE="JavaScript">
-                 swal("په بریالی توګه !", "د محضول معلومات تازه شول!", "success");
-                
+      swal("په بریالی توګه !", "د پولی واحد معلومات اضافه شول!", "success");
+      setTimeout(function() {
+      window.location.href = "admin.php";
+      }, 2000); // 2000 milliseconds (2 seconds)
                </script>;';
     } else {
       echo ' <script LANGUAGE="JavaScript">
@@ -639,7 +678,7 @@ function addUnit()
             <li>
               <hr class="dropdown-divider">
             </li>
-            <li><a class="dropdown-item" href="#">Sign out</a></li>
+            <li><a class="dropdown-item" href="logout.php?signout=signout">Sign out</a></li>
           </ul>
         </div>
       </div>

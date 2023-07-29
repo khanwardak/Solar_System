@@ -502,7 +502,7 @@ function addproduct()
                 data: { session: session },
                 success: function (response) {
 
-                  alert("Bill Created");
+                  alert("بیل جوړ شو!");
                   window.location.replace('goods.php');
                 },
                 error: function (error) {
