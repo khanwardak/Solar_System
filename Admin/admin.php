@@ -1512,9 +1512,9 @@ try {
             ?>
             <!-- bill generation profile modle end here ====================================================================================================================================================================================================-->
 
-            <!-- countery modal start here ===============================================================================================================================================================================================================================================-->
+             <!-- countery modal start here ===============================================================================================================================================================================================================================================-->
 
-            <div class="modal" id="countryModal" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+             <div class="modal" id="countryModal" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
 
@@ -1535,10 +1535,69 @@ try {
 
                           </div>
                         </form>
+                        <table class="table table-borderless align-middle mb-0 bg-white table-hover mt-2"
+                          style="direction:rtl" class="card">
+                          <thead>
+                            <tr>
+                              <th>د هیواد نوم</th>
+                              <th>عملیات</th>
+
+                            </tr>
+                          </thead>
+                          <tbody>
+
+                            <?php
+                            try {
+                              require_once('DBConnection.php');
+                              $sql = "SELECT * FROM `country`";
+                              $result = $conn->query($sql);
+                              if ($result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                               
+                                  echo '<tr data-country-id="' . $row["count_id"] . '" data-country-name="' . $row["count_name"] . '">';
+                                  echo '<td>' . $row["count_name"] . '</td>';
+                                  echo '<td>
+                                          <a class="fa fa-edit text-decoration-none editButtonCountry" href="javascript:void(0);"></a>
+                                        </td>';
+                                  echo '<td><a class="fa fa-trash text-decoration-none" href=""></a></td>';
+                                  echo '</tr>';
+                                }
+                              }
+                            } catch (Exception $e) {
+
+                            }
+
+                            ?>
+                          </tbody>
+                        </table>
+                        <script>
+ $(document).ready(function() {
+  // Handle click event for the editButton using event delegation
+  $(document).on('click', '.editButtonCountry', function(e) {
+    e.preventDefault(); // Prevent the default behavior of the anchor tag (navigating to the href)
+
+    // Find the parent table row and get the category_id and category_name from the data attributes
+    var row = $(this).closest('tr');
+    var comp_id = row.data('country-id');
+    var comp_name = row.data('country-name');
+    $('#update_Country_Modal').modal('show');
+    $('#country').modal('hide');
+    $('#update_Country_Modal input[name="update_country_id"]').val(comp_id);
+    $('#update_Country_Modal input[name="update_country_name"]').val(comp_name);
+  });
+});
+
+</script>
+
+
                       </div>
+
+
                     </div>
                   </div>
-               </div>
+
+
+                </div>
               </div>
             </div>
 
@@ -1595,6 +1654,8 @@ try {
               updateCountry();
             }
             ?>
+
+            <!-- edit country modal end here -->
 
             <!-- edit country modal end here -->
 
@@ -2119,9 +2180,11 @@ try {
               role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
+
                   <div class="col">
                     <div class="modal-body ">
                       <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
                       <div class="px-4 py-5">
                         <form class="row g-3 needs-validation" novalidate style="text-align:right;" method="post">
                           <div class="col-12">
@@ -2135,9 +2198,70 @@ try {
                             <div class="invalid-feedback">Please,bill id!</div>
                           </div>
                           <div class="text-center mt-5">
+
                             <button class="btn btn-primary btn-submit" type="submit" name="addCurrency">ثبتول</button>
+
                           </div>
                         </form>
+
+                        <table class="table table-borderless align-middle mb-0 bg-white table-hover mt-2"
+                          style="direction:rtl" class="card">
+                          <thead>
+                            <tr>
+                              <th>د پولي واحد نوم</th>
+                              <th>د پولي واحد سمبول</th>
+                              <th>عملیات</th>
+
+                            </tr>
+                          </thead>
+                          <tbody>
+
+                            <?php
+                            try {
+                              require_once('DBConnection.php');
+                              $sql = "SELECT * FROM `currency`";
+                              $result = $conn->query($sql);
+                              if ($result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                                  echo '<tr data-currency-id="' . $row["currency_id"] . '" data-currency-name="' . $row["currency_name"] . '" data-currency-symbol="' . $row["currency_symbol"] . '">';
+                                  echo '<td>' . $row["currency_name"] . '</td>';
+                                  echo '<td>' . $row["currency_symbol"] . '</td>';
+                                  echo '<td>
+                                          <a class="fa fa-edit text-decoration-none editButtonCurrency" href="javascript:void(0);"></a>
+                                        </td>';
+                                  echo '<td><a class="fa fa-trash text-decoration-none" href=""></a></td>';
+                                  echo '</tr>';
+                                }
+                              }
+                              
+                            } catch (Exception $e) {
+
+                            }
+
+                            ?>
+                          </tbody>
+                        </table>
+                        <script>
+ $(document).ready(function() {
+  // Handle click event for the editButton using event delegation
+  $(document).on('click', '.editButtonCurrency', function(e) {
+    e.preventDefault(); // Prevent the default behavior of the anchor tag (navigating to the href)
+
+    // Find the parent table row and get the category_id and category_name from the data attributes
+    var row = $(this).closest('tr');
+    var currency_id = row.data('currency-id');
+    var currency_name = row.data('currency-name');
+    var currency_symbol = row.data('currency-symbol');
+    $('#update_Currency_Modal').modal('show');
+    $('#currency').modal('hide');
+    $('#update_Currency_Modal input[name="update_currency_id"]').val(currency_id);
+    $('#update_Currency_Modal input[name="update_currency_name"]').val(currency_name);
+    $('#update_Currency_Modal input[name="update_currency_sign"]').val(currency_symbol);
+  });
+});
+
+</script>
+
                       </div>
                     </div>
                   </div>
