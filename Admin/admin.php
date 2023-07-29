@@ -1,22 +1,32 @@
 <?php
-session_start();
-if (!isset($_SESSION['login_user']) || (isset($_SESSION['role']) && $_SESSION['role'] != 1)) {
-  header("Location: Login.php");
-  exit;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+
+require '../vendor/autoload.php';
+include('DBConnection.php');
+
+if (!isset($_COOKIE['access_token']) || empty($_COOKIE['access_token'] || $_COOKIE['role_admin'] != 1)) {
+  header("Location: login.php");
+  exit();
+} elseif (!isset($_COOKIE['role_admin']) || $_COOKIE['role_admin'] != 1) {
+  header("Location: login.php");
+  exit();
 }
-?>
+$secret_key = "solar-tech-login-seretekeyLoginKey";
+$token = $_COOKIE['access_token'];
 
+try {
+  $decoded_token = JWT::decode($token, new Key($secret_key, 'HS256'));
+} catch (Exception $e) {
 
-<script type="text/javascript">
+  header("Location: login.php");
+  echo $e;
+  exit();
+}
 
-
-</script>
-<!-- Recently sold products
- -->
-<?php
 include('jdf.php');
-define("DATE", jdate('l j p y i : g a'));
-echo DATE;
+define("DATE", jdate('l / j / p / y / i : g a'));
+
 
 ?>
 <?php
@@ -26,8 +36,8 @@ function recentlly()
   $lint = 1;
   if (isset($_GET['view'])) {
     $lint = $_GET['view'];
-   
-    
+
+
   }
   $sql = "SELECT category.categ_name, country.count_name,customers_bys_goods.buy_date, company.comp_name, customers_bys_goods.price, currency.currency_name, 
             unit.unit_name, customers_bys_goods.unit_amount, person.person_name FROM customers_bys_goods, 
@@ -151,13 +161,15 @@ function addcate()
       echo 'opps!';
     } else {
       echo ' <script LANGUAGE="JavaScript">
-                 swal("په بریالی توګه !", "د محضول مغلومات اضافه شول!", "success");
-
+      swal("په بریالی توګه !", "د کټګوری معلومات اضافه شول!", "success");
+      setTimeout(function() {
+      window.location.href = "admin.php";
+      }, 2000); // 2000 milliseconds (2 seconds)
                </script>;';
     }
 
   } catch (Exception $e) {
-    echo $e->getMessage();
+    echo 'Some thing went woring kindly check line 152 on addmin' . $e->getMessage();
   }
 
 }
@@ -194,8 +206,10 @@ function addco()
     $sql = "INSERT INTO `company` (`comp_name`) VALUES ('$coname');";
     if ($conn->query($sql)) {
       echo ' <script LANGUAGE="JavaScript">
-                 swal("په بریالی توګه !", "د محضول مغلومات اضافه شول!", "success");
-
+      swal("په بریالی توګه !", "د کمپنۍ معلومات اضافه شول!", "success");
+      setTimeout(function() {
+      window.location.href = "admin.php";
+      }, 2000); // 2000 milliseconds (2 seconds)
                </script>;';
     } else {
       echo ' ("<script LANGUAGE="JavaScript">
@@ -241,23 +255,27 @@ function updateCompany()
 
 // updating company end here
 // AddOurLoan start 
-function addOurLoan(){
+function addOurLoan()
+{
   try {
     include('DBConnection.php');
     $ourloanfirm = $_POST['ourloanfirm'];
     $ourloancurency_id = $_POST['ourloancurrency_id'];
     $ourloanamount = $_POST['ourloanamount'];
-   
+
     $sqluser = "INSERT INTO `ourloan`(`loan_amount`, `loan_paid`, `firm_id`, `currency_id`) 
     VALUES ('$ourloanamount', 0, '$ourloanfirm', $ourloancurency_id)";
 
     if ($conn->query($sqluser)) {
-      echo '<script LANGUAGE="JavaScript">
-             swal("په بریالی توګه !", "د شرکت معلومات اضافه شول!", "success");
-            </script>';
+      echo ' <script LANGUAGE="JavaScript">
+      swal("په بریالی توګه !", "د قرضې معلومات اضافه شول!", "success");
+      setTimeout(function() {
+      window.location.href = "admin.php";
+      }, 2000); // 2000 milliseconds (2 seconds)
+               </script>;';
     } else {
       echo '<script LANGUAGE="JavaScript">
-             window.alert("Opps: '. $conn->error .'");
+             window.alert("Opps:");
            </script>';
     }
   } catch (Exception $e) {
@@ -269,7 +287,8 @@ function addOurLoan(){
 // end of AddOurLoan
 
 // strat of adding Users
-function addUsers(){
+function addUsers()
+{
   try {
     include('DBConnection.php');
     $name = $_POST['first_name'];
@@ -286,12 +305,15 @@ function addUsers(){
                 VALUES (NULL, '$username', '$hashedPassword', '$name', '$lastname', '$useremails', '$usertype')";
 
     if ($conn->query($sqluser)) {
-      echo '<script LANGUAGE="JavaScript">
-             swal("په بریالی توګه !", "د شرکت معلومات اضافه شول!", "success");
-            </script>';
+      echo ' <script LANGUAGE="JavaScript">
+      swal("په بریالی توګه !", "د یوزر معلومات اضافه شول!", "success");
+      setTimeout(function() {
+      window.location.href = "admin.php";
+      }, 2000); // 2000 milliseconds (2 seconds)
+               </script>;';
     } else {
       echo '<script LANGUAGE="JavaScript">
-             window.alert("Opps: '. $conn->error .'");
+             window.alert("Opps: ' . $conn->error . '");
            </script>';
     }
   } catch (Exception $e) {
@@ -303,7 +325,8 @@ function addUsers(){
 // end of user adding function
 
 // start of user edit function
-function EditUsers(){
+function EditUsers()
+{
   try {
     include('DBConnection.php');
     $userId = $_POST['ed_user_id']; // Assuming you have a form field with the user_id
@@ -330,12 +353,15 @@ function EditUsers(){
                 WHERE `user_id` = $userId";
 
     if ($conn->query($sqluser)) {
-      echo '<script LANGUAGE="JavaScript">
-             swal("په بریالی توګه !", "د شرکت معلومات تازه شول!", "success");
-            </script>';
+      echo ' <script LANGUAGE="JavaScript">
+      swal("په بریالی توګه !", "د شرکت معلومات اضافه شول!", "success");
+      setTimeout(function() {
+      window.location.href = "admin.php";
+      }, 2000); // 2000 milliseconds (2 seconds)
+               </script>;';
     } else {
       echo '<script LANGUAGE="JavaScript">
-             window.alert("Opps: '. $conn->error .'");
+             window.alert("Opps: ' . $conn->error . '");
            </script>';
     }
   } catch (Exception $e) {
@@ -348,17 +374,18 @@ function EditUsers(){
 // end of user edit funtion
 
 // start of addingfirm function
-function addFirm(){
+function addFirm()
+{
   try {
     include('DBConnection.php');
     $location = $_POST['location_name'];
     $dist = $_POST['district'];
     $province = $_POST['address'];
-    
+
     // Insert address first
     $sql2 = "INSERT INTO `address` (`adress_vilage`, `address_province`, `address_district`) 
              VALUES ('$location', '$province', '$dist')";
-    
+
     if (!$conn->query($sql2)) {
       echo "Opps!";
     }
@@ -376,12 +403,15 @@ function addFirm(){
                 VALUES (NULL, '$store_name', '$addressId')";
 
     if ($conn->query($sqlfirm)) {
-      echo '<script LANGUAGE="JavaScript">
-             swal("په بریالی توګه !", "د شرکت معلومات اضافه شول!", "success");
-           </script>';
+      echo ' <script LANGUAGE="JavaScript">
+      swal("په بریالی توګه !", "د شرکت معلومات اضافه شول!", "success");
+      setTimeout(function() {
+      window.location.href = "admin.php";
+      }, 2000); // 2000 milliseconds (2 seconds)
+               </script>;';
     } else {
       echo '<script LANGUAGE="JavaScript">
-             window.alert("Opps: '. $conn->error .'");
+             window.alert("Opps: ' . $conn->error . '");
            </script>';
     }
   } catch (Exception $e) {
@@ -389,10 +419,6 @@ function addFirm(){
     echo "Error in adding firm: " . $e->getMessage();
   }
 }
-
-
-
-
 
 // end of addingfirm function
 // add countery
@@ -404,8 +430,10 @@ function addcounter()
     $sql = "INSERT INTO `country` (`count_name`) VALUES (' $countery_name');";
     if ($conn->query($sql)) {
       echo ' <script LANGUAGE="JavaScript">
-                 swal("په بریالی توګه !", "د محضول مغلومات اضافه شول!", "success");
-
+      swal("په بریالی توګه !", "د هیواد معلومات اضافه شول!", "success");
+      setTimeout(function() {
+      window.location.href = "admin.php";
+      }, 2000); // 2000 milliseconds (2 seconds)
                </script>;';
     } else {
       echo ' <script LANGUAGE="JavaScript">
@@ -463,8 +491,10 @@ try {
     $sql = "INSERT INTO `currency` (`currency_id`, `currency_name`, `currency_symbol`) VALUES (NULL, '$countery_name', '$currency_sign');";
     if ($conn->query($sql)) {
       echo ' <script LANGUAGE="JavaScript">
-                 swal("په بریالی توګه !", "د محضول مغلومات اضافه شول!", "success");
-
+      swal("په بریالی توګه !", "پولی واحد اضافه شو!!", "success");
+      setTimeout(function() {
+      window.location.href = "admin.php";
+      }, 2000); // 2000 milliseconds (2 seconds)
                </script>;';
     } else {
       echo ' ("<script LANGUAGE="JavaScript">
@@ -519,10 +549,11 @@ function addUnit()
     $unit_name = $_POST['unit_name'];
     $sql = "INSERT INTO `unit` (`unit_id`, `unit_name`) VALUES (NULL, '$unit_name');";
     if ($conn->query($sql)) {
-
       echo ' <script LANGUAGE="JavaScript">
-                 swal("په بریالی توګه !", "د محضول مغلومات اضافه شول!", "success");
-                        window.location.href="";
+      swal("په بریالی توګه !", "واحد اضافه شول!", "success");
+      setTimeout(function() {
+      window.location.href = "admin.php";
+      }, 2000); // 2000 milliseconds (2 seconds)
                </script>;';
     } else {
       echo ' ("<script LANGUAGE="JavaScript">
@@ -535,112 +566,8 @@ function addUnit()
   }
 
 }
-// adding unit function end here
 
-
-// editing unit function start here
-
-function updateUnit()
-{
-  try {
-    $unit_id = $_POST['update_unit_id']; // Assuming you have a form field with the unit ID
-    $unit_name = $_POST['update_unit_name'];
-
-    include('DBConnection.php');
-
-    // Prepare the SQL update query
-    $sql = "UPDATE `unit` SET `unit_name` = '$unit_name' WHERE `unit_id` = $unit_id";
-
-    if ($conn->query($sql)) {
-      echo ' <script LANGUAGE="JavaScript">
-                 swal("په بریالی توګه !", "د محضول معلومات تازه شول!", "success");
-                
-               </script>;';
-    } else {
-      echo ' <script LANGUAGE="JavaScript">
-                 window.alert("Opps: ' . $conn->error . '");
-                 
-               </script>";';
-    }
-  } catch (Exception $e) {
-    // Handle any exceptions here
-    echo $e->getMessage();
-  }
-}
-
-// editing unit function end here
-
-// function addStore()
-// {
-//   try {
-//     include('DBConnection.php');
-//     $location = $_POST['location_name'];
-//     $dist = $_POST['district'];
-//     $province = $_POST['address'];
-//     $sql2 = "INSERT INTO `location` (`location_name`, `location_province`, `location_district`) VALUES ( '$location', '$province', '$dist');";
-//     if (!$conn->query($sql2)) {
-//       echo "opps!";
-//     }
-
-
-//     echo ' <script LANGUAGE="JavaScript">
-//                  swal("په بریالی توګه !", "د محضول مغلومات اضافه شول!", "success");
-
-//                </script>;';
-//     $sql = "SELECT * FROM `location` ORDER BY location_id desc limit 1";
-//     $id = $conn->query($sql);
-//     $addres = "";
-//     while ($row = $id->fetch_assoc()) {
-//       $addres = $row["location_id"];
-//     }
-//     $store_name = $_POST['store_name'];
-//     //$store_address = $_POST['store_address'];
-//     $sql = "INSERT INTO `store` (`store_id`, `store_name`, `store_address`) VALUES (NULL, '$store_name', '$addres');";
-//     if ($conn->query($sql)) {
-
-//       $conn->query($sqll);
-//       echo ' <script LANGUAGE="JavaScript">
-//                  swal("په بریالی توګه !", "د محضول مغلومات اضافه شول!", "success");
-
-//                </script>;';
-//     } else {
-//       echo ' ("<script LANGUAGE="JavaScript">
-//                      window.alert("Opps");
-
-//                    </script>");';
-//     }
-//   } catch (Exception $e) {
-//     echo $e->getMessage();
-//   }
-
-
-// }
-// try {
-//   function laon()
-//   {
-
-//     $loan_quqntity = $_POST["loan_quantity"];
-//     $paid_quantity = $_POST["paid_quantity"];
-//     echo $total_paid = $_POST["total_paid"];
-//     $select = $_SESSION['selecte'];
-//     include('DBConnection.php');
-//     //$sqll="SET FOREIGN_KEY_CHECKS = 0;";
-//     // $conn->query($sqll);
-//     $date = DATE;
-//     $sqlLoan = "INSERT INTO `loan` (`loan_id`, `loan_quantity`, `paid_quantity`, `total_paid`, `customer_id`,`created_date`) VALUES (NULL, '$loan_quqntity', '$paid_quantity', '$total_paid', '$select','$date');";
-//     if ($conn->query($sqlLoan)) {
-//       echo ' <script LANGUAGE="JavaScript">
-//                          swal("په بریالی توګه !", "د محضول مغلومات اضافه شول!", "success");
-//                       </script>;';
-//     }
-
-//   }
-// } catch (Exception $e) {
-
-// }
 // Dashboaerd -----------------------------------------------------------------------------------------------------------------//
-
-
 
 ?>
 
@@ -650,8 +577,6 @@ function updateUnit()
 
 <head>
   <!-- CSS only -->
-
-
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
   <!-- JavaScript Bundle with Popper -->
@@ -681,30 +606,29 @@ function updateUnit()
   <script src="jsPDF/jsPDFAutoTable/dist/jspdf.plugin.autotable.js"></script>
   <script src="jsPDF/html2canvas/html2canvas.js"></script>
   <script src="jsPDF/html2canvas/html2canvas.min.js"></script>
- 
-
-
   <link href="../style.css?verssion=4" rel="stylesheet">
 
 </head>
-
 <body>
-  <header class="py-3 mb-4 border-bottom shadow">
+  <header class="py-3 mb-4 border-bottom shadow" style="background-color:#122834">
     <div class="container-fluid align-items-center d-flex">
 
       <div class="col-lg-4 d-flex justify-content-start ">
 
         <a href="" class="text-decoration-none">
           <span class="h1 text-uppercase text-warning bg-dark px-2">SOLAR</span>
-          <span class="h1 text-uppercase text-dark bg-warning px-2 ml-n1">SYSTEM</span>
+          <span class="h1 text-uppercase text-dark bg-warning px-2 ml-n1">TECH</span>
         </a>
+      </div>
+      <div class="col-lg-4 d-flex justify-content-start ">
+        <b style="color:#fff"><?php echo DATE; ?></b>
       </div>
       <div class="flex-grow-1 d-flex align-items-center">
         <form class="w-100 me-3">
-          <input type="search" class="form-control" placeholder="Search...">
+          <!-- <input type="search" class="form-control" placeholder="Search..."> -->
         </form>
         <div class="flex-shrink-0 dropdown">
-          <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser2"
+          <a href="#" class="d-block link-light text-decoration-none dropdown-toggle" id="dropdownUser2"
             data-bs-toggle="dropdown" aria-expanded="false">
             <img src="https://via.placeholder.com/28?text=!" alt="user" width="32" height="32" class="rounded-circle">
           </a>
@@ -729,7 +653,7 @@ function updateUnit()
         <div class="bg-light border rounded-3 p-3">
           <div class="row">
             <div class="col-xxl-4 col-md-4" style="direction:rtl; text-align: right; background-color: ">
-              <div class="card info-card revenue-card" style="background-color:089f6d;">
+              <div class="card info-card revenue-card" style="background-color:#089f6d;">
 
                 <div class="filter">
                   <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
@@ -791,7 +715,6 @@ function updateUnit()
                       <h6  style="color:#fff">145</h6>
                       <span class=" small pt-1 fw-bold" style="color:#fff">12%</span> <span
                         class=" small pt-2 ps-1" style="color:#fff">ریات شوی</span>
-
                     </div>
                   </div>
                 </div>
@@ -873,10 +796,6 @@ function updateUnit()
                     $(document).ready(function(){
                             $("#addcustomer").modal("show");
                         });
-
-
-
-
                  </script>';
                   $sql = "SELECT * FROM `person` INNER JOIN address ON person.person_address = address.adress_id INNER JOIN district ON address.address_district= district.district_id INNER JOIN province ON district.province_id = province.province_id WHERE person_id='$id';";
                   include('DBConnection.php');
@@ -1051,29 +970,15 @@ function updateUnit()
                           style="direction:rtl" class="card">
                           <thead>
                             <tr class="cusomerHistory" id="customerhistory">
-
-
-
                             </tr>
-
-
                           </thead>
                           <tbody>
-
-
                           </tbody>
                         </table>
-
-
                       </div>
                       <div id="laoninfo"></div>
-
-
                     </div>
                   </div>
-
-
-
                 </div>
               </div>
             </div>
@@ -1153,6 +1058,12 @@ try {
 }
 ?>
 
+                                    </td>
+                                     <td><a class="fa fa-trash text-decoration-none" href=""></a></td>
+                                      </tr>
+                            
+                          </tbody>
+                        </table>
 
 
 
@@ -1179,13 +1090,8 @@ try {
 </script>
 
                       </div>
-
-
                     </div>
                   </div>
-
-
-
                 </div>
               </div>
             </div>
@@ -1466,9 +1372,6 @@ try {
                           data: { selecte: selecte },
                           success: function (response) {
                             //alert(selecte);s
-
-
-
                           }
                         });
                       })
@@ -1530,85 +1433,7 @@ try {
                                           <div class="table-responsive table-scroll" data-mdb-perfect-scrollbar="true"
                                             style="position: relative; height: 700px">
                                             <table class="table table-striped mb-0">
-                                              <?php
-                                              // try {
-                                              //   include('DBConnection.php');
-                                              //   $sql2 = "SELECT * FROM `bill` ORDER by bill_id DESC LIMIT 1;";
-                                              //   $result = $conn->query($sql2);
-                                              //   $userid = "";
-                                              //   $goods_id = "";
-                                              
-                                              //   while ($row = $result->fetch_assoc()) {
-                                              //     $userid = $row["person_id"];
-                                              //     $goods_id = $row["goods_id"];
-                                              //   }
-                                              
-                                              //   $sql = "SELECT bill.bill_id, customer.customer_name,bill.quantity, goods.unit_id, goods.goods_name AS product, bill.price AS فی, bill.price*bill.quantity AS total, customer_buy_goods.currency_id,customer_buy_goods.buy_date FROM bill,customer,goods,customer_buy_goods WHERE customer.customer_id=$userid and goods.goods_id =$goods_id  ORDER by bill.bill_id DESC LIMIT 1;";
-                                              //   $result = $conn->query($sql);
-                                              //   if ($result->num_rows > 0) {
-                                              //     while ($row = $result->fetch_assoc()) {
-                                              //       $customerName = mb_convert_encoding($row["customer_name"], 'UTF-8');
-                                              //       $buyDate = mb_convert_encoding($row["buy_date"], 'UTF-8');
-                                              //       $product = mb_convert_encoding($row["product"], 'UTF-8');
-                                              //       $quantity = mb_convert_encoding($row["quantity"], 'UTF-8');
-                                              //       $price = mb_convert_encoding($row["فی"], 'UTF-8');
-                                              //       $total = mb_convert_encoding($row["total"], 'UTF-8');
-                                              
-
-                                              //       // Encode the data as JSON
-                                              //       // $jsonData = json_encode($data);
-                                              
-                                              //       // get uint name
-                                              //       // $unit_id = $row["unit_id"];
-                                              //       // $sql2 = "SELECT * FROM `unit` WHERE unit_id=.$unit_id";
-                                              
-                                              //       // $unitrsult = $conn->query($sql2);
-                                              //       // if ($unit = $unitrsult->fetch_assoc()) {
-                                              //       //     echo $unit;
-                                              //       // }
-                                              //       // else{
-                                              //       //     echo "opps";
-                                              //       // }
-                                              //       echo '
-                                              //               <thead style="background-color: #002d72;">
-                                              //               <div class="row" id="printable">
-                                              //               <div class="col-xxl-4 mt-2">
-                                              //               <p style="outline-style: dotted;">' . $row["customer_name"] . '</p>
-                                              //               </div>
-                                              //               <div class="col-xxl-4 mt-2">
-                                              //                   <p style="outline-style: dotted; outline-top:none">' . $buyDate . '</p>
-                                              //               </div>
-                                              //               <div class="col-xxl-4 mt-2">
-                                              //                   <p style="outline-style: dotted; border-top: none;">نمر  ' . $row["bill_id"] . '</p>
-                                              //               </div>
-                                              //               <tr>
-                                              //                 <th scope="col" style="color:black">نمبر</th>
-                                              //                 <th scope="col">جنس</th>
-                                              //                 <th scope="col">مقدار</th>
-                                              //                 <th scope="col">قمت فی دانه</th>
-                                              //                 <th scope="col">ټوټل</th>
-                                              //               </tr>
-                                              //             </thead>
-                                              //             <tbody>
-                                              //               <tr>
-                                              //                 <td>' . $row["product"] . 'y</td>
-                                              //                 <td>Boxing</td>
-                                              //                 <td>' . $row["quantity"] . '</td>
-                                              //                 <td>' . $row["فی"] . '</td>
-                                              //                 <td>10</td>
-                                              //               </tr>
-                                              
-                                              //             </tbody> ';
-                                              //     }
-                                              //   } else {
-                                              //     echo "No data found!!";
-                                              //   }
-                                              
-                                              // } catch (Exception $e) {
-                                              //   $e->getMessage();
-                                              // }
-                                              
-                                              ?>
+                                             <h1>Nothing to show </h1>
 
                                             </table>
                                           </div>
@@ -1710,69 +1535,10 @@ try {
 
                           </div>
                         </form>
-                        <table class="table table-borderless align-middle mb-0 bg-white table-hover mt-2"
-                          style="direction:rtl" class="card">
-                          <thead>
-                            <tr>
-                              <th>د هیواد نوم</th>
-                              <th>عملیات</th>
-
-                            </tr>
-                          </thead>
-                          <tbody>
-
-                            <?php
-                            try {
-                              require_once('DBConnection.php');
-                              $sql = "SELECT * FROM `country`";
-                              $result = $conn->query($sql);
-                              if ($result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                               
-                                  echo '<tr data-country-id="' . $row["count_id"] . '" data-country-name="' . $row["count_name"] . '">';
-                                  echo '<td>' . $row["count_name"] . '</td>';
-                                  echo '<td>
-                                          <a class="fa fa-edit text-decoration-none editButtonCountry" href="javascript:void(0);"></a>
-                                        </td>';
-                                  echo '<td><a class="fa fa-trash text-decoration-none" href=""></a></td>';
-                                  echo '</tr>';
-                                }
-                              }
-                            } catch (Exception $e) {
-
-                            }
-
-                            ?>
-                          </tbody>
-                        </table>
-                        <script>
- $(document).ready(function() {
-  // Handle click event for the editButton using event delegation
-  $(document).on('click', '.editButtonCountry', function(e) {
-    e.preventDefault(); // Prevent the default behavior of the anchor tag (navigating to the href)
-
-    // Find the parent table row and get the category_id and category_name from the data attributes
-    var row = $(this).closest('tr');
-    var comp_id = row.data('country-id');
-    var comp_name = row.data('country-name');
-    $('#update_Country_Modal').modal('show');
-    $('#country').modal('hide');
-    $('#update_Country_Modal input[name="update_country_id"]').val(comp_id);
-    $('#update_Country_Modal input[name="update_country_name"]').val(comp_name);
-  });
-});
-
-</script>
-
-
                       </div>
-
-
                     </div>
                   </div>
-
-
-                </div>
+               </div>
               </div>
             </div>
 
@@ -1925,8 +1691,6 @@ try {
                       </div>
                     </div>
                   </div>
-
-
                 </div>
               </div>
             </div>
@@ -1935,10 +1699,6 @@ try {
               addUsers();
             }
             ?>
-
-
-
-
 
         <!-- end of firm model -->
 
@@ -1986,7 +1746,7 @@ try {
                                 }
 
                               }
-                              
+
 
                               ?>
                               </select>
@@ -2008,20 +1768,20 @@ try {
                           <tbody>
 
                           <?php
-require_once('DBConnection.php');
-$sql = "SELECT user_id, name, type_flag FROM user INNER JOIN user_type ON user.user_type = user_type.type_id";
-$result = $conn->query($sql);
-if ($result->num_rows > 0) {
-  while ($row = $result->fetch_assoc()) {
-    echo '<tr data-user-id="' . $row["user_id"] . '">';
-    echo '<td>' . $row["name"] . '</td>';
-    echo '<td>' . $row["type_flag"] . '</td>';
-    echo '<td><a class="fa fa-edit text-decoration-none editButton" href="#"></a></td>';
-    echo '<td><a class="fa fa-trash text-decoration-none" href=""></a></td>';
-    echo '</tr>';
-  }
-}
-?>
+                          require_once('DBConnection.php');
+                          $sql = "SELECT user_id, name, type_flag FROM user INNER JOIN user_type ON user.user_type = user_type.type_id";
+                          $result = $conn->query($sql);
+                          if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                              echo '<tr data-user-id="' . $row["user_id"] . '">';
+                              echo '<td>' . $row["name"] . '</td>';
+                              echo '<td>' . $row["type_flag"] . '</td>';
+                              echo '<td><a class="fa fa-edit text-decoration-none editButton" href="#"></a></td>';
+                              echo '<td><a class="fa fa-trash text-decoration-none" href=""></a></td>';
+                              echo '</tr>';
+                            }
+                          }
+                          ?>
 
                           </tbody>
                         </table>
@@ -2063,15 +1823,9 @@ if ($result->num_rows > 0) {
     });
   });
 </script>
-
-
-          
-
                       </div>
                     </div>
                   </div>
-
-
                 </div>
               </div>
             </div>
@@ -2080,11 +1834,6 @@ if ($result->num_rows > 0) {
               addUsers();
             }
             ?>
-
-
-
-
-
         <!-- end of user model -->
 
 
@@ -2135,7 +1884,7 @@ if ($result->num_rows > 0) {
                                 }
 
                               }
-                              
+
 
                               ?>
                               </select>
@@ -2147,8 +1896,6 @@ if ($result->num_rows > 0) {
                       </div>
                     </div>
                   </div>
-
-
                 </div>
               </div>
             </div>
@@ -2157,11 +1904,6 @@ if ($result->num_rows > 0) {
               EditUsers();
             }
             ?>
-
-
-
-
-
 
         <!-- end of editing user form -->
 
@@ -2201,9 +1943,7 @@ if ($result->num_rows > 0) {
                     </div>
 
                       <div class="input-group mt-2">
-
                       <select class="form-select form-control " required name="ourloancurrency_id">
-
                         <?php
                         //  $sql="SELECT * FROM `currency`";
                         include('DBConnection.php');
@@ -2219,16 +1959,12 @@ if ($result->num_rows > 0) {
                           "no record found";
 
                         ?>
-
-
                       </select>
                       <span class="input-group-text">پولی واحد</span>
                     </div>
                             <label for="yourName" class="form-label">اندازه</label>
                             <input type="text" name="ourloanamount" class="form-control" id="" required>
                             <div class="invalid-feedback">Please,bill id!</div>
-                       
-                            
                             <div class="text-center mt-5">
                               <button class="btn btn-primary btn-submit" type="submit" name="addOurLoan">ثبتول</button>
                             </div>
@@ -2267,8 +2003,6 @@ if ($result->num_rows > 0) {
                       </div>
                     </div>
                   </div>
-
-
                 </div>
               </div>
             </div>
@@ -2277,22 +2011,12 @@ if ($result->num_rows > 0) {
               addOurLoan();
             }
             ?>
-
-
-
-
         <!-- end of ourloan model -->
 
 
             <!-- start of firm model -->
-
-
-       
-
         <div class="modal left fade" id="firm" data-backdrop="static" data-keyboard="false" tabindex="-1">
-
               <role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="col">
@@ -2345,7 +2069,6 @@ if ($result->num_rows > 0) {
                             <label for="yourName" class="form-label">کلی</label>
                             <input type="text" name="location_name" class="form-control" id="" required>
                             <div class="invalid-feedback">Please,bill id!</div>
-
                             <div class="text-center mt-5">
                               <button class="btn btn-primary btn-submit" type="submit" name="addFirm">ثبتول</button>
                             </div>
@@ -2357,11 +2080,9 @@ if ($result->num_rows > 0) {
                             <tr>
                               <th>د شرکت نوم</th>
                               <th>عملیات</th>
-
                             </tr>
                           </thead>
                           <tbody>
-
                             <?php
                             require_once('DBConnection.php');
                             $sql = "SELECT * FROM `firm`";
@@ -2383,8 +2104,6 @@ if ($result->num_rows > 0) {
                       </div>
                     </div>
                   </div>
-
-
                 </div>
               </div>
             </div>
@@ -2393,13 +2112,6 @@ if ($result->num_rows > 0) {
               addFirm();
             }
             ?>
-
-
-
-
-
-
-
             <!-- end of firm model ============================================== -->
             <!-- currencey modal start here ============-===================================================================================================================================================================================================================================-->
 
@@ -2407,11 +2119,9 @@ if ($result->num_rows > 0) {
               role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
-
                   <div class="col">
                     <div class="modal-body ">
                       <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-
                       <div class="px-4 py-5">
                         <form class="row g-3 needs-validation" novalidate style="text-align:right;" method="post">
                           <div class="col-12">
@@ -2425,70 +2135,9 @@ if ($result->num_rows > 0) {
                             <div class="invalid-feedback">Please,bill id!</div>
                           </div>
                           <div class="text-center mt-5">
-
                             <button class="btn btn-primary btn-submit" type="submit" name="addCurrency">ثبتول</button>
-
                           </div>
                         </form>
-
-                        <table class="table table-borderless align-middle mb-0 bg-white table-hover mt-2"
-                          style="direction:rtl" class="card">
-                          <thead>
-                            <tr>
-                              <th>د پولي واحد نوم</th>
-                              <th>د پولي واحد سمبول</th>
-                              <th>عملیات</th>
-
-                            </tr>
-                          </thead>
-                          <tbody>
-
-                            <?php
-                            try {
-                              require_once('DBConnection.php');
-                              $sql = "SELECT * FROM `currency`";
-                              $result = $conn->query($sql);
-                              if ($result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                                  echo '<tr data-currency-id="' . $row["currency_id"] . '" data-currency-name="' . $row["currency_name"] . '" data-currency-symbol="' . $row["currency_symbol"] . '">';
-                                  echo '<td>' . $row["currency_name"] . '</td>';
-                                  echo '<td>' . $row["currency_symbol"] . '</td>';
-                                  echo '<td>
-                                          <a class="fa fa-edit text-decoration-none editButtonCurrency" href="javascript:void(0);"></a>
-                                        </td>';
-                                  echo '<td><a class="fa fa-trash text-decoration-none" href=""></a></td>';
-                                  echo '</tr>';
-                                }
-                              }
-                              
-                            } catch (Exception $e) {
-
-                            }
-
-                            ?>
-                          </tbody>
-                        </table>
-                        <script>
- $(document).ready(function() {
-  // Handle click event for the editButton using event delegation
-  $(document).on('click', '.editButtonCurrency', function(e) {
-    e.preventDefault(); // Prevent the default behavior of the anchor tag (navigating to the href)
-
-    // Find the parent table row and get the category_id and category_name from the data attributes
-    var row = $(this).closest('tr');
-    var currency_id = row.data('currency-id');
-    var currency_name = row.data('currency-name');
-    var currency_symbol = row.data('currency-symbol');
-    $('#update_Currency_Modal').modal('show');
-    $('#currency').modal('hide');
-    $('#update_Currency_Modal input[name="update_currency_id"]').val(currency_id);
-    $('#update_Currency_Modal input[name="update_currency_name"]').val(currency_name);
-    $('#update_Currency_Modal input[name="update_currency_sign"]').val(currency_symbol);
-  });
-});
-
-</script>
-
                       </div>
                     </div>
                   </div>
@@ -2604,8 +2253,6 @@ if ($result->num_rows > 0) {
                       </div>
                     </div>
                   </div>
-
-
                 </div>
               </div>
             </div>
@@ -2932,32 +2579,11 @@ if ($result->num_rows > 0) {
                     ?>
                   </tbody>
                 </table>
+                
               </div>
               <div class="col-lg-6 card" style="direction:rtl; text-align: right;">
                 <h5 class="card-title">وروستی خرڅ شوی مخصولات<span>| نن</span></h5>
-                <!-- <table class="table table-bordered border-primary ">
-                  <thead class="overflow-auto h-100">
-                    <tr class="">
-
-                      <th>نوم</th>
-
-                      <th>د خرځ بیه</th>
-                      <th>تاریخ</th>
-                      <th>دمشتری آیدی</th>
-                      <th>عملیات</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                     <?php// recentlly(); ?>
-
-
-                    </tr>
-                  </tbody>
-                </table>  -->
-                
-   
-       
+    
             <div class="panel">
                 <div class="panel-heading">
                     <div class="row" style=" background: ;">
@@ -2986,10 +2612,7 @@ if ($result->num_rows > 0) {
                         <tbody id="recentTableBody">
                             <tr>
                             <?php recentlly(); ?>
-
-                           
-                            </tr>
-                              
+                            </tr>     
                         </tbody>
                     </table>
                 </div>
@@ -3364,28 +2987,27 @@ if ($result->num_rows > 0) {
                 <label class="custom-control-label" for="size-all">ټول مخصولات</label>
                 <span class="badge border font-weight-normal" style="color:black;">1000</span>
               </div>
-              <?php 
-                try{
-                    include('DBConnection.php');
-                    $sql ="SELECT SUM(goods.goods_qunatity) as quantity, category.categ_name FROM goods,category WHERE goods.categ_id = category.categ_id GROUP bY category.categ_name";
-                    $result = $conn->query($sql);
-                    if($result->num_rows>0){
-                      while($row = $result->fetch_assoc()){
-                        echo '
+              <?php
+              try {
+                include('DBConnection.php');
+                $sql = "SELECT SUM(goods.goods_qunatity) as quantity, category.categ_name FROM goods,category WHERE goods.categ_id = category.categ_id GROUP bY category.categ_name";
+                $result = $conn->query($sql);
+                if ($result->num_rows > 0) {
+                  while ($row = $result->fetch_assoc()) {
+                    echo '
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <input type="checkbox" class="custom-control-input" id="size-1">
-                        <label class="custom-control-label" for="size-1">'.$row["categ_name"].'</label>
-                        <span class="badge border font-weight-normal" style="color:black;">'.$row["quantity"].'</span>
+                        <label class="custom-control-label" for="size-1">' . $row["categ_name"] . '</label>
+                        <span class="badge border font-weight-normal" style="color:black;">' . $row["quantity"] . '</span>
                       </div>
                         ';
-                      }
-                    }
-                    else{
-                      echo "No data found";
-                    }
-                }catch(Exception $e){
-                  echo $e."some things wrong search by category";
+                  }
+                } else {
+                  echo "No data found";
                 }
+              } catch (Exception $e) {
+                echo $e . "some things wrong search by category";
+              }
 
               ?>
             </form>

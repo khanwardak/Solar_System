@@ -1,49 +1,49 @@
 <?php
+   include('DBConnection.php');
+   use Firebase\JWT\JWT;
+   use Firebase\JWT\Key;
+   require '../vendor/autoload.php'; // Include the JWT library
 $error = '';
-
 if (isset($_POST["login"])) {
-  session_start();
-  include('DBConnection.php');
-
   $username = mysqli_real_escape_string($conn, $_POST['user_name']);
   $password = mysqli_real_escape_string($conn, $_POST['password']);
-
-  $sql = "SELECT username, password, user_type FROM user WHERE username = '$username'";
+  $sql = "SELECT username, user_id, password, user_type FROM user WHERE username = '$username'";
   $result = $conn->query($sql);
-
   if ($result->num_rows == 1) {
-    $row = $result->fetch_assoc();
-    $hashedPassword = $row["password"];
-    $role = $row["user_type"];
-
-    // Verify the password
-    if (password_verify($password, $hashedPassword)) {
-      $_SESSION['login_user'] = $username;
-      $_SESSION['role'] = $role;
-
-      if ($role == 1) {
-        header("Location: admin.php");
-        exit();
-      } elseif ($role == 2) {
-        header("Location: second_goods.php");
-        exit();
-      } else {
-        $error = '<div class="alert alert-danger" role="alert">
-                   Invalid User Type!
-                  </div>';
-      }
-    } else {
-      $error = '<div class="alert alert-danger" role="alert" id="alert-danger">
-                 Invalid Username or Password!
-               </div>';
-    }
+      $row = $result->fetch_assoc();
+      $hashedPassword = $row["password"];
+      $role = $row["user_type"];
+      $userID = $row["user_id"];
+      if (password_verify($password, $hashedPassword)) {
+        //  JWT tken generated here
+          $token_payload = array(
+              "username" => $username,
+              "user_id" => $userID,
+              "user_type" => $role
+          );
+          $secret_key = "solar-tech-login-seretekeyLoginKey"; 
+          $algorithm = 'HS256';
+          $token = JWT::encode($token_payload, $secret_key, $algorithm);
+          setcookie("access_token", $token, time() + 86400, "/", "", false, true);
+          if ($role == 1) {
+              setcookie("userID_admin",$userID, time()+86400,"/","", false,true);
+              setcookie("role_admin",$role, time()+86400,"/","", false,true);
+              header("Location: admin.php");
+              exit();
+          } elseif ($role == 2) {
+              setcookie("userID_seller",$userID, time()+86400,"/","", false,true);
+              setcookie("role_seller",$role, time()+86400,"/","", false,true);
+              header("Location: second_goods.php");
+              exit();
+          } 
+      } 
   } else {
-    $error = '<div class="alert alert-danger" role="alert" id="alert-danger">
-               Invalid Username or Password!
-             </div>';
+      $error = '<div class="alert alert-danger" role="alert" id="alert-danger">
+        Invalid Username or Password!
+    </div>';
   }
 }
-
+  
 ?>
 
 

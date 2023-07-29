@@ -1,12 +1,30 @@
 <?php
 session_start();
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+require '../vendor/autoload.php'; 
 include('DBConnection.php');
+include('jdf.php');
+define("DATE", jdate('l / j / p / y / i : g a'));
+if (!isset($_COOKIE['access_token']) || empty($_COOKIE['access_token'] || $_COOKIE['role_admin']!=1)) {
+    header("Location: login.php");
+    exit();
+}
 
-if (!isset($_SESSION['login_user']) && $_SESSION['login_user']['role'] != 2) {
-  if (!isset($_SESSION['login_user']) || (isset($_SESSION['role']) && $_SESSION['role'] != 2)) {
-    header("Location: Login.php");
-    exit;
-  }
+elseif(!isset($_COOKIE['role_admin']) || $_COOKIE['role_admin']!=1){
+  header("Location: login.php");
+  exit();
+}
+$secret_key = "solar-tech-login-seretekeyLoginKey";
+$token = $_COOKIE['access_token'];
+
+try {
+    $decoded_token = JWT::decode($token,new Key($secret_key,'HS256'));
+} catch (Exception $e) {
+    
+    header("Location: login.php");
+    echo $e;
+    exit();
 }
 ?>
 
@@ -96,26 +114,29 @@ function addproduct()
 </head>
 
 <body>
-  <header class="py-3 mb-4 border-bottom shadow">
+<header class="py-3 mb-4 border-bottom shadow" style="background-color:#122834">
     <div class="container-fluid align-items-center d-flex">
 
       <div class="col-lg-4 d-flex justify-content-start ">
 
         <a href="" class="text-decoration-none">
           <span class="h1 text-uppercase text-warning bg-dark px-2">SOLAR</span>
-          <span class="h1 text-uppercase text-dark bg-warning px-2 ml-n1">SYSTEM</span>
+          <span class="h1 text-uppercase text-dark bg-warning px-2 ml-n1">TECH</span>
         </a>
+      </div>
+      <div class="col-lg-4 d-flex justify-content-start ">
+        <b style="color:#fff"><?php echo DATE; ?></b>
       </div>
       <div class="flex-grow-1 d-flex align-items-center">
         <form class="w-100 me-3">
-          <input type="search" class="form-control" placeholder="Search...">
+          <!-- <input type="search" class="form-control" placeholder="Search..."> -->
         </form>
         <div class="flex-shrink-0 dropdown">
-          <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser2"
+          <a href="#" class="d-block link-light text-decoration-none dropdown-toggle" id="dropdownUser2"
             data-bs-toggle="dropdown" aria-expanded="false">
             <img src="https://via.placeholder.com/28?text=!" alt="user" width="32" height="32" class="rounded-circle">
           </a>
-          <ul class="dropdown-menu dropdown-menu-end " aria-labelledby="dropdownUser2" style="z-index:1000;">
+          <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownUser2" style="">
 
             <li><a class="dropdown-item" href="#">Settings</a></li>
             <li><a class="dropdown-item" href="#">Profile</a></li>
@@ -255,7 +276,23 @@ function addproduct()
               <div class="modal-body">
                 <div class="card">
                   <form class="post" method="post" enctype="multipart/form-data">
-
+                  <?php 
+                      include('DBConnection.php');
+                      $sellerID =null;
+                      if(isset($_COOKIE["userID_admin"])){
+                        $sellerID = $_COOKIE["userID_admin"];
+                      }
+                       $findUserId ="SELECT user_id FROM user WHERE user_id='$sellerID';";
+                       $result = $conn->query($findUserId);
+                       if($result->num_rows>0){
+                        while($row = $result->fetch_assoc()){
+                          $sellerID = $row["user_id"];
+                          echo '<input class="d-none" value="'.$sellerID.'" name="sellerAdmin">';
+                        }
+                       }else{
+                        echo 'user id not fond';
+                       }
+                      ?>
                     <div class="input-group mt-2">
                       <select class="form-select form-control " required name="sold_category_id">
                         <?php
@@ -758,7 +795,7 @@ function addproduct()
                               <?php
                               $bill_generate = $bill_number - 1;
                               include('DBConnection.php');
-
+                            echo  $sellerID;
                               $checkBill = "SELECT category.categ_name, customers_bys_goods.bill_number,country.count_name,company.comp_name,customers_bys_goods.unit_amount,unit.unit_name,customers_bys_goods.price,customers_bys_goods.quantity,person.person_name,currency.currency_name 
                                   from customers_bys_goods,category,country,company,currency,person,unit 
                                   WHERE customers_bys_goods.categ_id=category.categ_id 
@@ -767,7 +804,7 @@ function addproduct()
                                   and customers_bys_goods.currency_id=currency.currency_id 
                                   and customers_bys_goods.unit_id=unit.unit_id 
                                   and customers_bys_goods.person_id=person.person_id 
-                                  and customers_bys_goods.bill_number='$bill_generate'";
+                                  and customers_bys_goods.bill_number='$bill_generate'and customers_bys_goods.seller_id='$sellerID'";
                               $showbillResult = $conn->query($checkBill);
                               $totalPrice =0;
                               $subTotal =0;
