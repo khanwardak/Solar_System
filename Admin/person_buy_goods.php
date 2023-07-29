@@ -15,10 +15,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sold_person_id = $_POST['sold_person_id'];
     $sold_currency_id = $_POST['sold_currency_id'];
     $sold_buy_price = $_POST['sold_price'];
-
-    // Check if the bill number has been inserted already
+    $userId =null;
+    if(isset($_POST['seller'])){
+        $userId =$_POST['seller'];   
+    }if(isset($_POST['sellerAdmin'])){
+        $userId =$_POST['sellerAdmin']; 
+    }
+    // if(isset($_COOKIE['role_admin']) && $_COOKIE['role_admin']==1){
+    //     $userId= $_COOKIE["userID_admin"];
+    // }elseif(isset($_COOKIE['role_seller']) && $_COOKIE['role_seller']==2){
+    //     $userId= $_COOKIE["userID_seller"];
+    // }
     if (!isset($_SESSION['bill_number'])) {
-        // Get the last bill number from the "bill" table
+      
         $queryBillNo = "SELECT bill_number FROM `bill` ORDER BY bill_number DESC LIMIT 1";
         $billNoResult = $conn->query($queryBillNo);
         
@@ -26,16 +35,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $sold_bill_NO = $billNoResult->fetch_assoc();
             $bill_number = $sold_bill_NO["bill_number"] + 1;
         } else {
-            // If no existing bill numbers found, start the sequence from 1.
+            
             $bill_number = 1;
         }
 
-        // Create new bill number and insert it into the "bill" table
         $createBillNo = "INSERT INTO `bill` (`bill_number`) VALUES ('$bill_number');";
         if (!$conn->query($createBillNo)) {
             echo "Oops! Something went wrong. Unable to create a new bill number.";
         } else {
-            // Set the flag to indicate that the bill number has been inserted
+          
             $_SESSION['bill_number'] = $bill_number;
         }
     } else {
@@ -43,19 +51,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $bill_number = $_SESSION['bill_number'];
     }
 
-    // Rest of the code for inserting data into the "customers_bys_goods" table
+   
     $sql = "INSERT INTO `customers_bys_goods` (`currency_id`, `person_id`, `seller_id`, `price`, `quantity`, `buy_date`, `categ_id`, `comp_id`, `count_id`, `unit_amount`, `bill_number`,`unit_id`, `goods_name`)
-    VALUES ('$sold_currency_id', '$sold_person_id', 2, '$sold_buy_price', '$sold_quantity', NOW(), '$sold_cate_id_select', '$sold_company_id', '$sold_country_id', '$sold_unit_quantity', '$bill_number',$sold_unit_id, '$sold_goods_name');";
+    VALUES ('$sold_currency_id', '$sold_person_id','$userId', '$sold_buy_price', '$sold_quantity', NOW(), '$sold_cate_id_select', '$sold_company_id', '$sold_country_id', '$sold_unit_quantity', '$bill_number',$sold_unit_id, '$sold_goods_name');";
 
     if ($conn->query($sql) === TRUE) {
-        // Query was successful, display a success message
+        
         echo '<script>
         alert("Data submitted successfully!");
         </script>';
     } else {
-        // Error occurred while executing the query
+        
         echo '<script>
-        alert("Something went wrong: ' . $conn->error . '");
+        alert("Something went wrong: ' . $conn->error . ''.$userId.'");
         </script>';
     }
 }

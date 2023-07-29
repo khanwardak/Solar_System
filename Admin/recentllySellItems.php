@@ -7,7 +7,7 @@ if(isset($_GET["search_term"])){
      $sql = "SELECT customers_bys_goods.person_id,customers_bys_goods.categ_id,customers_bys_goods.price,customers_bys_goods.quantity,customers_bys_goods.buy_date,category.categ_name,category.categ_id, person.person_id,person.person_name 
      FROM customers_bys_goods,category,person 
      WHERE person.person_id = customers_bys_goods.person_id
-    AND person.person_name ='$search_term'";
+    AND person.person_name LIKE'%$search_term%'";
      include('DBConnection.php');
      $result = $conn->query($sql);
      if ($result->num_rows > 0) {
