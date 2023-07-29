@@ -497,35 +497,51 @@ function addFirm()
 // edit firm start 
 function updateFirm()
 {
-    try {
-        include('DBConnection.php');
-        $firm_id = $_POST['firm_id']; // Assuming you have a hidden input field named 'firm_id' to store the firm ID.
-        $location = $_POST['location_name'];
-        $dist = $_POST['district'];
-        $province = $_POST['address'];
+  try {
+    include('DBConnection.php');
+    $firmId = $_POST['firm_id'];
+    $addressID=$_POST['update_firm_address']
+    $location = $_POST['location_name'];
+    $dist = $_POST['district'];
+    $province = $_POST['address'];
 
-        // First, update the address
-        $sql_update_address = "UPDATE `address` SET `adress_vilage`='$location', `address_province`='$province', `address_district`='$dist' WHERE `address_id`='$firm_id'";
+    // Update address first
+    $sql2 = "UPDATE `address` SET adress_vilage='$location', address_province='$province', address_district='$dist' WHERE address_id='$firmId'";
 
-        if ($conn->query($sql_update_address)) {
-            // Address update successful, now update other firm-specific information if needed
-            // ...
-
-            echo '<script LANGUAGE="JavaScript">
-                swal("په بریالی توګه !", "معلومات تازه شو!", "success");
-                setTimeout(function() {
-                    window.location.href = "admin.php";
-                }, 2000); // 2000 milliseconds (2 seconds)
-            </script>';
-        } else {
-            echo "Opps!";
-        }
-    } catch (Exception $e) {
-        // Handle any exceptions here
-        echo "Error: " . $e->getMessage();
+    if (!$conn->query($sql2)) {
+      echo "Opps!";
     }
+
+    // Get the updated address_id
+    $sql = "SELECT * FROM `address` WHERE address_id='$firmId'";
+    $id = $conn->query($sql);
+    $addressId = "";
+    while ($row = $id->fetch_assoc()) {
+      $addressId = $row["address_id"];
+    }
+
+    $store_name = $_POST['firm_name'];
+    $sqlfirm = "UPDATE `firm` SET firm_name='$store_name', address_id='$addressId' WHERE firm_id='$firmId'";
+
+    if ($conn->query($sqlfirm)) {
+      echo ' <script LANGUAGE="JavaScript">
+      swal("په بریالی توګه !", "د شرکت معلومات سمودل شول!", "success");
+      setTimeout(function() {
+      window.location.href = "admin.php";
+      }, 2000); // 2000 milliseconds (2 seconds)
+               </script>;';
+    } else {
+      echo '<script LANGUAGE="JavaScript">
+             window.alert("Opps: ' . $conn->error . '");
+           </script>';
+    }
+  } catch (Exception $e) {
+    // Handle any exceptions here
+    echo "Error in updating firm: " . $e->getMessage();
+  }
 }
 
+// end of update firm
 // add countery
 function addcounter()
 {
@@ -1844,11 +1860,11 @@ try {
 
                             <?php
                             require_once('DBConnection.php');
-                            $sql = "SELECT firm.firm_id,province.province_name,district.district_name,firm.firm_name,address.adress_vilage FROM firm,province,address,district WHERE firm.address_id=address.address_id and address.address_province=province.province_id and address.address_district=district.district_id;";
+                            $sql = "SELECT firm.address_id,firm.firm_id,province.province_name,district.district_name,firm.firm_name,address.adress_vilage FROM firm,province,address,district WHERE firm.address_id=address.address_id and address.address_province=province.province_id and address.address_district=district.district_id;";
                             $result = $conn->query($sql);
                             if ($result->num_rows > 0) {
                               while ($row = $result->fetch_assoc()) {
-                                echo '<tr data-firm-id="' . $row["firm_id"] . '" data-firm-name="' . $row["firm_name"] . '" data-province-name="' . $row["province_name"] . '" data-district-name="' . $row["district_name"] . '" data-village-name="' . $row["adress_vilage"] . '">';
+                                echo '<tr data-firm-id="' . $row["firm_id"] . '" data-firm-name="' . $row["firm_name"] . '" data-firm-address-id="' . $row["address_id"] . '" data-province-name="' . $row["province_name"] . '" data-district-name="' . $row["district_name"] . '" data-village-name="' . $row["adress_vilage"] . '">';
                                 echo '<td>' . $row["firm_name"] . '</td>';
                                 echo '<td>' . $row["province_name"] . '</td>';
                                 echo '<td>' . $row["district_name"] . '</td>';
@@ -1858,6 +1874,7 @@ try {
                                       </td>';
                                 echo '<td><a class="fa fa-trash text-decoration-none" href=""></a></td>';
                                 echo '</tr>';
+                                
                               }
                             }
                             ?>
@@ -1877,6 +1894,7 @@ try {
     var firm_name = row.data('firm-name');
     var district_name = row.data('district-name');
     var vilage_name = row.data('village-name');
+    var firm_address_id = row.data('firm-address-id');
     $('#update_Firm_Modal').modal('show');
     $('#firm').modal('hide');
     $('#update_Firm_Modal input[name="update_firm_id"]').val(firm_id);
@@ -1884,6 +1902,7 @@ try {
     $('#update_Firm_Modal input[name="update_firm_address"]').val(province_name);
     $('#update_Firm_Modal input[name="update_firm_district_name"]').val(district_name);
     $('#update_Firm_Modal input[name="update_firm_location_name"]').val(vilage_name);
+    $('#update_Firm_Modal input[name="update_address_id"]').val(firm_addrss_id);
   });
 });
 
@@ -1915,6 +1934,7 @@ try {
                         <form class="row g-3 needs-validation" novalidate style="text-align:right;" method="post">
                           <div class="col-12">
                           <input type="hidden" name="update_firm_id" id="update_firm_id">
+                          <input type="hidden" name="update_address_id" id="update_address_id">
 
                             <label for="yourName" class="form-label">نوم</label>
                             <input type="text" name="update_firm_name" class="form-control" id="" required>
