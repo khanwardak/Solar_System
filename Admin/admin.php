@@ -173,7 +173,31 @@ function addcate()
   }
 
 }
-// add company
+// start of update category funtion
+function updateCategory()
+{
+  try {
+    include('DBConnection.php');
+    $catid = $_POST['update_categ_id']; // Assuming you have a hidden field for category_id in your HTML form
+    $catename = $_POST['update_category_name'];
+    $sql = "UPDATE `category` SET `categ_name`='$catename' WHERE `categ_id`='$catid';";
+    if (!$conn->query($sql)) {
+      echo 'opps!';
+    } else {
+      echo ' <script LANGUAGE="JavaScript">
+                 swal("په بریالی توګه !", "د محضول مغلومات تازه شول!", "success");
+               </script>;';
+    }
+
+  } catch (Exception $e) {
+    echo $e->getMessage();
+  }
+}
+// end of update category function
+
+
+
+// add company function
 function addco()
 {
   try {
@@ -198,7 +222,38 @@ function addco()
   }
 
 }
-// AddOurLoan start 
+// adding company end here
+
+// updating company start here
+function updateCompany()
+{
+  try {
+    $comp_id = $_POST['update_company_id']; // Assuming you have a form field with the company ID
+    $coname = $_POST['update_company_name'];
+
+    include('DBConnection.php');
+
+    // Prepare the SQL update query
+    $sql = "UPDATE `company` SET `comp_name` = '$coname' WHERE `comp_id` = $comp_id";
+
+    if ($conn->query($sql)) {
+      echo ' <script LANGUAGE="JavaScript">
+                 swal("په بریالی توګه !", "د محضول معلومات تازه شول!", "success");
+                 
+               </script>;';
+    } else {
+      throw new Exception('Database update error: ' . $conn->error);
+    }
+  } catch (Exception $e) {
+    // Handle the exception here
+    echo ' ("<script LANGUAGE="JavaScript">
+             window.alert("Opps: ' . $e->getMessage() . '");
+             window.location.href="admin.php";
+           </script>");';
+  }
+}
+
+// updating company end here
 // AddOurLoan start 
 function addOurLoan()
 {
@@ -392,7 +447,41 @@ function addcounter()
   }
 
 }
-// add currecy
+// end of adding country function 
+
+// update country function start here
+
+function updateCountry()
+{
+  try {
+    $count_id = $_POST['update_country_id']; // Assuming you have a form field with the country ID
+    $countery_name = $_POST['update_country_name'];
+
+    include('DBConnection.php');
+
+    // Prepare the SQL update query
+    $sql = "UPDATE `country` SET `count_name` = '$countery_name' WHERE `count_id` = $count_id";
+
+    if ($conn->query($sql)) {
+      echo ' <script LANGUAGE="JavaScript">
+                 swal("په بریالی توګه !", "د محضول معلومات تازه شول!", "success");
+              
+               </script>;';
+    } else {
+      echo ' <script LANGUAGE="JavaScript">
+                 window.alert("Opps: ' . $conn->error . '");
+                 window.location.href="admin.php";
+               </script>"';
+    }
+  } catch (Exception $e) {
+    // Handle any exceptions here
+    echo $e->getMessage();
+  }
+}
+
+// update country function end here
+
+// add currency function start here
 try {
   function addCurrency()
   {
@@ -417,6 +506,42 @@ try {
 } catch (Exception $e) {
   echo $e->getMessage();
 }
+// end of adding currency function 
+
+
+// editing currency function start here
+
+function updateCurrency()
+{
+  try {
+    $currency_id = $_POST['update_currency_id']; // Assuming you have a form field with the currency ID
+    $currency_name = $_POST['update_currency_name'];
+    $currency_sign = $_POST['update_currency_sign'];
+
+    include('DBConnection.php');
+
+    // Prepare the SQL update query
+    $sql = "UPDATE `currency` SET `currency_name` = '$currency_name', `currency_symbol` = '$currency_sign' WHERE `currency_id` = $currency_id";
+
+    if ($conn->query($sql)) {
+      echo ' <script LANGUAGE="JavaScript">
+                 swal("په بریالی توګه !", "د محضول معلومات تازه شول!", "success");
+                
+               </script>;';
+    } else {
+      echo ' <script LANGUAGE="JavaScript">
+                 window.alert("Opps: ' . $conn->error . '");
+                 window.location.href="admin.php";
+               </script>";';
+    }
+  } catch (Exception $e) {
+    // Handle any exceptions here
+    echo $e->getMessage();
+  }
+}
+// edit currency function start here
+
+// adding unit function start here
 function addUnit()
 {
   try {
@@ -875,7 +1000,7 @@ function addUnit()
               });
             </script>
             <!-- customer history modal end -->
-            <!-- Categot modal start here ==============================================================================================================================================================================================================================================================================================-->
+            <!-- category modal start here ==============================================================================================================================================================================================================================================================================================-->
 
             <div class="modal left fade" id="catagory" data-backdrop="static" data-keyboard="false" tabindex="-1"
               role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -912,29 +1037,58 @@ function addUnit()
                           </thead>
                           <tbody>
 
-                            <?php
-                            try {
-                              require_once('DBConnection.php');
-                              $sql = "SELECT * FROM `category` ORDER BY categ_id desc limit 10";
-                              $result = $conn->query($sql);
-                              if ($result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                                  echo '   <tr><td>' . $row["categ_name"] . '</td>
-                                    <td><a class="fa fa-edit text-decoration-none" href=""></a>
+                          <?php
+try {
+  require_once('DBConnection.php');
+  $sql = "SELECT * FROM `category` ORDER BY categ_id DESC LIMIT 10";
+  $result = $conn->query($sql);
+  if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+      echo '<tr data-category-id="' . $row["categ_id"] . '" data-category-name="' . $row["categ_name"] . '">';
+      echo '<td>' . $row["categ_name"] . '</td>';
+      echo '<td>
+              <a class="fa fa-edit text-decoration-none editButtonCategory" href="javascript:void(0);"></a>
+            </td>';
+      echo '<td><a class="fa fa-trash text-decoration-none" href=""></a></td>';
+      echo '</tr>';
+    }
+  }
+} catch (Exception $e) {
+  // Handle the exception here
+}
+?>
 
                                     </td>
                                      <td><a class="fa fa-trash text-decoration-none" href=""></a></td>
                                       </tr>
-                                    ';
-                                }
-                              }
-                            } catch (Exception $e) {
-
-                            }
-
-                            ?>
+                            
                           </tbody>
                         </table>
+
+
+
+                          </tbody>
+                        </table>
+
+                        <script>
+ $(document).ready(function() {
+  // Handle click event for the editButton using event delegation
+  $(document).on('click', '.editButtonCategory', function(e) {
+    e.preventDefault(); // Prevent the default behavior of the anchor tag (navigating to the href)
+
+    // Find the parent table row and get the category_id and category_name from the data attributes
+    var row = $(this).closest('tr');
+    var categ_id = row.data('category-id');
+    var categ_name = row.data('category-name');
+    $('#update_Category_modal').modal('show');
+    $('#catagory').modal('hide');
+    $('#update_Category_modal input[name="update_categ_id"]').val(categ_id);
+    $('#update_Category_modal input[name="update_category_name"]').val(categ_name);
+  });
+});
+
+</script>
+
                       </div>
                     </div>
                   </div>
@@ -947,8 +1101,65 @@ function addUnit()
               addcate();
             }
             ?>
-            <!-- Catgory modal end here ==========================================================================================================================================================================================================================================================================-->
+          
+            <!-- Category modal end here ==========================================================================================================================================================================================================================================================================-->
+            
+            
+            
+            <!-- start of edit category modal -->
 
+
+            <div class="modal left fade" id="update_Category_modal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+              role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog ">
+                <div class="modal-content">
+
+                  <div class="col">
+                    <div class="modal-body ">
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                      <h5 class="card-title text-center"><span>کټګوري تغیر کړئ</span></h5>
+                      <div class="px-4 py-5">
+                        <form method="post" class="row g-3 needs-validation" novalidate style="text-align:right;">
+
+                          <div class="col-12">
+                             <label for="yourName" class="form-label">آیدي</label>
+                            <input type="text" name="update_categ_id" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+                            
+                            <label for="yourName" class="form-label">نوم</label>
+                            <input type="text" name="update_category_name" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+                            <div class="text-center mt-5">
+
+                              <button class="btn btn-primary btn-submit" type="submit" name="update_category">تغیر کول</button>
+
+                            </div>
+                          </div>
+
+                        </form>
+                      
+                      </div>
+
+
+                    </div>
+                  </div>
+
+
+
+                </div>
+              </div>
+            </div>
+            <?php
+
+            if (isset($_POST['update_category'])) {
+              updateCategory();
+            }
+            ?>
+
+
+
+
+            <!-- end of edit category modal -->
 
 
             <!-- Company modal start here ========================================================================================================================================================================-->
@@ -995,13 +1206,14 @@ function addUnit()
                               $result = $conn->query($sql);
                               if ($result->num_rows > 0) {
                                 while ($row = $result->fetch_assoc()) {
-                                  echo '   <tr><td>' . $row["comp_name"] . '</td>
-                                    <td><a class="fa fa-edit text-decoration-none" href=""></a>
-
-                                    </td>
-                                     <td><a class="fa fa-trash text-decoration-none" href=""></a></td>
-                                      </tr>
-                                    ';
+                               
+                                  echo '<tr data-company-id="' . $row["comp_id"] . '" data-company-name="' . $row["comp_name"] . '">';
+                                  echo '<td>' . $row["comp_name"] . '</td>';
+                                  echo '<td>
+                                          <a class="fa fa-edit text-decoration-none editButtonCompany" href="javascript:void(0);"></a>
+                                        </td>';
+                                  echo '<td><a class="fa fa-trash text-decoration-none" href=""></a></td>';
+                                  echo '</tr>';
                                 }
                               }
                             } catch (Exception $e) {
@@ -1011,6 +1223,24 @@ function addUnit()
                             ?>
                           </tbody>
                         </table>
+                        <script>
+ $(document).ready(function() {
+  // Handle click event for the editButton using event delegation
+  $(document).on('click', '.editButtonCompany', function(e) {
+    e.preventDefault(); // Prevent the default behavior of the anchor tag (navigating to the href)
+
+    // Find the parent table row and get the category_id and category_name from the data attributes
+    var row = $(this).closest('tr');
+    var comp_id = row.data('company-id');
+    var comp_name = row.data('company-name');
+    $('#update_Company_Modal').modal('show');
+    $('#company').modal('hide');
+    $('#update_Company_Modal input[name="update_company_id"]').val(comp_id);
+    $('#update_Company_Modal input[name="update_company_name"]').val(comp_name);
+  });
+});
+
+</script>
                       </div>
                     </div>
                   </div>
@@ -1023,6 +1253,52 @@ function addUnit()
             }
             ?>
             <!-- Company modle end here ====================================================================================================================================================================================================-->
+            <!-- edit company modal start here -->
+
+            <div class="modal left fade" id="update_Company_Modal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+              role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+
+                  <div class="col">
+                    <div class="modal-body ">
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                      <h5 class="card-title text-center"><span>! کمپني نوم تغیر کړئ</span></h5>
+                      <div class="px-4 py-5">
+                        <form class="row g-3 needs-validation" novalidate style="text-align:right;" method="post">
+
+                          <div class="col-12">
+                          <label for="yourName" class="form-label">آیدي</label>
+                            <input type="text" name="update_company_id" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+                            <label for="yourName" class="form-label">د کمپنی نوم</label>
+                            <input type="text" name="update_company_name" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+                          </div>
+                          <div class="text-center mt-5">
+
+                            <button class="btn btn-primary btn-submit" type="submit" name="updatecompany">ثبتول</button>
+
+                          </div>
+                        </form>
+                      
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <?php
+            if (isset($_POST['updatecompany'])) {
+              updateCompany();
+            }
+            ?>
+
+            <!-- edit company modal end here -->
+
+
+
 
 
             <!-- Company Loan profile start here ========================================================================================================================================================================-->
@@ -1271,6 +1547,56 @@ function addUnit()
               addcounter();
             }
             ?>
+
+            <!-- adding country modal end here -->
+
+            <!-- edit country modal start here -->
+
+            <div class="modal" id="update_Country_Modal" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+
+                  <div class="col">
+                    <div class="modal-body ">
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                      <div class="px-4 py-5">
+                        <form class="row g-3 needs-validation" novalidate style="text-align:right;" method="post">
+                          <div class="col-12">
+                          <label for="yourName" class="form-label">آیدي</label>
+                            <input type="text" name="update_country_id" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+                            <label for="yourName" class="form-label">نوم</label>
+                            <input type="text" name="update_country_name" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+                          </div>
+                          <div class="text-center mt-5">
+
+                            <button class="btn btn-primary btn-submit" type="submit" name="updatecountry">ثبتول</button>
+
+                          </div>
+                        </form>
+                        
+
+
+                      </div>
+
+
+                    </div>
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+
+            <?php
+            if (isset($_POST['updatecountry'])) {
+              updateCountry();
+            }
+            ?>
+
+            <!-- edit country modal end here -->
 
 <!-- start of firm model -->
         <div class="modal left fade" id="firm" data-backdrop="static" data-keyboard="false" tabindex="-1"
@@ -1787,7 +2113,7 @@ function addUnit()
             }
             ?>
             <!-- end of firm model ============================================== -->
-            <!-- currencey modal end here ============-===================================================================================================================================================================================================================================-->
+            <!-- currencey modal start here ============-===================================================================================================================================================================================================================================-->
 
             <div class="modal left fade" id="currency" data-backdrop="statc" data-keyboard="false" tabindex="-1"
               role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -1824,6 +2150,58 @@ function addUnit()
             }
 
             ?>
+            <!-- currency modal end here -->
+
+            <!-- edit currency modal start here -->
+
+            <div class="modal left fade" id="update_Currency_Modal" data-backdrop="statc" data-keyboard="false" tabindex="-1"
+              role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+
+                  <div class="col">
+                    <div class="modal-body ">
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                      <div class="px-4 py-5">
+                        <form class="row g-3 needs-validation" novalidate style="text-align:right;" method="post">
+                          <div class="col-12">
+                          <label for="yourName" class="form-label">آيدي</label>
+                            <input type="text" name="update_currency_id" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+                            <label for="yourName" class="form-label">نوم</label>
+                            <input type="text" name="update_currency_name" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+                          </div>
+                          <div class="col-12">
+                            <label for="yourName" class="form-label">سمبول</label>
+                            <input type="text" name="update_currency_sign" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+                          </div>
+                          <div class="text-center mt-5">
+
+                            <button class="btn btn-primary btn-submit" type="submit" name="updateCurrency">ثبتول</button>
+
+                          </div>
+                        </form>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <?php
+            if (isset($_POST['updateCurrency'])) {
+              updateCurrency();
+            }
+
+            ?>
+
+
+
+            <!-- edit currency modal end here -->
+
             <!---------------------------------------------------  customers modal start here -------------------------------------------------------------->
             <div class="modal left fade" id="showcustomers" data-backdrop="static" data-keyboard="false" tabindex="-1"
               role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -1897,7 +2275,7 @@ function addUnit()
             </script>
             <!---------------------------------------------------  customers modal end here -------------------------------------------------------------->
 
-            <!-- currency unit here ==================================================================================================================================================================================================================================================-->
+            <!-- adding  unit modal start  here ==================================================================================================================================================================================================================================================-->
 
             <div class="modal left fade" id="unit" data-backdrop="static" data-keyboard="false" tabindex="-1"
               role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -1935,18 +2313,36 @@ function addUnit()
                             $result = $conn->query($sql);
                             if ($result->num_rows > 0) {
                               while ($row = $result->fetch_assoc()) {
-                                echo '   <tr><td>' . $row["unit_name"] . '</td>
-                                    <td><a class="fa fa-edit text-decoration-none" href=""></a>
-
-                                    </td>
-                                     <td><a class="fa fa-trash text-decoration-none" href=""></a></td>
-                                      </tr>
-                                    ';
+                                echo '<tr data-unit-id="' . $row["unit_id"] . '" data-unit-name="' . $row["unit_name"] . '">';
+                                echo '<td>' . $row["unit_name"] . '</td>';
+                                echo '<td>
+                                        <a class="fa fa-edit text-decoration-none editButtonUnit" href="javascript:void(0);"></a>
+                                      </td>';
+                                echo '<td><a class="fa fa-trash text-decoration-none" href=""></a></td>';
+                                echo '</tr>';
                               }
                             }
                             ?>
                           </tbody>
                         </table>
+                        <script>
+ $(document).ready(function() {
+  // Handle click event for the editButton using event delegation
+  $(document).on('click', '.editButtonUnit', function(e) {
+    e.preventDefault(); // Prevent the default behavior of the anchor tag (navigating to the href)
+
+    // Find the parent table row and get the category_id and category_name from the data attributes
+    var row = $(this).closest('tr');
+    var unit_id = row.data('unit-id');
+    var unit_name = row.data('unit-name');
+    $('#update_Unit_Modal').modal('show');
+    $('#unit').modal('hide');
+    $('#update_Unit_Modal input[name="update_unit_id"]').val(unit_id);
+    $('#update_Unit_Modal input[name="update_unit_name"]').val(unit_name);
+  });
+});
+
+</script>
                       </div>
                     </div>
                   </div>
@@ -1960,7 +2356,50 @@ function addUnit()
               addUnit();
             }
             ?>
-            <!-- unit modal end here=================================================================================================================================================================================================================================================== -->
+            <!-- adding unit modal end here=================================================================================================================================================================================================================================================== -->
+ 
+            <!-- updating unit modal start here -->
+            <div class="modal left fade" id="update_Unit_Modal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+              role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="col">
+                    <div class="modal-body ">
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                      <h5 class="card-title text-center"><span>د یونت تغیرول</span></h5>
+                      <div class="px-4 py-5">
+                        <form class="row g-3 needs-validation" novalidate style="text-align:right;" method="post">
+                          <div class="col-12">
+                          <label for="yourName" class="form-label">آیدي</label>
+                            <input type="text" name="update_unit_id" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+                            <label for="yourName" class="form-label">نوم</label>
+                            <input type="text" name="update_unit_name" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+                            <div class="text-center mt-5">
+                              <button class="btn btn-primary btn-submit" type="submit" name="updateUnit">ثبتول</button>
+                            </div>
+                          </div>
+                        </form>
+                     
+                      </div>
+                    </div>
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+            <?php
+            if (isset($_POST['updateUnit'])) {
+              updateUnit();
+            }
+            ?>
+
+            <!-- updating unit modal end here -->
+
+
+
 
             <!-- store here ==================================================================================================================================================================================================================================================-->
 
