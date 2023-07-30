@@ -500,29 +500,37 @@ function updateFirm()
 {
   try {
     include('DBConnection.php');
-    $firmId = $_POST['firm_id'];
-    $addressID=$_POST['update_firm_address']
-    $location = $_POST['location_name'];
-    $dist = $_POST['district'];
-    $province = $_POST['address'];
+    $firmId = $_POST['update_firm_id'];
+    $addressID=$_POST['update_firm_address'];
+    $location = $_POST['update_firm_location_name'];
+    $dist = $_POST['update_firm_district'];
+    $province = $_POST['update_firm_address'];
+    $firm_name = $_POST['update_firm_name'];
 
     // Update address first
-    $sql2 = "UPDATE `address` SET adress_vilage='$location', address_province='$province', address_district='$dist' WHERE address_id='$firmId'";
+    $sql2 = "UPDATE `address` SET adress_vilage='$location', address_province='$province', address_district='$dist' WHERE address_id='$addressID'";
 
-    if (!$conn->query($sql2)) {
-      echo "Opps!";
+    if ($conn->query($sql2)) {
+        // Update successful
+        echo '<script LANGUAGE="JavaScript">
+                swal("په بریالی توګه !", "د شرکت معلومات تازه شو!", "success");
+                setTimeout(function() {
+                    window.location.href = "admin.php";
+                }, 2000); // 2000 milliseconds (2 seconds)
+              </script>';
+    } else {
+        // Update failed, print the error message
+        echo '<script LANGUAGE="JavaScript">
+                window.alert("Opps: ' . $conn->error . '");
+              </script>';
     }
+    
+   
+  
+    
 
-    // Get the updated address_id
-    $sql = "SELECT * FROM `address` WHERE address_id='$firmId'";
-    $id = $conn->query($sql);
-    $addressId = "";
-    while ($row = $id->fetch_assoc()) {
-      $addressId = $row["address_id"];
-    }
-
-    $store_name = $_POST['firm_name'];
-    $sqlfirm = "UPDATE `firm` SET firm_name='$store_name', address_id='$addressId' WHERE firm_id='$firmId'";
+    ///$store_name = $_POST['firm_name'];
+    $sqlfirm = "UPDATE `firm` SET firm_name='$firm_name', address_id='$addressID' WHERE firm_id='$firmId'";
 
     if ($conn->query($sqlfirm)) {
       echo ' <script LANGUAGE="JavaScript">
@@ -1903,7 +1911,7 @@ try {
     $('#update_Firm_Modal input[name="update_firm_id"]').val(firm_id);
     $('#update_Firm_Modal input[name="update_firm_name"]').val(firm_name);
     $('#update_Firm_Modal input[name="update_firm_address"]').val(province_name);
-    $('#update_Firm_Modal input[name="update_firm_district_name"]').val(district_name);
+    $('#update_Firm_Modal input[name="update_firm_district"]').val(district_name);
     $('#update_Firm_Modal input[name="update_firm_location_name"]').val(vilage_name);
     $('#update_Firm_Modal input[name="update_address_id"]').val(firm_addrss_id);
   });
@@ -1943,7 +1951,7 @@ try {
                             <input type="text" name="update_firm_name" class="form-control" id="" required>
                             <div class="invalid-feedback">Please,bill id!</div>
                             <label for="yourName" class="form-label">ولایت</label>
-                            <select class="form-control" id="update_firm_address" name="update_firm_address" onchange="address(this.value)">
+                            <select class="form-control" id="update_firm_address" name="update_firm_address" onchange="update_firm_address(this.value)">
                               <?php
                               require_once('DBConnection.php');
 
@@ -1961,7 +1969,7 @@ try {
                             </select>
                             <script type="text/javascript">
                               $(document).ready(function () {
-                                $('#address').on('change', function () {
+                                $('#update_firm_address').on('change', function () {
                                   var prov_id = $(this).val();
                                   $.ajax({
                                     url: 'store.php',
@@ -1969,14 +1977,14 @@ try {
                                     data: { provID: prov_id },
                                     dataType: "text",
                                     success: function (html) {
-                                      $('#district').html(html);
+                                      $('#update_firm_district').html(html);
                                     }
                                   });
                                 });
                               });
                             </script>
                             <label for="for add" class="form-label">ولسوالی</label>
-                            <select id="district" name="update_firm_district" class="form-control">
+                            <select id="update_firm_district" name="update_firm_district" class="form-control">
                               <option value="">ولسوالی</option>
                             </select>
                             <label for="yourName" class="form-label">کلی</label>
