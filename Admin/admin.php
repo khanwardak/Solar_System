@@ -1882,7 +1882,7 @@ try {
     $('#update_Firm_Modal input[name="update_firm_id"]').val(firm_id);
     $('#update_Firm_Modal input[name="update_firm_name"]').val(firm_name);
     $('#update_Firm_Modal input[name="update_firm_address"]').val(province_name);
-    $('#update_Firm_Modal input[name="update_firm_district_name"]').val(district_name);
+    $('#update_Firm_Modal input[name="update_firm_district"]').val(district_name);
     $('#update_Firm_Modal input[name="update_firm_location_name"]').val(vilage_name);
   });
 });
@@ -1920,7 +1920,7 @@ try {
                             <input type="text" name="update_firm_name" class="form-control" id="" required>
                             <div class="invalid-feedback">Please,bill id!</div>
                             <label for="yourName" class="form-label">ولایت</label>
-                            <select class="form-control" id="update_firm_address" name="update_firm_address" onchange="address(this.value)">
+                            <select class="form-control" id="update_firm_address" name="update_firm_address" onchange="update_firm_address(this.value)">
                               <?php
                               require_once('DBConnection.php');
 
@@ -1938,7 +1938,7 @@ try {
                             </select>
                             <script type="text/javascript">
                               $(document).ready(function () {
-                                $('#address').on('change', function () {
+                                $('#update_firm_address').on('change', function () {
                                   var prov_id = $(this).val();
                                   $.ajax({
                                     url: 'store.php',
@@ -1946,14 +1946,14 @@ try {
                                     data: { provID: prov_id },
                                     dataType: "text",
                                     success: function (html) {
-                                      $('#district').html(html);
+                                      $('#update_firm_district').html(html);
                                     }
                                   });
                                 });
                               });
                             </script>
                             <label for="for add" class="form-label">ولسوالی</label>
-                            <select id="district" name="update_firm_district" class="form-control">
+                            <select id="update_firm_district" name="update_firm_district" class="form-control">
                               <option value="">ولسوالی</option>
                             </select>
                             <label for="yourName" class="form-label">کلی</label>
