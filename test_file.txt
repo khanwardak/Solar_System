@@ -1,8 +1,0 @@
-
-SELECT category.categ_name, MIN(company.comp_name) AS comp_name, 
-MIN(country.count_name) AS count_name, unit.unit_name,goods.unit_amount,
- IFNULL(SUM(goods_qunatity), 0) AS Quantity FROM goods JOIN category 
-ON category.categ_id = goods.categ_id JOIN unit ON goods.unit_id = unit.unit_id JOIN currency
- ON goods.currency_id = currency.currency_id JOIN company ON goods.comp_id = company.comp_id JOIN country
- ON goods.count_id = country.count_id GROUP BY category.categ_name, unit.unit_name,
-country.count_name,company.comp_name,goods.unit_amount;
