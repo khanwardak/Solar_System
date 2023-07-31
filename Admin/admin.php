@@ -621,7 +621,8 @@ try {
     include('DBConnection.php');
     $countery_name = $_POST['currency_name'];
     $currency_sign = $_POST['currency_sign'];
-    $sql = "INSERT INTO `currency` (`currency_id`, `currency_name`, `currency_symbol`) VALUES (NULL, '$countery_name', '$currency_sign');";
+    $currency_price = $_POST['currency_price'];
+    $sql = "INSERT INTO `currency` (`currency_id`, `currency_name`, `currency_symbol`,currency_price) VALUES (NULL, '$countery_name', '$currency_sign','$currency_price');";
     if ($conn->query($sql)) {
       echo ' <script LANGUAGE="JavaScript">
       swal("په بریالی توګه !", "پولی واحد اضافه شو!!", "success");
@@ -650,11 +651,12 @@ function updateCurrency()
     $currency_id = $_POST['update_currency_id']; // Assuming you have a form field with the currency ID
     $currency_name = $_POST['update_currency_name'];
     $currency_sign = $_POST['update_currency_sign'];
+    $currency_price=$_POST['update_currency_price'];
 
     include('DBConnection.php');
 
     // Prepare the SQL update query
-    $sql = "UPDATE `currency` SET `currency_name` = '$currency_name', `currency_symbol` = '$currency_sign' WHERE `currency_id` = $currency_id";
+    $sql = "UPDATE `currency` SET `currency_name` = '$currency_name', `currency_symbol` = '$currency_sign',`currency_price` = '$currency_price' WHERE `currency_id` = $currency_id";
 
     if ($conn->query($sql)) {
       echo ' <script LANGUAGE="JavaScript">
@@ -2565,6 +2567,11 @@ try {
                             <label for="yourName" class="form-label">سمبول</label>
                             <input type="text" name="currency_sign" class="form-control" id="" required>
                             <div class="invalid-feedback">Please,bill id!</div>
+                            <div class="col-12">
+                            <label for="yourName" class="form-label">قیمت په افغاني</label>
+                            <input type="text" name="currency_price" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+                          </div>
                           </div>
                           <div class="text-center mt-5">
 
@@ -2579,6 +2586,7 @@ try {
                             <tr>
                               <th>د پولي واحد نوم</th>
                               <th>د پولي واحد سمبول</th>
+                              <th>قیمت په افغاني</th>
                               <th>عملیات</th>
 
                             </tr>
@@ -2592,9 +2600,10 @@ try {
                               $result = $conn->query($sql);
                               if ($result->num_rows > 0) {
                                 while ($row = $result->fetch_assoc()) {
-                                  echo '<tr data-currency-id="' . $row["currency_id"] . '" data-currency-name="' . $row["currency_name"] . '" data-currency-symbol="' . $row["currency_symbol"] . '">';
+                                  echo '<tr data-currency-id="' . $row["currency_id"] . '" data-currency-price="' . $row["currency_price"] . '" data-currency-name="' . $row["currency_name"] . '" data-currency-symbol="' . $row["currency_symbol"] . '">';
                                   echo '<td>' . $row["currency_name"] . '</td>';
                                   echo '<td>' . $row["currency_symbol"] . '</td>';
+                                  echo '<td>' . $row["currency_price"] . '</td>';
                                   echo '<td>
                                           <a class="fa fa-edit text-decoration-none editButtonCurrency" href="javascript:void(0);"></a>
                                         </td>';
@@ -2621,11 +2630,14 @@ try {
     var currency_id = row.data('currency-id');
     var currency_name = row.data('currency-name');
     var currency_symbol = row.data('currency-symbol');
+    var currency_price = row.data('currency-price');
     $('#update_Currency_Modal').modal('show');
     $('#currency').modal('hide');
+    $('#live_currency').modal('hide');
     $('#update_Currency_Modal input[name="update_currency_id"]').val(currency_id);
     $('#update_Currency_Modal input[name="update_currency_name"]').val(currency_name);
     $('#update_Currency_Modal input[name="update_currency_sign"]').val(currency_symbol);
+    $('#update_Currency_Modal input[name="update_currency_price"]').val(currency_price);
   });
 });
 
@@ -2671,6 +2683,11 @@ try {
                             <input type="text" name="update_currency_sign" class="form-control" id="" required>
                             <div class="invalid-feedback">Please,bill id!</div>
                           </div>
+                          <div class="col-12">
+                            <label for="yourName" class="form-label">قیمت په افغاني</label>
+                            <input type="text" name="update_currency_price" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+                          </div>
                           <div class="text-center mt-5">
 
                             <button class="btn btn-primary btn-submit" type="submit" name="updateCurrency">ثبتول</button>
@@ -2694,6 +2711,91 @@ try {
 
 
             <!-- edit currency modal end here -->
+
+
+            <!-- live currency editing start here -->
+            
+            <div class="modal left fade" id="live_currency" data-backdrop="statc" data-keyboard="false" tabindex="-1"
+  role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header with the title -->
+      <div class="modal-header d-flex justify-content-center"> <!-- Add "d-flex justify-content-center" class -->
+        <h5 class="modal-title">که د اسعارو په بیو کې کوم تغیر راغلی وي نو تغیر يې کړئ</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="col">
+        <div class="modal-body">
+          <div class="px-4 py-5">
+            <table class="table table-borderless align-middle mb-0 bg-white table-hover mt-2" style="direction:rtl"
+              class="card">
+              <thead>
+                <tr>
+                  <th>د پولي واحد نوم</th>
+                  <th>د پولي واحد سمبول</th>
+                  <th>قیمت په افغاني</th>
+                  <th>عملیات</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php
+                try {
+                  require_once('DBConnection.php');
+                  $sql = "SELECT * FROM `currency`";
+                  $result = $conn->query($sql);
+                  if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                      echo '<tr data-currency-id="' . $row["currency_id"] . '" data-currency-price="' . $row["currency_price"] . '" data-currency-name="' . $row["currency_name"] . '" data-currency-symbol="' . $row["currency_symbol"] . '">';
+                      echo '<td>' . $row["currency_name"] . '</td>';
+                      echo '<td>' . $row["currency_symbol"] . '</td>';
+                      echo '<td>' . $row["currency_price"] . '</td>';
+                      echo '<td>
+                              <a class="fa fa-edit text-decoration-none editButtonCurrency" href="javascript:void(0);"></a>
+                            </td>';
+                      echo '<td><a class="fa fa-trash text-decoration-none" href=""></a></td>';
+                      echo '</tr>';
+                    }
+                  }
+                } catch (Exception $e) {
+                  // Handle exceptions if needed
+                }
+                ?>
+              </tbody>
+            </table>
+
+            <!-- Your JavaScript code for handling editButtonCurrency click event goes here -->
+            <script>
+              $(document).ready(function () {
+                // Handle click event for the editButton using event delegation
+                $(document).on('click', '.editButtonCurrency', function (e) {
+                  e.preventDefault(); // Prevent the default behavior of the anchor tag (navigating to the href)
+
+                  // Find the parent table row and get the category_id and category_name from the data attributes
+                  var row = $(this).closest('tr');
+                  var currency_id = row.data('currency-id');
+                  var currency_name = row.data('currency-name');
+                  var currency_symbol = row.data('currency-symbol');
+                  var currency_price = row.data('currency-price');
+                  $('#update_Currency_Modal').modal('show');
+                  $('#currency').modal('hide');
+                  $('#update_Currency_Modal input[name="update_currency_id"]').val(currency_id);
+                  $('#update_Currency_Modal input[name="update_currency_name"]').val(currency_name);
+                  $('#update_Currency_Modal input[name="update_currency_sign"]').val(currency_symbol);
+                  $('#update_Currency_Modal input[name="update_currency_price"]').val(currency_price);
+                });
+              });
+            </script>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+            <!-- live currency editing end here -->
 
             <!---------------------------------------------------  customers modal start here -------------------------------------------------------------->
             <div class="modal left fade" id="showcustomers" data-backdrop="static" data-keyboard="false" tabindex="-1"
@@ -2999,6 +3101,7 @@ try {
             // }
             ?>
             <div class="col d-flex justify-content-end">
+            
 
               <div class="btn-group  d-flex justify-content-center">
                 <button type="button" class="bi- btn btn-sm  dropdown-toggle" data-toggle="dropdown" id="viewbtn" style="border: 2px solid #f5bf42; margin-right:10px;">ښکاره
@@ -3400,6 +3503,15 @@ try {
                 <i class="fa fa-money" style="font-size:22px;"></i>
               </a>
             </li>
+             <li>
+
+              <a href="#" class=" nav-link px-2 text-truncate" data-bs-toggle="modal" data-bs-target="#live_currency"
+                style="text-align:righ; color:#c8c8d2">
+                <span class="d-none d-sm-inline">live_currency</span>
+                <i class="fa fa-money" style="font-size:22px;"></i>
+              </a>
+            </li>
+
             <li>
 
               <a href="#" class=" nav-link px-2 text-truncate" data-bs-toggle="modal" data-bs-target="#unit"
@@ -3524,12 +3636,36 @@ try {
   <script src="mail/jqBootstrapValidation.min.js"></script>
   <script src="mail/contact.js"></script>
 
+  <!-- Your HTML code for the modal goes here -->
+
+<!-- Your HTML code for the modal goes here -->
+
+<!-- Your HTML code for the modal goes here -->
+
+
+
+<script>
+  // Function to open the modal
+  function openModal() {
+    $('#live_currency').modal('show');
+  }
+
+  // Call the openModal function initially after a delay of 6 hours
+  setTimeout(openModal, 2 * 60 * 60 * 1000); // 6 hours = 6 * 60 * 60 * 1000 milliseconds
+
+  // Call the openModal function every 6 hours
+  setInterval(openModal, 2 * 60 * 60 * 1000); // 6 hours = 6 * 60 * 60 * 1000 milliseconds
+</script>
+
+
+
+
+
   <!-- Template Javascript -->
   <script src="js/main.js"></script>
   <script src="js/edit.js"></script>
 
-  // edit.js
-
+ 
 
 
 </body>
