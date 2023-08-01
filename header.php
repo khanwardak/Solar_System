@@ -40,21 +40,21 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse" >
             <div class="navbar-nav ms-auto p-4 p-lg-0">
-                <a href="index.html" class="nav-item nav-link active"> کور پاڼه</a>
-                <a href="about.html" class="nav-item nav-link"> زموږ په اړه</a>
-                <a href="service.html" class="nav-item nav-link"> خدمات</a>
-                <a href="project.html" class="nav-item nav-link"> پروژې</a>
+                <a href="index.php" class="nav-item nav-link active"> کور پاڼه</a>
+                <a href="about.php" class="nav-item nav-link"> زموږ په اړه</a>
+                <a href="service.php" class="nav-item nav-link"> خدمات</a>
+                <a href="project.php" class="nav-item nav-link"> پروژې</a>
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">پاڼې</a>
                     <div class="dropdown-menu bg-light m-0">
-                        <a href="feature.html" class="dropdown-item"> ځانکړتیاوې</a>
-                        <a href="quote.html" class="dropdown-item"> کوټ</a>
-                        <a href="team.html" class="dropdown-item"> زموږ ټیم</a>
-                        <a href="testimonial.html" class="dropdown-item">Testimonial</a>
+                        <a href="feature.php" class="dropdown-item"> ځانکړتیاوې</a>
+                        <a href="quote.php" class="dropdown-item"> کوټ</a>
+                        <a href="team.php" class="dropdown-item"> زموږ ټیم</a>
+                        <a href="testimonial.php" class="dropdown-item">Testimonial</a>
                       
                     </div>
                 </div>
-                <a href="contact.html" class="nav-item nav-link">اړیکه</a>
+                <a href="contact.php" class="nav-item nav-link">اړیکه</a>
             </div>
             <a href="" class="btn btn-primary rounded-0 py-4 px-lg-5 d-none d-lg-block">کوټ<i class="fa fa-arrow-right ms-3"></i></a>
         </div>

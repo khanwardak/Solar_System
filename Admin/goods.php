@@ -749,12 +749,12 @@ function addproduct()
               <div class="modal-body" style=" background-color: #fff;">
 
                 <div class="col" id="billedcustoemr" style =" background-color: #fff; ">
-                  <div class="row" style="text-align: right;">
+                  <div class="row" style="text-align: right; ">
 
-                    <div class="receipt-main col" style="text-align: right; height: 1400px; ">
-                      <div class="row">
+                    <div class="receipt-main col" style="text-align: right; height: 1400px;background-color:#fff">
+                      <div class="row" style="color:#fff">
 
-                        <div class="col-lg-8 justify-content-start text-align" style="text-align: right; ">
+                        <div class="col-lg-8 justify-content-start text-align" style="text-align: right;background-color:#fff" >
                           <div class="receipt-left">
                             <img class="img-responsive" alt="solar-tech-logo"
                               src="img/solar tech logo.png">
@@ -766,7 +766,7 @@ function addproduct()
                             <p>Kabul, Afghanistan <i class="fa fa-location-arrow"></i></p>
                           </div>
                         </div>
-                        <div class="col-lg-4 text-right  justify-content-end" style="text-align: right;">
+                        <div class="col-lg-4 text-right  justify-content-end" style="text-align: right;background-color:#fff">
                           <div class="receipt-right" style="text-align: right;">
                             <h5 style="color:black">دمشتر نوم:
                               
@@ -940,9 +940,9 @@ function addproduct()
                             </tbody>
                           </table>
                         </div>
-                        <div class="row">
-                          <div class="receipt-header receipt-header-mid receipt-footer">
-                            <div class="col-xs-8 col-sm-8 col-md-8 text-left">
+                        <div class="row" style="background-color:#fff">
+                          <div class="receipt-header receipt-header-mid receipt-footer" style="background-color:#fff">
+                            <div class="col-xs-8 col-sm-8 col-md-8 text-left" style="background-color:#fff">
                               <div class="receipt-right">
                                 <p><b>Date & Time :</b>
                                   <?php
@@ -958,7 +958,7 @@ function addproduct()
                                 <h5 style="color: rgb(140, 140, 140);">مننه چې سولر تیک مو غوره کړ!</h5>
                               </div>
                             </div>
-                            <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class="col-xs-4 col-sm-4 col-md-4" style="background-color:#fff">
                               <div class="receipt-left">
                                 <h1>امضا</h1>
 
@@ -966,10 +966,26 @@ function addproduct()
                             </div>
                           </div>
                         </div>
-
+                              
                       </div>
                     </div>
+                   <div class="row">
+                     
+                      <div class="col" style="background-color:#fff">
+                        <ul style=" list-style-type: none;">
+                          <li style=" color: #1e7155;"> ادرس: قوای مرکز، کابل افغانستان سولر تیک</li>
+                          <li style=" color: #1e7155;"> وېب سایټ:www.solar-tech.energy</li>
+                        </ul>
+                      </div>
+                      <div class="col" style="background-color:#fff">
+                      <ul style=" list-style-type: none;">
+                          <li style=" color: #1e7155;">موبایل: 0778822525</li>
+                          <li style=" color: #1e7155;">برښنالیک: info@solar-tech.energy</li>
+                        </ul>
+                      </div>
+                   </div>
                   </div>
+
                 </div>
                 <div class="spinner-border text-success " id="spinnerContainer" style="display: none;"></div>
               </div>
