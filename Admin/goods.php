@@ -760,7 +760,7 @@ function addproduct()
                               src="img/solar tech logo.png">
                           </div>
                           <div class="receipt-right" style="text-align: right;">
-                            <h5>Solar Tech</h5>
+                            <h5 style="color:black">Solar Tech</h5>
                             <p>0778885555 <i class="fa fa-phone"></i></p>
                             <p>solar-tech@solar-tech.energy <i class="fa fa-envelope-o"></i></p>
                             <p>Kabul, Afghanistan <i class="fa fa-location-arrow"></i></p>
@@ -768,7 +768,7 @@ function addproduct()
                         </div>
                         <div class="col-lg-4 text-right  justify-content-end" style="text-align: right;">
                           <div class="receipt-right" style="text-align: right;">
-                            <h5>دمشتر نوم:
+                            <h5 style="color:black">دمشتر نوم:
                               
                               <?php 
                                 if(isset($_SESSION["username"])){
@@ -894,8 +894,10 @@ function addproduct()
                                   $_SESSION["username"] = $row["person_name"];
                                   $_SESSION["billNumber"] = $bill_generate;
                                 }
-                                $totabaseonCreency ="SELECT cbg.currency_id, c.currency_name, c.currency_price, c.currency_symbol, SUM(cbg.price * cbg.quantity) AS total_price FROM customers_bys_goods cbg INNER JOIN currency c ON cbg.currency_id = c.currency_id WHERE cbg.bill_number = 14 GROUP BY cbg.currency_id, c.currency_name, c.currency_price, c.currency_symbol";
+                                $totabaseonCreency ="SELECT cbg.currency_id, c.currency_name, c.currency_price, c.currency_symbol, SUM(cbg.price * cbg.quantity) AS total_price FROM customers_bys_goods cbg INNER JOIN currency c ON cbg.currency_id = c.currency_id WHERE cbg.bill_number ='$bill_generate' GROUP BY cbg.currency_id, c.currency_name, c.currency_price, c.currency_symbol";
                                  $totabaseonCreencyResult =$conn->query($totabaseonCreency);
+                                 $mustBePaidDolor=0;
+                                 $mustBePaidAfghani=0;
                                  if($totabaseonCreencyResult ->num_rows>0){
                                   while($row=$totabaseonCreencyResult ->fetch_assoc()){
                                     
@@ -911,7 +913,7 @@ function addproduct()
                                     
                                   $mustBePaidDolor = ($totalPaidDolor+$totalPaidAfghani)/$dolor;
                                   $mustBePaidAfghani =($totalPaidDolor+$totalPaidAfghani);
-                                  echo $row['total_price'].'<br>';
+                                //  echo $row['total_price'].'<br>';
                                   }
                                   //echo $totalPaidAfghani;
                                  }
@@ -1007,7 +1009,7 @@ function addproduct()
                     var pdfWidth = pdf.internal.pageSize.getWidth();
                     var pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-                    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+                    pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
                     pdf.save("downloaded_table.pdf");
 
                     // Hide the Bootstrap spinner once the PDF is generated
