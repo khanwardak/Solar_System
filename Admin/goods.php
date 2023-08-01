@@ -918,12 +918,16 @@ function addproduct()
                                
                               }
                               ?>
+                              <tr>
                               <td class="text-right">
                                 <h2><strong>ټوټل ډالر: </strong></h2>
                               </td>
+                            
                               <td class="text-right">
                                 <h2><strong>ټوټل افغانی: </strong></h2>
                               </td>
+                              </tr>
+                              <tr>
                               <td class="text-left text-danger">
                                 <strong><i class="fa fa-inr"></i><?php  echo $mustBePaidDolor; ?></strong>
                               </td>
@@ -996,9 +1000,9 @@ function addproduct()
 
                   html2canvas(table, {
                     scale: 2,
-                    dpi: 250,
+                    dpi: 100,
                   }).then(function (canvas) {
-                    var imgData = canvas.toDataURL("image/png");
+                    var imgData = canvas.toDataURL("image/JPEG");
                     var imgProps = pdf.getImageProperties(imgData);
                     var pdfWidth = pdf.internal.pageSize.getWidth();
                     var pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
