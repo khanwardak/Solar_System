@@ -812,8 +812,8 @@ function addproduct()
                               <?php
                               $bill_generate = $bill_number - 1;
                               include('DBConnection.php');
-                            echo  $sellerID;
-                              $checkBill = "SELECT category.categ_name, customers_bys_goods.bill_number,country.count_name,company.comp_name,customers_bys_goods.unit_amount,unit.unit_name,customers_bys_goods.price,customers_bys_goods.quantity,person.person_name,currency.currency_name 
+                           // echo  $sellerID;
+                              $checkBill = "SELECT category.categ_name, customers_bys_goods.bill_number,country.count_name,company.comp_name,customers_bys_goods.unit_amount,unit.unit_name,customers_bys_goods.price,customers_bys_goods.quantity,person.person_name,currency.currency_name,currency.currency_symbol,currency.currency_price 
                                   from customers_bys_goods,category,country,company,currency,person,unit 
                                   WHERE customers_bys_goods.categ_id=category.categ_id 
                                   and country.count_id=customers_bys_goods.count_id 
@@ -825,8 +825,54 @@ function addproduct()
                               $showbillResult = $conn->query($checkBill);
                               $totalPrice =0;
                               $subTotal =0;
+                              $dolor=0;
+                              $eruo = 0;
+                              $afghani =0;
+                              $rate = null;
+                              $totabaseonCreency=0;
+                              $totalAfghani=0;
+                              $totalDolor=0;
+                              $totalPaidAfghani=0;
+                              $totalPaidPK=0;
+                              $totalPaidDolor=0;
+                              $totalPaidToman=0;
+                              $sql_exchange_reate ="select * from currency";
+                              $currencyRateResult= $conn->query($sql_exchange_reate);
+                              if($currencyRateResult ->num_rows>0){
+                                while($row = $currencyRateResult ->fetch_assoc()){
+                                  if($row['currency_symbol']=='$'){
+                                  $dolor = $row['currency_price'];
+                                    
+                                  }
+                                  if($row['currency_symbol']=='؋'){
+                                    $afghani = $row['currency_price'];
+                                  }
+                                  if($row['currency_symbol']=='#'){
+                                    $eruo = $row['currency_price'];
+                                  }
+                                }
+                               
+                              }
                               if ($showbillResult->num_rows > 0) {
                                 while ($row = $showbillResult->fetch_assoc()) {
+                                  $totabaseonCreency =0; 
+                                if($row['currency_symbol']=='؋'){
+                                  $rate=$row['price']/$dolor;
+                                 $totabaseonCreency += $rate*$row['quantity'];
+                                
+                                }
+                                elseif($row['currency_symbol']=='$'){
+                                   $rate=$row['price']*$dolor;
+                                  $totabaseonCreency += $rate*$row['quantity'];
+                                                          
+                                }
+                                elseif($row['currency_symbol']=='#'){
+                                   $rate=$row['price']*$eruo;
+                                 $totabaseonCreency += $rate*$row['quantity'];
+                                 // $totalAfghani =($rate + $rate) * $row['quantity'];
+                                }
+                              
+                             
                                   $subTotal =$row["quantity"]*$row["price"];
                                   echo '<tr><td>' . $row["categ_name"] . '</td>
                                   <td>' . $row["count_name"] . '</td>
@@ -834,27 +880,55 @@ function addproduct()
                                   <td>' . $row["unit_name"] . '</td>
                                   <td>' . $row["unit_amount"] . '</td>
                                   <td>' . $row["quantity"] . '</td>
-                                  <td>' . $row["price"] . '</td>
-                                  <td>' .$subTotal.'
+                                  <td>' . $row["price"] . '/'.$rate.'</td>
+                                  <td>' .$subTotal.'/'.$totabaseonCreency.'
                                   <td>' . $row["currency_name"] . '</td>
+                                  
                                 
                                 </tr>';
                                  
-                                 
-                                //echo $subTotal =+$subTotal;           
+                               //  echo $row['currency_symbol'];
+                                //echo $subTotal =+$subTotal;  
+                                   
                                 $totalPrice += $subTotal;
                                   $_SESSION["username"] = $row["person_name"];
                                   $_SESSION["billNumber"] = $bill_generate;
                                 }
-
+                                $totabaseonCreency ="SELECT cbg.currency_id, c.currency_name, c.currency_price, c.currency_symbol, SUM(cbg.price * cbg.quantity) AS total_price FROM customers_bys_goods cbg INNER JOIN currency c ON cbg.currency_id = c.currency_id WHERE cbg.bill_number = 14 GROUP BY cbg.currency_id, c.currency_name, c.currency_price, c.currency_symbol";
+                                 $totabaseonCreencyResult =$conn->query($totabaseonCreency);
+                                 if($totabaseonCreencyResult ->num_rows>0){
+                                  while($row=$totabaseonCreencyResult ->fetch_assoc()){
+                                    
+                                    if($row['currency_symbol']=='$'){
+                                     
+                                     $totalPaidDolor += $row['total_price']*$dolor;
+                                      
+                                    }
+                                     //echo $totalPaidDolor
+                                    if ($row['currency_symbol']=='؋') {
+                                    $totalPaidAfghani += $row['total_price'];
+                                    } 
+                                    
+                                  $mustBePaidDolor = ($totalPaidDolor+$totalPaidAfghani)/$dolor;
+                                  $mustBePaidAfghani =($totalPaidDolor+$totalPaidAfghani);
+                                  echo $row['total_price'].'<br>';
+                                  }
+                                  //echo $totalPaidAfghani;
+                                 }
                                
                               }
                               ?>
                               <td class="text-right">
-                                <h2><strong>Total: </strong></h2>
+                                <h2><strong>ټوټل ډالر: </strong></h2>
+                              </td>
+                              <td class="text-right">
+                                <h2><strong>ټوټل افغانی: </strong></h2>
                               </td>
                               <td class="text-left text-danger">
-                                <h2><strong><i class="fa fa-inr"></i><?php  echo $totalPrice; ?></strong></h2>
+                                <strong><i class="fa fa-inr"></i><?php  echo $mustBePaidDolor; ?></strong>
+                              </td>
+                              <td class="text-left text-danger">
+                                <strong><i class="fa fa-inr"></i><?php  echo $mustBePaidAfghani; ?></strong>
                               </td>
                               </tr>
                             </tbody>
