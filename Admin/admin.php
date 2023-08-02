@@ -555,9 +555,9 @@ function addCustomers()
 {
   try {
     include('DBConnection.php');
-    $location = $_POST['cu_vilage'];
-    $dist = $_POST['cus_district'];
-    $province = $_POST['cus_province'];
+    $location = $_POST['update_cu_vilage'];
+    $dist = $_POST['update_cus_district'];
+    $province = $_POST['update_cus_province'];
 
     // Insert address first
     $sql2 = "INSERT INTO `address` (`adress_vilage`, `address_province`, `address_district`) 
@@ -575,9 +575,9 @@ function addCustomers()
       $addressId = $row["address_id"];
     }
 
-    $cu_name = $_POST['cus_first_name'];
-    $cu_last_name = $_POST['cus_last_name'];
-    $cu_father_name = $_POST['cus_father_name'];
+    $cu_name = $_POST['update_cus_first_name'];
+    $cu_last_name = $_POST['update_cus_last_name'];
+    $cu_father_name = $_POST['update_cus_father_name'];
     $sqlcu = "INSERT INTO `person` (`person_name`, `person_f_name`, `person_fathe_name`,person_address) 
                 VALUES ('$cu_name','$cu_last_name','$cu_father_name','$addressId')";
 
@@ -606,42 +606,32 @@ function addCustomers()
 function updateCustomers()
 {
   try {
+   
+   
     include('DBConnection.php');
-    $firmId = $_POST['update_firm_id'];
-    $addressID=$_POST['update_firm_address'];
-    $location = $_POST['update_firm_location_name'];
-    $dist = $_POST['update_firm_district'];
-    $province = $_POST['update_firm_address'];
-    $firm_name = $_POST['update_firm_name'];
+    
+    $location = $_POST['update_cus_vilage_name'];
+    $dist = $_POST['update_cus_district'];
+    $province = $_POST['update_cus_province'];
+    $personAddress=$_POST['update_person_address_id'];
+    $personId = $_POST['update_person_id'];// Assuming you have a field to provide the person ID
 
     // Update address first
-    $sql2 = "UPDATE `address` SET adress_vilage='$location', address_province='$province', address_district='$dist' WHERE address_id='$addressID'";
+    $sqlUpdateAddress = "UPDATE `address` SET `adress_vilage` = '$location', `address_province` = '$province', `address_district` = '$dist' WHERE `address_id` = '$personAddress'";
 
-    if ($conn->query($sql2)) {
-        // Update successful
-        echo '<script LANGUAGE="JavaScript">
-                swal("په بریالی توګه !", "د شرکت معلومات تازه شو!", "success");
-                setTimeout(function() {
-                    window.location.href = "admin.php";
-                }, 2000); // 2000 milliseconds (2 seconds)
-              </script>';
-    } else {
-        // Update failed, print the error message
-        echo '<script LANGUAGE="JavaScript">
-                window.alert("Opps: ' . $conn->error . '");
-              </script>';
+    if (!$conn->query($sqlUpdateAddress)) {
+      echo "Opps!";
     }
-    
-   
-  
-    
 
-    ///$store_name = $_POST['firm_name'];
-    $sqlfirm = "UPDATE `firm` SET firm_name='$firm_name', address_id='$addressID' WHERE firm_id='$firmId'";
+    $cu_name = $_POST['updat_cus_first_name'];
+    $cu_last_name = $_POST['update_cus_last_name'];
+    $cu_father_name = $_POST['update_cus_father_name'];
 
-    if ($conn->query($sqlfirm)) {
+    $sqlUpdatePerson = "UPDATE `person` SET `person_name` = '$cu_name', `person_f_name` = '$cu_last_name', `person_fathe_name` = '$cu_father_name' WHERE `person_id` = $personId";
+
+    if ($conn->query($sqlUpdatePerson)) {
       echo ' <script LANGUAGE="JavaScript">
-      swal("په بریالی توګه !", "د شرکت معلومات تغیر شول!", "success");
+      swal("په بریالی توګه !", "د معلومات تازه شول!", "success");
       setTimeout(function() {
       window.location.href = "admin.php";
       }, 2000); // 2000 milliseconds (2 seconds)
@@ -653,9 +643,10 @@ function updateCustomers()
     }
   } catch (Exception $e) {
     // Handle any exceptions here
-    echo "Error in updating firm: " . $e->getMessage();
+    echo "Error in updating customer: " . $e->getMessage();
   }
 }
+
 
 // end of update customers fucntion
 
@@ -3196,7 +3187,7 @@ try {
                             $result = $conn->query($sql);
                             if ($result->num_rows > 0) {
                               while ($row = $result->fetch_assoc()) {
-                                echo '<tr data-cus-person-address-id="'.$row["person_address"].'"data-cus-person-id="' . $row["person_id"] . '" data-cus-person-name="' . $row["person_name"] . '" data-cus-person-f-name="' . $row["person_f_name"] . '" data-cus-province-name="' . $row["province_name"] . '" data-cus-district-name="' . $row["district_name"] . '" data-cus-village-name="' . $row["adress_vilage"] . '">';
+                                echo '<tr data-cus-person-address-id="'.$row["person_address"].'"data-cus-person-id="' . $row["person_id"] . '" data-cus-person-name="' . $row["person_name"] .'" data-cus-person-father-name="' . $row["person_fathe_name"] . '" data-cus-person-f-name="' . $row["person_f_name"] . '" data-cus-province-name="' . $row["province_name"] . '" data-cus-district-name="' . $row["district_name"] . '" data-cus-village-name="' . $row["adress_vilage"] . '">';
                                 echo '<td>' . $row["person_name"] . '</td>';
                                 echo '<td>' . $row["person_f_name"] . '</td>';
                                 echo '<td>' . $row["person_fathe_name"] . '</td>';
@@ -3240,8 +3231,8 @@ try {
     $('#updatecustomersModal input[name="update_cus_father_name"]').val(person_father_name);
     $('#updatecustomersModal input[name="update_cus_province"]').val(province_name);
     $('#updatecustomersModal input[name="update_cus_district"]').val(district_name);
-    $('#updatecustomersModal input[name="update_cus_vilage"]').val(vilage_name);
-    $('#updatecustomersModal input[name="update_person_address_id"]').val(firm_addrss_id);
+    $('#updatecustomersModal input[name="update_cus_vilage_name"]').val(vilage_name);
+    $('#updatecustomersModal input[name="update_person_address_id"]').val(person_address_id);
   });
 });
 
@@ -3273,7 +3264,7 @@ try {
                         <form class="row g-3 needs-validation" novalidate style="text-align:right;" method="post">
                           <div class="col-12">
                           <input type="hidden" name="update_person_id" id="update_person_id">
-                          <input type="hidden" name="update_address_id" id="update_person_address_id">
+                          <input type="hidden" name="update_person_address_id" id="update_person_address_id">
                             <label for="yourName" class="form-label">نوم</label>
                             <input type="text" name="updat_cus_first_name" class="form-control" id="" required>
                             <div class="invalid-feedback">Please,bill id!</div>
@@ -3325,7 +3316,7 @@ try {
                             <div class="invalid-feedback">Please,bill id!</div>
 
                             <div class="text-center mt-5">
-                              <button class="btn btn-primary btn-submit" type="submit" name="updateCustomers">ثبتول</button>
+                              <button class="btn btn-primary btn-submit" type="submit" name="updateCustomers">تغیر کول</button>
                             </div>
                           </div>
                         </form>
@@ -3800,8 +3791,8 @@ try {
             </li>
 
             <li>
-              <a href="webpage.php" class="nav-link px-2 text-truncate" style="color:#c8c8d2">
-                <span class="d-none d-sm-inline">Web Page</span>
+              <a href="#" class="nav-link px-2 text-truncate" data-bs-toggle="modal" data-bs-target="#bill" style="color:#c8c8d2">
+                <span class="d-none d-sm-inline">Bill</span>
                 <i class="bi bi-receipt fs-5"></i>
               </a>
             </li>
