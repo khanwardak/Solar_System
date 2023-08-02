@@ -196,86 +196,21 @@ function addproduct()
                   <th>کمپنی</th>
                   <th> هیواد</th>
                   <th>اندازه</th>
-                  <th>د اندازه کولو واحد</th>
-                  <th>تعداد</th>
+                  <th>یونېټ</th>
+                  <th>مقدار</th>
                 </tr>
               </thead>
               <tbody>
                 <?php
                 require_once('DBConnection.php');
                 $sql = "
-                SELECT 
-    categ_name,
-    comp_name,
-    count_name,
-    unit_name,
-    unit_amount,
-    SUM(quantity) - SUM(customer_quantity) AS total_left
-FROM
-    (
-    SELECT 
-        category.categ_name,
-        company.comp_name,
-        country.count_name,
-        unit.unit_name,
-        goods.unit_amount,
-        IFNULL(SUM(goods.goods_qunatity), 0) AS quantity,
-        0 AS customer_quantity
-    FROM 
-        goods
-    LEFT JOIN 
-        category ON category.categ_id = goods.categ_id
-    LEFT JOIN 
-        unit ON goods.unit_id = unit.unit_id
-    LEFT JOIN 
-        currency ON goods.currency_id = currency.currency_id
-    LEFT JOIN 
-        company ON goods.comp_id = company.comp_id
-    LEFT JOIN 
-        country ON goods.count_id = country.count_id
-    GROUP BY 
-        category.categ_name,
-        company.comp_name,
-        country.count_name,
-        unit.unit_name,
-        goods.unit_amount
-
-    UNION ALL
-
-    SELECT 
-        category.categ_name,
-        company.comp_name,
-        country.count_name,
-        unit.unit_name,
-        customers_bys_goods.unit_amount,
-        0 AS quantity,
-        IFNULL(SUM(customers_bys_goods.quantity), 0) AS customer_quantity
-    FROM 
-        customers_bys_goods
-    LEFT JOIN 
-        category ON category.categ_id = customers_bys_goods.categ_id
-    LEFT JOIN 
-        unit ON customers_bys_goods.unit_id = unit.unit_id
-    LEFT JOIN 
-        currency ON customers_bys_goods.currency_id = currency.currency_id
-    LEFT JOIN 
-        company ON customers_bys_goods.comp_id = company.comp_id
-    LEFT JOIN 
-        country ON customers_bys_goods.count_id = country.count_id
-    GROUP BY 
-        category.categ_name,
-        company.comp_name,
-        country.count_name,
-        unit.unit_name,
-        customers_bys_goods.unit_amount
-    ) AS combined_data
-GROUP BY
-    categ_name,
-    comp_name,
-    count_name,
-    unit_name,
-    unit_amount;
-";
+                SELECT category.categ_name, MIN(company.comp_name) AS comp_name, 
+                MIN(country.count_name) AS count_name, unit.unit_name,goods.unit_amount,
+                 IFNULL(SUM(goods_qunatity), 0) AS Quantity FROM goods JOIN category 
+                ON category.categ_id = goods.categ_id JOIN unit ON goods.unit_id = unit.unit_id JOIN currency
+                 ON goods.currency_id = currency.currency_id JOIN company ON goods.comp_id = company.comp_id JOIN country
+                 ON goods.count_id = country.count_id GROUP BY category.categ_name, unit.unit_name,
+                country.count_name,company.comp_name,goods.unit_amount;";
                 $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
 
@@ -290,7 +225,7 @@ GROUP BY
                                           <td>' . $row["count_name"] . '</td>
                                           <td>' . $row["unit_amount"] . '</td>
                                            <td>' . $row["unit_name"] . '</td>
-                                           <td id="q">' . $row["total_left"] . '</td>
+                                           <td id="q">' . $row["Quantity"] . '</td>
 
                                          
                                        </tr>';
@@ -939,8 +874,7 @@ GROUP BY
                               
                              
                                   $subTotal =$row["quantity"]*$row["price"];
-                                  echo '<tr>
-                                  <td>' . $row["categ_name"] . '</td>
+                                  echo '<tr><td>' . $row["categ_name"] . '</td>
                                   <td>' . $row["count_name"] . '</td>
                                   <td>' . $row["comp_name"] . '</td>
                                   <td>' . $row["unit_name"] . '</td>
