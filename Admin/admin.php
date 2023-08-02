@@ -3545,8 +3545,8 @@ try {
             </li>
 
             <li>
-              <a href="#" class="nav-link px-2 text-truncate" data-bs-toggle="modal" data-bs-target="#bill" style="color:#c8c8d2">
-                <span class="d-none d-sm-inline">Bill</span>
+              <a href="webpage.php" class="nav-link px-2 text-truncate" style="color:#c8c8d2">
+                <span class="d-none d-sm-inline">Web Page</span>
                 <i class="bi bi-receipt fs-5"></i>
               </a>
             </li>
