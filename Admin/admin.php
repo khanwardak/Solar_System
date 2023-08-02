@@ -549,6 +549,108 @@ function updateFirm()
 
 // end of update firm
 
+
+// start of adding customers function
+function addCustomers()
+{
+  try {
+    include('DBConnection.php');
+    $location = $_POST['update_cu_vilage'];
+    $dist = $_POST['update_cus_district'];
+    $province = $_POST['update_cus_province'];
+
+    // Insert address first
+    $sql2 = "INSERT INTO `address` (`adress_vilage`, `address_province`, `address_district`) 
+             VALUES ('$location', '$province', '$dist')";
+
+    if (!$conn->query($sql2)) {
+      echo "Opps!";
+    }
+
+    // Get the inserted address_id
+    $sql = "SELECT * FROM `address` ORDER BY address_id DESC LIMIT 1";
+    $id = $conn->query($sql);
+    $addressId = "";
+    while ($row = $id->fetch_assoc()) {
+      $addressId = $row["address_id"];
+    }
+
+    $cu_name = $_POST['update_cus_first_name'];
+    $cu_last_name = $_POST['update_cus_last_name'];
+    $cu_father_name = $_POST['update_cus_father_name'];
+    $sqlcu = "INSERT INTO `person` (`person_name`, `person_f_name`, `person_fathe_name`,person_address) 
+                VALUES ('$cu_name','$cu_last_name','$cu_father_name','$addressId')";
+
+    if ($conn->query($sqlcu)) {
+      echo ' <script LANGUAGE="JavaScript">
+      swal("په بریالی توګه !", "د معلومات اضافه شول!", "success");
+      setTimeout(function() {
+      window.location.href = "admin.php";
+      }, 2000); // 2000 milliseconds (2 seconds)
+               </script>;';
+    } else {
+      echo '<script LANGUAGE="JavaScript">
+             window.alert("Opps: ' . $conn->error . '");
+           </script>';
+    }
+  } catch (Exception $e) {
+    // Handle any exceptions here
+    echo "Error in adding firm: " . $e->getMessage();
+  }
+}
+
+// end of adding customers function
+
+
+// edit customer function start
+function updateCustomers()
+{
+  try {
+   
+   
+    include('DBConnection.php');
+    
+    $location = $_POST['update_cus_vilage_name'];
+    $dist = $_POST['update_cus_district'];
+    $province = $_POST['update_cus_province'];
+    $personAddress=$_POST['update_person_address_id'];
+    $personId = $_POST['update_person_id'];// Assuming you have a field to provide the person ID
+
+    // Update address first
+    $sqlUpdateAddress = "UPDATE `address` SET `adress_vilage` = '$location', `address_province` = '$province', `address_district` = '$dist' WHERE `address_id` = '$personAddress'";
+
+    if (!$conn->query($sqlUpdateAddress)) {
+      echo "Opps!";
+    }
+
+    $cu_name = $_POST['updat_cus_first_name'];
+    $cu_last_name = $_POST['update_cus_last_name'];
+    $cu_father_name = $_POST['update_cus_father_name'];
+
+    $sqlUpdatePerson = "UPDATE `person` SET `person_name` = '$cu_name', `person_f_name` = '$cu_last_name', `person_fathe_name` = '$cu_father_name' WHERE `person_id` = $personId";
+
+    if ($conn->query($sqlUpdatePerson)) {
+      echo ' <script LANGUAGE="JavaScript">
+      swal("په بریالی توګه !", "د معلومات تازه شول!", "success");
+      setTimeout(function() {
+      window.location.href = "admin.php";
+      }, 2000); // 2000 milliseconds (2 seconds)
+               </script>;';
+    } else {
+      echo '<script LANGUAGE="JavaScript">
+             window.alert("Opps: ' . $conn->error . '");
+           </script>';
+    }
+  } catch (Exception $e) {
+    // Handle any exceptions here
+    echo "Error in updating customer: " . $e->getMessage();
+  }
+}
+
+
+// end of update customers fucntion
+
+
 // add countery
 function addcounter()
 {
@@ -2889,6 +2991,7 @@ try {
                       <div class="px-4 py-5">
                         <form class="row g-3 needs-validation" novalidate style="text-align:right;" method="post">
                           <div class="col-12">
+                          
                             <label for="yourName" class="form-label">نوم</label>
                             <input type="text" name="unit_name" class="form-control" id="" required>
                             <div class="invalid-feedback">Please,bill id!</div>
@@ -3002,24 +3105,30 @@ try {
 
 
 
-            <!-- store here ==================================================================================================================================================================================================================================================-->
+            <!-- add customers modal start here ==================================================================================================================================================================================================================================================-->
 
-            <div class="modal left fade" id="store" data-backdrop="static" data-keyboard="false" tabindex="-1"
+            <div class="modal left fade" id="customersModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
               role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="col">
                     <div class="modal-body ">
                       <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                      <h5 class="card-title text-center"><span>Add Store</span></h5>
+                      <h5 class="card-title text-center"><span>Add Customers</span></h5>
                       <div class="px-4 py-5">
                         <form class="row g-3 needs-validation" novalidate style="text-align:right;" method="post">
                           <div class="col-12">
                             <label for="yourName" class="form-label">نوم</label>
-                            <input type="text" name="store_name" class="form-control" id="" required>
+                            <input type="text" name="cus_first_name" class="form-control" id="" required>
                             <div class="invalid-feedback">Please,bill id!</div>
-                            <label for="yourName" class="form-label">سټور ادرس</label>
-                            <select class="form-control" id="address" name="address" onchange="address(this.value)">
+                            <label for="yourName" class="form-label">تخلص</label>
+                            <input type="text" name="cus_last_name" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+                            <label for="yourName" class="form-label">پلار نوم</label>
+                            <input type="text" name="cus_father_name" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+                            <label for="yourName" class="form-label">ولایت</label>
+                            <select class="form-control" id="cus_province" name="cus_province" onchange="cus_province(this.value)">
                               <?php
                               require_once('DBConnection.php');
 
@@ -3037,7 +3146,7 @@ try {
                             </select>
                             <script type="text/javascript">
                               $(document).ready(function () {
-                                $('#address').on('change', function () {
+                                $('#cus_province').on('change', function () {
                                   var prov_id = $(this).val();
                                   $.ajax({
                                     url: 'store.php',
@@ -3045,22 +3154,22 @@ try {
                                     data: { provID: prov_id },
                                     dataType: "text",
                                     success: function (html) {
-                                      $('#district').html(html);
+                                      $('#cus_district').html(html);
                                     }
                                   });
                                 });
                               });
                             </script>
                             <label for="for add" class="form-label">ولسوالی</label>
-                            <select id="district" name="district" class="form-control">
+                            <select id="cus_district" name="cus_district" class="form-control">
                               <option value="">ولسوالی</option>
                             </select>
                             <label for="yourName" class="form-label">کلی</label>
-                            <input type="text" name="location_name" class="form-control" id="" required>
+                            <input type="text" name="cu_vilage" class="form-control" id="" required>
                             <div class="invalid-feedback">Please,bill id!</div>
 
                             <div class="text-center mt-5">
-                              <button class="btn btn-primary btn-submit" type="submit" name="addStore">ثبتول</button>
+                              <button class="btn btn-primary btn-submit" type="submit" name="addCustomers">ثبتول</button>
                             </div>
                           </div>
                         </form>
@@ -3068,7 +3177,12 @@ try {
                           style="direction:rtl" class="card">
                           <thead>
                             <tr>
-                              <th>د کمپنی نوم</th>
+                              <th>نوم</th>
+                              <th>تخلص</th>
+                              <th>پلار نوم</th>
+                              <th>ولایت</th>
+                              <th>ولسوالي</th>
+                              <th>کلی</th>
                               <th>عملیات</th>
 
                             </tr>
@@ -3076,36 +3190,159 @@ try {
                           <tbody>
 
                             <?php
-                            // require_once('DBConnection.php');
-                            // $sql = "SELECT * FROM `store`";
-                            // $result = $conn->query($sql);
-                            // if ($result->num_rows > 0) {
-                            //   while ($row = $result->fetch_assoc()) {
-                            //     echo '   <tr><td>' . $row["store_name"] . '</td>
-                            //         <td><a class="fa fa-edit text-decoration-none" href=""></a>
-                            
-                            //         </td>
-                            //          <td><a class="fa fa-trash text-decoration-none" href=""></a></td>
-                            //           </tr>
-                            //         ';
-                            //   }
-                            // }
+                            require_once('DBConnection.php');
+                            $sql = "SELECT person.person_address,person.person_id,province.province_name,district.district_name,person.person_name,person.person_f_name,person.person_fathe_name,address.adress_vilage FROM person,province,address,district WHERE person.person_address=address.address_id and address.address_province=province.province_id and address.address_district=district.district_id;";
+                            $result = $conn->query($sql);
+                            if ($result->num_rows > 0) {
+                              while ($row = $result->fetch_assoc()) {
+                                echo '<tr data-cus-person-address-id="'.$row["person_address"].'"data-cus-person-id="' . $row["person_id"] . '" data-cus-person-name="' . $row["person_name"] .'" data-cus-person-father-name="' . $row["person_fathe_name"] . '" data-cus-person-f-name="' . $row["person_f_name"] . '" data-cus-province-name="' . $row["province_name"] . '" data-cus-district-name="' . $row["district_name"] . '" data-cus-village-name="' . $row["adress_vilage"] . '">';
+                                echo '<td>' . $row["person_name"] . '</td>';
+                                echo '<td>' . $row["person_f_name"] . '</td>';
+                                echo '<td>' . $row["person_fathe_name"] . '</td>';
+                                echo '<td>' . $row["province_name"] . '</td>';
+                                echo '<td>' . $row["district_name"] . '</td>';
+                                echo '<td>' . $row["adress_vilage"] . '</td>';
+                                echo '<td>
+                                        <a class="fa fa-edit text-decoration-none editButtonCustomers" href="javascript:void(0);"></a>
+                                      </td>';
+                                echo '<td><a class="fa fa-trash text-decoration-none" href=""></a></td>';
+                                echo '</tr>';
+                                
+                              }
+                            }
                             ?>
                           </tbody>
                         </table>
+
+                        <script>
+ $(document).ready(function() {
+  // Handle click event for the editButton using event delegation
+  $(document).on('click', '.editButtonCustomers', function(e) {
+    e.preventDefault(); // Prevent the default behavior of the anchor tag (navigating to the href)
+
+    // Find the parent table row and get the category_id and category_name from the data attributes
+    var row = $(this).closest('tr');
+    var person_id = row.data('cus-person-id');
+    var person_name = row.data('cus-person-name');
+    var person_f_name = row.data('cus-person-f-name');
+    var person_father_name = row.data('cus-person-father-name');
+    var province_name = row.data('cus-province-name');
+    
+    var district_name = row.data('cus-district-name');
+    var vilage_name = row.data('cus-village-name');
+    var person_address_id = row.data('cus-person-address-id');
+    $('#updatecustomersModal').modal('show');
+    $('#customersModal').modal('hide');
+    $('#updatecustomersModal input[name="update_person_id"]').val(person_id);
+    $('#updatecustomersModal input[name="updat_cus_first_name"]').val(person_name);
+    $('#updatecustomersModal input[name="update_cus_last_name"]').val(person_f_name);
+    $('#updatecustomersModal input[name="update_cus_father_name"]').val(person_father_name);
+    $('#updatecustomersModal input[name="update_cus_province"]').val(province_name);
+    $('#updatecustomersModal input[name="update_cus_district"]').val(district_name);
+    $('#updatecustomersModal input[name="update_cus_vilage_name"]').val(vilage_name);
+    $('#updatecustomersModal input[name="update_person_address_id"]').val(person_address_id);
+  });
+});
+
+</script>
                       </div>
                     </div>
                   </div>
-
-
                 </div>
               </div>
             </div>
             <?php
-            // if (isset($_POST['addStore'])) {
-            //   addStore();
-            // }
+            if (isset($_POST['addCustomers'])) {
+              addCustomers();
+            }
             ?>
+ <!-- end of add customers modal -->
+
+ <!-- editing customers modal start here ==================================================================================================================================================================================================================================================-->
+
+ <div class="modal left fade" id="updatecustomersModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+              role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="col">
+                    <div class="modal-body ">
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                      <h5 class="card-title text-center"><span>مشتري تغیر کړئ</span></h5>
+                      <div class="px-4 py-5">
+                        <form class="row g-3 needs-validation" novalidate style="text-align:right;" method="post">
+                          <div class="col-12">
+                          <input type="hidden" name="update_person_id" id="update_person_id">
+                          <input type="hidden" name="update_person_address_id" id="update_person_address_id">
+                            <label for="yourName" class="form-label">نوم</label>
+                            <input type="text" name="updat_cus_first_name" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+                            <label for="yourName" class="form-label">تخلص</label>
+                            <input type="text" name="update_cus_last_name" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+                            <label for="yourName" class="form-label">پلار نوم</label>
+                            <input type="text" name="update_cus_father_name" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+                            <label for="yourName" class="form-label">ولایت</label>
+                            <select class="form-control" id="update_cus_province" name="update_cus_province" onchange="update_cus_province(this.value)">
+                              <?php
+                              require_once('DBConnection.php');
+
+                              $sql = "SELECT * FROM `province`";
+                              $result = $conn->query($sql);
+                              if ($result->num_rows > 0) {
+
+                                while ($row = $result->fetch_assoc()) {
+                                  echo '<option value="' . $row["province_id"] . '">' . $row["province_name"] . '</option>';
+                                }
+
+                              }
+
+                              ?>
+                            </select>
+                            <script type="text/javascript">
+                              $(document).ready(function () {
+                                $('#update_cus_province').on('change', function () {
+                                  var prov_id = $(this).val();
+                                  $.ajax({
+                                    url: 'store.php',
+                                    method: 'POST',
+                                    data: { provID: prov_id },
+                                    dataType: "text",
+                                    success: function (html) {
+                                      $('#update_cus_district').html(html);
+                                    }
+                                  });
+                                });
+                              });
+                            </script>
+                            <label for="for add" class="form-label">ولسوالی</label>
+                            <select id="update_cus_district" name="update_cus_district" class="form-control">
+                              <option value="">ولسوالی</option>
+                            </select>
+                            <label for="yourName" class="form-label">کلی</label>
+                            <input type="text" name="update_cus_vilage_name" class="form-control" id="" required>
+                            <div class="invalid-feedback">Please,bill id!</div>
+
+                            <div class="text-center mt-5">
+                              <button class="btn btn-primary btn-submit" type="submit" name="updateCustomers">تغیر کول</button>
+                            </div>
+                          </div>
+                        </form>
+                        
+
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <?php
+            if (isset($_POST['updateCustomers'])) {
+              updateCustomers();
+            }
+            ?>
+ <!-- end of Editing customers modal -->
             <div class="col d-flex justify-content-end">
 
               <div class="btn-group  d-flex justify-content-center">
@@ -3545,6 +3782,15 @@ try {
               </a>
             </li>
 
+             <li>
+
+              <a href="#" class=" nav-link px-2 text-truncate" data-bs-toggle="modal" data-bs-target="#customersModal"
+                style="text-align:righ;color:#c8c8d2">
+                <span class="d-none d-sm-inline">Add Customers</span>
+                <i class="fa fa-user fs-5"></i>
+              </a>
+            </li>
+
             <li>
               <a href="goods.php" class="nav-link px-2 text-truncate" style="color:#c8c8d2">
                 <span class="d-none d-sm-inline">Products</span>
@@ -3553,8 +3799,8 @@ try {
             </li>
 
             <li>
-              <a href="webpage.php" class="nav-link px-2 text-truncate" style="color:#c8c8d2">
-                <span class="d-none d-sm-inline">Web Page</span>
+              <a href="#" class="nav-link px-2 text-truncate" data-bs-toggle="modal" data-bs-target="#bill" style="color:#c8c8d2">
+                <span class="d-none d-sm-inline">Bill</span>
                 <i class="bi bi-receipt fs-5"></i>
               </a>
             </li>

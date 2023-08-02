@@ -227,8 +227,8 @@ function addproduct()
                                            <td>' . $row["unit_name"] . '</td>
                                            <td id="q">' . $row["Quantity"] . '</td>
 
-          
-                           </tr>';
+                                         
+                                       </tr>';
 
 
                     echo '<script>
