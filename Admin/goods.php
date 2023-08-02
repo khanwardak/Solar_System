@@ -814,26 +814,26 @@ GROUP BY
               <div class="modal-body" style=" background-color: #fff;">
 
                 <div class="col" id="billedcustoemr" style =" background-color: #fff; ">
-                  <div class="row" style="text-align: right;">
+                  <div class="row" style="text-align: right; ">
 
-                    <div class="receipt-main col" style="text-align: right; height: 1400px; ">
-                      <div class="row">
+                    <div class="receipt-main col" style="text-align: right; height: 1400px;background-color:#fff">
+                      <div class="row" style="color:#fff">
 
-                        <div class="col-lg-8 justify-content-start text-align" style="text-align: right; ">
+                        <div class="col-lg-8 justify-content-start text-align" style="text-align: right;background-color:#fff" >
                           <div class="receipt-left">
                             <img class="img-responsive" alt="solar-tech-logo"
                               src="img/solar tech logo.png">
                           </div>
                           <div class="receipt-right" style="text-align: right;">
-                            <h5>Solar Tech</h5>
+                            <h5 style="color:black">Solar Tech</h5>
                             <p>0778885555 <i class="fa fa-phone"></i></p>
                             <p>solar-tech@solar-tech.energy <i class="fa fa-envelope-o"></i></p>
                             <p>Kabul, Afghanistan <i class="fa fa-location-arrow"></i></p>
                           </div>
                         </div>
-                        <div class="col-lg-4 text-right  justify-content-end" style="text-align: right;">
+                        <div class="col-lg-4 text-right  justify-content-end" style="text-align: right;background-color:#fff">
                           <div class="receipt-right" style="text-align: right;">
-                            <h5>دمشتر نوم:
+                            <h5 style="color:black">دمشتر نوم:
                               
                               <?php 
                                 if(isset($_SESSION["username"])){
@@ -877,8 +877,8 @@ GROUP BY
                               <?php
                               $bill_generate = $bill_number - 1;
                               include('DBConnection.php');
-                            echo  $sellerID;
-                              $checkBill = "SELECT category.categ_name, customers_bys_goods.bill_number,country.count_name,company.comp_name,customers_bys_goods.unit_amount,unit.unit_name,customers_bys_goods.price,customers_bys_goods.quantity,person.person_name,currency.currency_name 
+                           // echo  $sellerID;
+                              $checkBill = "SELECT category.categ_name, customers_bys_goods.bill_number,country.count_name,company.comp_name,customers_bys_goods.unit_amount,unit.unit_name,customers_bys_goods.price,customers_bys_goods.quantity,person.person_name,currency.currency_name,currency.currency_symbol,currency.currency_price 
                                   from customers_bys_goods,category,country,company,currency,person,unit 
                                   WHERE customers_bys_goods.categ_id=category.categ_id 
                                   and country.count_id=customers_bys_goods.count_id 
@@ -890,8 +890,54 @@ GROUP BY
                               $showbillResult = $conn->query($checkBill);
                               $totalPrice =0;
                               $subTotal =0;
+                              $dolor=0;
+                              $eruo = 0;
+                              $afghani =0;
+                              $rate = null;
+                              $totabaseonCreency=0;
+                              $totalAfghani=0;
+                              $totalDolor=0;
+                              $totalPaidAfghani=0;
+                              $totalPaidPK=0;
+                              $totalPaidDolor=0;
+                              $totalPaidToman=0;
+                              $sql_exchange_reate ="select * from currency";
+                              $currencyRateResult= $conn->query($sql_exchange_reate);
+                              if($currencyRateResult ->num_rows>0){
+                                while($row = $currencyRateResult ->fetch_assoc()){
+                                  if($row['currency_symbol']=='$'){
+                                  $dolor = $row['currency_price'];
+                                    
+                                  }
+                                  if($row['currency_symbol']=='؋'){
+                                    $afghani = $row['currency_price'];
+                                  }
+                                  if($row['currency_symbol']=='#'){
+                                    $eruo = $row['currency_price'];
+                                  }
+                                }
+                               
+                              }
                               if ($showbillResult->num_rows > 0) {
                                 while ($row = $showbillResult->fetch_assoc()) {
+                                  $totabaseonCreency =0; 
+                                if($row['currency_symbol']=='؋'){
+                                  $rate=$row['price']/$dolor;
+                                 $totabaseonCreency += $rate*$row['quantity'];
+                                
+                                }
+                                elseif($row['currency_symbol']=='$'){
+                                   $rate=$row['price']*$dolor;
+                                  $totabaseonCreency += $rate*$row['quantity'];
+                                                          
+                                }
+                                elseif($row['currency_symbol']=='#'){
+                                   $rate=$row['price']*$eruo;
+                                 $totabaseonCreency += $rate*$row['quantity'];
+                                 // $totalAfghani =($rate + $rate) * $row['quantity'];
+                                }
+                              
+                             
                                   $subTotal =$row["quantity"]*$row["price"];
                                   echo '<tr>
                                   <td>' . $row["categ_name"] . '</td>
@@ -900,35 +946,69 @@ GROUP BY
                                   <td>' . $row["unit_name"] . '</td>
                                   <td>' . $row["unit_amount"] . '</td>
                                   <td>' . $row["quantity"] . '</td>
-                                  <td>' . $row["price"] . '</td>
-                                  <td>' .$subTotal.'
+                                  <td>' . $row["price"] . '/'.$rate.'</td>
+                                  <td>' .$subTotal.'/'.$totabaseonCreency.'
                                   <td>' . $row["currency_name"] . '</td>
+                                  
                                 
                                 </tr>';
                                  
-                                 
-                                //echo $subTotal =+$subTotal;           
+                               //  echo $row['currency_symbol'];
+                                //echo $subTotal =+$subTotal;  
+                                   
                                 $totalPrice += $subTotal;
                                   $_SESSION["username"] = $row["person_name"];
                                   $_SESSION["billNumber"] = $bill_generate;
                                 }
-
+                                $totabaseonCreency ="SELECT cbg.currency_id, c.currency_name, c.currency_price, c.currency_symbol, SUM(cbg.price * cbg.quantity) AS total_price FROM customers_bys_goods cbg INNER JOIN currency c ON cbg.currency_id = c.currency_id WHERE cbg.bill_number ='$bill_generate' GROUP BY cbg.currency_id, c.currency_name, c.currency_price, c.currency_symbol";
+                                 $totabaseonCreencyResult =$conn->query($totabaseonCreency);
+                                 $mustBePaidDolor=0;
+                                 $mustBePaidAfghani=0;
+                                 if($totabaseonCreencyResult ->num_rows>0){
+                                  while($row=$totabaseonCreencyResult ->fetch_assoc()){
+                                    
+                                    if($row['currency_symbol']=='$'){
+                                     
+                                     $totalPaidDolor += $row['total_price']*$dolor;
+                                      
+                                    }
+                                     //echo $totalPaidDolor
+                                    if ($row['currency_symbol']=='؋') {
+                                    $totalPaidAfghani += $row['total_price'];
+                                    } 
+                                    
+                                  $mustBePaidDolor = ($totalPaidDolor+$totalPaidAfghani)/$dolor;
+                                  $mustBePaidAfghani =($totalPaidDolor+$totalPaidAfghani);
+                                //  echo $row['total_price'].'<br>';
+                                  }
+                                  //echo $totalPaidAfghani;
+                                 }
                                
                               }
                               ?>
+                              <tr>
                               <td class="text-right">
-                                <h2><strong>Total: </strong></h2>
+                                <h2><strong>ټوټل ډالر: </strong></h2>
+                              </td>
+                            
+                              <td class="text-right">
+                                <h2><strong>ټوټل افغانی: </strong></h2>
+                              </td>
+                              </tr>
+                              <tr>
+                              <td class="text-left text-danger">
+                                <strong><i class="fa fa-inr"></i><?php  echo $mustBePaidDolor; ?></strong>
                               </td>
                               <td class="text-left text-danger">
-                                <h2><strong><i class="fa fa-inr"></i><?php  echo $totalPrice; ?></strong></h2>
+                                <strong><i class="fa fa-inr"></i><?php  echo $mustBePaidAfghani; ?></strong>
                               </td>
                               </tr>
                             </tbody>
                           </table>
                         </div>
-                        <div class="row">
-                          <div class="receipt-header receipt-header-mid receipt-footer">
-                            <div class="col-xs-8 col-sm-8 col-md-8 text-left">
+                        <div class="row" style="background-color:#fff">
+                          <div class="receipt-header receipt-header-mid receipt-footer" style="background-color:#fff">
+                            <div class="col-xs-8 col-sm-8 col-md-8 text-left" style="background-color:#fff">
                               <div class="receipt-right">
                                 <p><b>Date & Time :</b>
                                   <?php
@@ -944,7 +1024,7 @@ GROUP BY
                                 <h5 style="color: rgb(140, 140, 140);">مننه چې سولر تیک مو غوره کړ!</h5>
                               </div>
                             </div>
-                            <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class="col-xs-4 col-sm-4 col-md-4" style="background-color:#fff">
                               <div class="receipt-left">
                                 <h1>امضا</h1>
 
@@ -952,10 +1032,26 @@ GROUP BY
                             </div>
                           </div>
                         </div>
-
+                              
                       </div>
                     </div>
+                   <div class="row">
+                     
+                      <div class="col" style="background-color:#fff">
+                        <ul style=" list-style-type: none;">
+                          <li style=" color: #1e7155;"> ادرس: قوای مرکز، کابل افغانستان سولر تیک</li>
+                          <li style=" color: #1e7155;"> وېب سایټ:www.solar-tech.energy</li>
+                        </ul>
+                      </div>
+                      <div class="col" style="background-color:#fff">
+                      <ul style=" list-style-type: none;">
+                          <li style=" color: #1e7155;">موبایل: 0778822525</li>
+                          <li style=" color: #1e7155;">برښنالیک: info@solar-tech.energy</li>
+                        </ul>
+                      </div>
+                   </div>
                   </div>
+
                 </div>
                 <div class="spinner-border text-success " id="spinnerContainer" style="display: none;"></div>
               </div>
@@ -988,14 +1084,14 @@ GROUP BY
 
                   html2canvas(table, {
                     scale: 2,
-                    dpi: 250,
+                    dpi: 100,
                   }).then(function (canvas) {
-                    var imgData = canvas.toDataURL("image/png");
+                    var imgData = canvas.toDataURL("image/JPEG");
                     var imgProps = pdf.getImageProperties(imgData);
                     var pdfWidth = pdf.internal.pageSize.getWidth();
                     var pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-                    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+                    pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
                     pdf.save("downloaded_table.pdf");
 
                     // Hide the Bootstrap spinner once the PDF is generated
