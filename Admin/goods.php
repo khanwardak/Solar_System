@@ -195,9 +195,9 @@ function addproduct()
                   <th>ګټګوری</th>
                   <th>کمپنی</th>
                   <th> هیواد</th>
-                  <th>پولی واحد</th>
-                  <th>یونېټ</th>
                   <th>اندازه</th>
+                  <th>یونېټ</th>
+                  <th>مقدار</th>
                 </tr>
               </thead>
               <tbody>
@@ -227,8 +227,8 @@ function addproduct()
                                            <td>' . $row["unit_name"] . '</td>
                                            <td id="q">' . $row["Quantity"] . '</td>
 
-                                         
-                                       </tr>';
+          
+                           </tr>';
 
 
                     echo '<script>

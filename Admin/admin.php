@@ -741,6 +741,7 @@ function addUnit()
   <script src="jsPDF/jsPDFAutoTable/dist/jspdf.plugin.autotable.js"></script>
   <script src="jsPDF/html2canvas/html2canvas.js"></script>
   <script src="jsPDF/html2canvas/html2canvas.min.js"></script>
+  <script src="delete.js"></script>
   <link href="../style.css?verssion=4" rel="stylesheet">
 
 </head>
@@ -1175,37 +1176,44 @@ function addUnit()
                           <?php
 try {
   require_once('DBConnection.php');
-  $sql = "SELECT * FROM `category` ORDER BY categ_id DESC LIMIT 10";
+  $sql = "SELECT * FROM `category` WHERE status='0' ORDER BY categ_id DESC LIMIT 10";
   $result = $conn->query($sql);
   if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
       echo '<tr data-category-id="' . $row["categ_id"] . '" data-category-name="' . $row["categ_name"] . '">';
       echo '<td>' . $row["categ_name"] . '</td>';
       echo '<td>
-              <a class="fa fa-edit text-decoration-none editButtonCategory" href="javascript:void(0);"></a>
+              <a class="fa fa-edit text-decoration-none editButtonCategory" href="javascript:void(0);" data-category-id="' . $row["categ_id"] . '"></a>
             </td>';
-      echo '<td><a class="fa fa-trash text-decoration-none" href=""></a></td>';
+      echo '<td style="color:red">
+              <a class="fa fa-trash text-decoration-none deletCatagory" href="javascript:void(0);" data-category-id="' . $row["categ_id"] . '"></a>
+            </td>';
       echo '</tr>';
     }
   }
 } catch (Exception $e) {
-  // Handle the exception here
+  echo "something went wrong" . $e;
 }
+
 ?>
 
-                                    </td>
-                                     <td><a class="fa fa-trash text-decoration-none" href=""></a></td>
-                                      </tr>
+            </td>
+            <td><a class="fa fa-trash text-decoration-none" href=""></a></td>
+            </tr>
                             
-                          </tbody>
-                        </table>
+        </tbody>
+      </table>
 
 
 
-                          </tbody>
-                        </table>
+      </tbody>
+    </table>
+    <!-- delete cate start js -->
 
-                        <script>
+<!-- end delete end -->
+
+
+  <script>
  $(document).ready(function() {
   // Handle click event for the editButton using event delegation
   $(document).on('click', '.editButtonCategory', function(e) {
@@ -1337,7 +1345,7 @@ try {
                             <?php
                             try {
                               require_once('DBConnection.php');
-                              $sql = "SELECT * FROM `company`";
+                              $sql = "SELECT * FROM `company` where status ='0'";
                               $result = $conn->query($sql);
                               if ($result->num_rows > 0) {
                                 while ($row = $result->fetch_assoc()) {
@@ -1347,7 +1355,7 @@ try {
                                   echo '<td>
                                           <a class="fa fa-edit text-decoration-none editButtonCompany" href="javascript:void(0);"></a>
                                         </td>';
-                                  echo '<td><a class="fa fa-trash text-decoration-none" href=""></a></td>';
+                                  echo '<td><a class="fa fa-trash text-decoration-none deleteComp" href="javascript:void(0);"></a></td>';
                                   echo '</tr>';
                                 }
                               }
@@ -1684,7 +1692,7 @@ try {
                             <?php
                             try {
                               require_once('DBConnection.php');
-                              $sql = "SELECT * FROM `country`";
+                              $sql = "SELECT * FROM `country` where status ='0' ";
                               $result = $conn->query($sql);
                               if ($result->num_rows > 0) {
                                 while ($row = $result->fetch_assoc()) {
@@ -1694,7 +1702,7 @@ try {
                                   echo '<td>
                                           <a class="fa fa-edit text-decoration-none editButtonCountry" href="javascript:void(0);"></a>
                                         </td>';
-                                  echo '<td><a class="fa fa-trash text-decoration-none" href=""></a></td>';
+                                  echo '<td><a class="fa fa-trash text-decoration-none deleteConut" href="javascript:void(0);"></a></td>';
                                   echo '</tr>';
                                 }
                               }
@@ -1870,7 +1878,7 @@ try {
 
                             <?php
                             require_once('DBConnection.php');
-                            $sql = "SELECT firm.address_id,firm.firm_id,province.province_name,district.district_name,firm.firm_name,address.adress_vilage FROM firm,province,address,district WHERE firm.address_id=address.address_id and address.address_province=province.province_id and address.address_district=district.district_id;";
+                            $sql = "SELECT firm.address_id,firm.firm_id,province.province_name,district.district_name,firm.firm_name,address.adress_vilage FROM firm,province,address,district WHERE firm.address_id=address.address_id and address.address_province=province.province_id and address.address_district=district.district_id and firm.status='0';";
                             $result = $conn->query($sql);
                             if ($result->num_rows > 0) {
                               while ($row = $result->fetch_assoc()) {
@@ -1880,9 +1888,9 @@ try {
                                 echo '<td>' . $row["district_name"] . '</td>';
                                 echo '<td>' . $row["adress_vilage"] . '</td>';
                                 echo '<td>
-                                        <a class="fa fa-edit text-decoration-none editButtonFirm" href="javascript:void(0);"></a>
+                                        <a class="fa fa-edit text-decoration-none editButtonFirm" href="javascript:void(0);" style="color:blue"></a>
                                       </td>';
-                                echo '<td><a class="fa fa-trash text-decoration-none" href=""></a></td>';
+                                echo '<td><a class="fa fa-trash text-decoration-none deleteFirm" href="" style="color:red"></a></td>';
                                 echo '</tr>';
                                 
                               }
@@ -2087,8 +2095,8 @@ try {
                               echo '<tr data-user-id="' . $row["user_id"] . '">';
                               echo '<td>' . $row["name"] . '</td>';
                               echo '<td>' . $row["type_flag"] . '</td>';
-                              echo '<td><a class="fa fa-edit text-decoration-none editButton" href="#"></a></td>';
-                              echo '<td><a class="fa fa-trash text-decoration-none" href=""></a></td>';
+                              echo '<td ><a class="fa fa-edit text-decoration-none editButton" href="javascript:void(0);" style="color:blue"></a></td>';
+                              echo '<td><a class="fa fa-trash text-decoration-none deleteUser" href="javascript:void(0);" style="color:red"></a></td>';
                               echo '</tr>';
                             }
                           }
@@ -2296,7 +2304,7 @@ try {
                             <?php
                             try {
                               require_once('DBConnection.php');
-                              $sql = "SELECT ourloan.ourloan_id,firm.firm_name,ourloan.loan_amount,currency.currency_name from ourloan,firm,currency where ourloan.firm_id=firm.firm_id and ourloan.currency_id=currency.currency_id;";
+                              $sql = "SELECT ourloan.ourloan_id,firm.firm_name,ourloan.loan_amount,currency.currency_name from ourloan,firm,currency where ourloan.firm_id=firm.firm_id and ourloan.currency_id=currency.currency_id and ourloan.status='0';";
                               $result = $conn->query($sql);
                               if ($result->num_rows > 0) {
                                 while ($row = $result->fetch_assoc()) {
@@ -2308,7 +2316,7 @@ try {
                                   echo '<td>
                                           <a class="fa fa-edit text-decoration-none editButtonOurloan" href="javascript:void(0);"></a>
                                         </td>';
-                                  echo '<td><a class="fa fa-trash text-decoration-none" href=""></a></td>';
+                                  echo '<td><a class="fa fa-trash text-decoration-none deleteOurLoan" href=""></a></td>';
                                   echo '</tr>';
                                 }
                               }
@@ -2594,7 +2602,7 @@ try {
                             <?php
                             try {
                               require_once('DBConnection.php');
-                              $sql = "SELECT * FROM `currency`";
+                              $sql = "SELECT * FROM `currency` where status ='0'";
                               $result = $conn->query($sql);
                               if ($result->num_rows > 0) {
                                 while ($row = $result->fetch_assoc()) {
@@ -2605,7 +2613,7 @@ try {
                                   echo '<td>
                                           <a class="fa fa-edit text-decoration-none editButtonCurrency" href="javascript:void(0);"></a>
                                         </td>';
-                                  echo '<td><a class="fa fa-trash text-decoration-none" href=""></a></td>';
+                                  echo '<td><a class="fa fa-trash text-decoration-none deleteCurrency" href="javascript:void(0);"></a></td>';
                                   echo '</tr>';
                                 }
                               }
@@ -2902,7 +2910,7 @@ try {
 
                             <?php
                             require_once('DBConnection.php');
-                            $sql = "SELECT * FROM `unit`";
+                            $sql = "SELECT * FROM `unit` where status = '0'";
                             $result = $conn->query($sql);
                             if ($result->num_rows > 0) {
                               while ($row = $result->fetch_assoc()) {
@@ -2911,7 +2919,7 @@ try {
                                 echo '<td>
                                         <a class="fa fa-edit text-decoration-none editButtonUnit" href="javascript:void(0);"></a>
                                       </td>';
-                                echo '<td><a class="fa fa-trash text-decoration-none" href=""></a></td>';
+                                echo '<td><a class="fa fa-trash text-decoration-none deleteUnit" href="javascript:void(0);"></a></td>';
                                 echo '</tr>';
                               }
                             }
