@@ -1285,10 +1285,10 @@ try {
       echo '<tr data-category-id="' . $row["categ_id"] . '" data-category-name="' . $row["categ_name"] . '">';
       echo '<td>' . $row["categ_name"] . '</td>';
       echo '<td>
-              <a class="fa fa-edit text-decoration-none editButtonCategory" href="javascript:void(0);" data-category-id="' . $row["categ_id"] . '"></a>
+              <a class="fa fa-edit text-decoration-none editButtonCategory" href="javascript:void(0);" data-category-id="' . $row["categ_id"] . '" style="color:blue"></a>
             </td>';
       echo '<td style="color:red">
-              <a class="fa fa-trash text-decoration-none deletCatagory" href="javascript:void(0);" data-category-id="' . $row["categ_id"] . '"></a>
+              <a class="fa fa-trash text-decoration-none deletCatagory" href="javascript:void(0);" data-category-id="' . $row["categ_id"] . '" style="color:red"></a>
             </td>';
       echo '</tr>';
     }
@@ -1455,9 +1455,9 @@ try {
                                   echo '<tr data-company-id="' . $row["comp_id"] . '" data-company-name="' . $row["comp_name"] . '">';
                                   echo '<td>' . $row["comp_name"] . '</td>';
                                   echo '<td>
-                                          <a class="fa fa-edit text-decoration-none editButtonCompany" href="javascript:void(0);"></a>
+                                          <a class="fa fa-edit text-decoration-none editButtonCompany" href="javascript:void(0);" style="color:blue"></a>
                                         </td>';
-                                  echo '<td><a class="fa fa-trash text-decoration-none deleteComp" href="javascript:void(0);"></a></td>';
+                                  echo '<td><a class="fa fa-trash text-decoration-none deleteComp" href="javascript:void(0);" style="color:red"></a></td>';
                                   echo '</tr>';
                                 }
                               }
@@ -1802,9 +1802,9 @@ try {
                                   echo '<tr data-country-id="' . $row["count_id"] . '" data-country-name="' . $row["count_name"] . '">';
                                   echo '<td>' . $row["count_name"] . '</td>';
                                   echo '<td>
-                                          <a class="fa fa-edit text-decoration-none editButtonCountry" href="javascript:void(0);"></a>
+                                          <a class="fa fa-edit text-decoration-none editButtonCountry" href="javascript:void(0);" style="color:blue"></a>
                                         </td>';
-                                  echo '<td><a class="fa fa-trash text-decoration-none deleteConut" href="javascript:void(0);"></a></td>';
+                                  echo '<td><a class="fa fa-trash text-decoration-none deleteConut" href="javascript:void(0);" style="color:red"></a></td>';
                                   echo '</tr>';
                                 }
                               }
@@ -2416,9 +2416,9 @@ try {
                                   echo '<td>' . $row["loan_amount"] . '</td>';
                                  
                                   echo '<td>
-                                          <a class="fa fa-edit text-decoration-none editButtonOurloan" href="javascript:void(0);"></a>
+                                          <a class="fa fa-edit text-decoration-none editButtonOurloan" href="javascript:void(0);" style="color:blue"></a>
                                         </td>';
-                                  echo '<td><a class="fa fa-trash text-decoration-none deleteOurLoan" href=""></a></td>';
+                                  echo '<td><a class="fa fa-trash text-decoration-none deleteOurLoan" href="" style="color:red"></a></td>';
                                   echo '</tr>';
                                 }
                               }
@@ -2713,9 +2713,9 @@ try {
                                   echo '<td>' . $row["currency_symbol"] . '</td>';
                                   echo '<td>' . $row["currency_price"] . '</td>';
                                   echo '<td>
-                                          <a class="fa fa-edit text-decoration-none editButtonCurrency" href="javascript:void(0);"></a>
+                                          <a class="fa fa-edit text-decoration-none editButtonCurrency" href="javascript:void(0);" style="color:blue"></a>
                                         </td>';
-                                  echo '<td><a class="fa fa-trash text-decoration-none deleteCurrency" href="javascript:void(0);"></a></td>';
+                                  echo '<td><a class="fa fa-trash text-decoration-none deleteCurrency" href="javascript:void(0);" style="color:red"></a></td>';
                                   echo '</tr>';
                                 }
                               }
@@ -3020,9 +3020,9 @@ try {
                                 echo '<tr data-unit-id="' . $row["unit_id"] . '" data-unit-name="' . $row["unit_name"] . '">';
                                 echo '<td>' . $row["unit_name"] . '</td>';
                                 echo '<td>
-                                        <a class="fa fa-edit text-decoration-none editButtonUnit" href="javascript:void(0);"></a>
+                                        <a class="fa fa-edit text-decoration-none editButtonUnit" href="javascript:void(0);" style="color:blue"></a>
                                       </td>';
-                                echo '<td><a class="fa fa-trash text-decoration-none deleteUnit" href="javascript:void(0);"></a></td>';
+                                echo '<td><a class="fa fa-trash text-decoration-none deleteUnit" href="javascript:void(0);" style="color:red"></a></td>';
                                 echo '</tr>';
                               }
                             }
@@ -3896,7 +3896,7 @@ try {
   <script src="js/main.js"></script>
   <script src="js/edit.js"></script>
 
-  // edit.js
+ 
 
 
 

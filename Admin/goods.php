@@ -195,9 +195,9 @@ function addproduct()
                   <th>ګټګوری</th>
                   <th>کمپنی</th>
                   <th> هیواد</th>
-                  <th>اندازه</th>
+                  <th>مقدا</th>
                   <th>یونېټ</th>
-                  <th>مقدار</th>
+                  <th>اندازه</th>
                 </tr>
               </thead>
               <tbody>
@@ -755,8 +755,8 @@ function addproduct()
                       <div class="row" style="color:#fff">
 
                         <div class="col-lg-8 justify-content-start text-align" style="text-align: right;background-color:#fff" >
-                          <div class="receipt-left">
-                            <img class="img-responsive" alt="solar-tech-logo"
+                          <div class="receipt-let" style="width:200px">
+                            <img class="img-responsie" alt="solar-tech-logo"
                               src="img/solar tech logo.png">
                           </div>
                           <div class="receipt-right" style="text-align: right;">
@@ -974,7 +974,7 @@ function addproduct()
                       <div class="col" style="background-color:#fff">
                         <ul style=" list-style-type: none;">
                           <li style=" color: #1e7155;"> ادرس: قوای مرکز، کابل افغانستان سولر تیک</li>
-                          <li style=" color: #1e7155;"> وېب سایټ:www.solar-tech.energy</li>
+                          <li style=" color: #1e7155;" class=""> وېب سایټ: www.solar-tech.energy</li>
                         </ul>
                       </div>
                       <div class="col" style="background-color:#fff">
