@@ -86,14 +86,14 @@ if (isset($_POST["login"])) {
 	            <div class="form-group d-md-flex">
 	            	<div class="w-50">
 		            	<label class="checkbox-wrap checkbox-primary">ما په یاد ولره
-									  <input type="checkbox" checked>
-									  <span class="checkmark"></span>
-									</label>
-								</div>
-								<div class="w-50 text-md-right">
-									<a href="#" style="color: #fff">پاسورډ مو هیر شوی؟</a>
-								</div>
-	            </div>
+							<input type="checkbox" checked>
+							<span class="checkmark"></span>
+						</label>
+					</div>
+						<div class="w-50 text-md-right">
+							<a href="#" style="color: #fff">پاسورډ مو هیر شوی؟</a>
+						</div>
+	            	</div>
 	          </form>
 	          <p class="w-100 text-center">&mdash; یا هم داخل شی! &mdash;</p>
 	          <div class="social d-flex text-center">
@@ -109,7 +109,7 @@ if (isset($_POST["login"])) {
 	<script src="js/jquery.min.js"></script>
   <script src="js/popper.js"></script>
   <script src="js/bootstrap.min.js"></script>
-  <script src="js/main.js"></script>
+  <script src='js/main.js'></script>
 
 	</body>
 </html>

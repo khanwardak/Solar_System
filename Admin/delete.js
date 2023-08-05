@@ -168,3 +168,7 @@ $(document).ready(function() {
   });
 });
 // delete frim end
+
+// delete goods start
+
+// delete goods start
