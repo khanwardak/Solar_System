@@ -184,3 +184,78 @@ if(isset($_GET['firm_id'])){
 }
 ?>
 <!-- delete firm end -->
+
+<!-- delete post start  -->
+<?php
+try {
+  require_once('DBConnection.php');
+if(isset($_GET['post_id'])){
+    $post_id = $_GET['post_id'];
+    $deletePostById ="UPDATE `post` SET `isDelete` = '1' WHERE `post`.`post_id` = '$post_id';";
+    if(!$conn->query($deletePostById)){
+       echo 'په بښنې سره نه شو کولای حذب کړو';
+    }
+    else{
+        echo 'په بریالی توګه سره حذب شو';
+    }
+}
+ 
+} catch (Exception $e) {
+  echo 'Error deleting the countery: ' . $e->getMessage();
+}
+?>
+<!-- delete post end -->
+
+<!-- delete service start -->
+<?php
+if(isset($_GET['service_id'])){
+  $service_di =$_GET['service_id'];
+  try{
+    include('DBConnection/php');
+    $sqlDeleteService = "UPDATE `service` SET `isDelete` = '1' WHERE `service`.`service_id` ='$service_di';";
+    if(!$conn->query($sqlDeleteService)){
+      echo "Opps Some things went wrong";
+    }
+  }catch(Exception $e){
+    echo "can not delete".$e;
+  }
+}
+?>
+<!-- delete service end -->
+
+<!-- delete members start -->
+<?php 
+if(isset($_GET['member_id'])){
+  try{
+    include('DBConnection.php');
+    $member_id = $_GET['member_id'];
+    $sqlDeleteMember ="UPDATE `team_members` SET `isDelete` = '1' 
+    WHERE `team_members`.`team_member_id` = '$member_id';";
+    if(!$conn->query($sqlDeleteMember)){
+      echo 'Can not delete the members';
+    }
+   
+  }catch(Exception $e){
+    echo $e;
+  }
+}
+?>
+<!-- delete members end -->
+
+<!-- delete header start  -->
+<?php
+  if(isset($_GET['page_header_id'])){
+    $page_header_id = $_GET['page_header_id'];
+    include('DBConnection.php');
+    try{
+      $sqlDeletePageHeader = "UPDATE `pagesheader` SET `isDelete` = '1' WHERE `pagesheader`.`page_header_id` = '$page_header_id'; ";
+      if(!$conn->query($sqlDeletePageHeader)){
+        echo 'can not upadate page headers';
+      }
+    }catch(Exception $e){
+      echo $e;
+    }
+
+  }
+?>
+<!-- delete header end -->

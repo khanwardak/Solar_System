@@ -34,11 +34,11 @@
 
 <body >
     <!-- Spinner Start -->
-    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+    <!-- <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
         <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
             <span class="sr-only">Loading...</span>
         </div>
-    </div>
+    </div> -->
     <!-- Spinner End -->
 
 
@@ -48,47 +48,43 @@
 
 
     <!-- Carousel Start -->
+ 
     <div class="container-fluid p-0 pb-5 wow fadeIn" data-wow-delay="0.1s align-items-center ">
         <div class="owl-carousel header-carousel position-relative">
-            <div class="owl-carousel-item position-relative" data-dot="<img src='img/carousel-1.jpg'>">
-                <img class="img-fluid" src="img/carousel-1.jpg" alt="">
+        <?php 
+    include('Admin/DBConnection.php');
+    $sqlSowSilderInfo="SELECT * FROM post WHERE isDelete = '0' ORDER BY post_id DESC LIMIT 3";
+    try{
+        $showSilderInfoResult = $conn->query($sqlSowSilderInfo);
+        if($showSilderInfoResult -> num_rows>0){
+            while($row = $showSilderInfoResult->fetch_assoc()){
+              //  echo 'Admin'.'/'.trim($row['post_img']);
+                echo ' <div class="owl-carousel-item position-relative" data-dot="<img src=Admin'.'/'.trim($row['post_img']).'>">
+                <img class="img-fluid" src="Admin'.'/'.trim($row['post_img']).'" alt="" style="max-height: 800px;">
                 <div class="owl-carousel-inner">
                     <div class="container">
                         <div class="row justify-content-end" style="text-align: right;">
                             <div class="col-10 col-lg-8">
-                                <h1 class="display-2 text-white animated slideInDown">سولر تیک</p>
+                                <h1 class="display-2 text-white animated slideInDown"> '.$row["post_title"].'</h1>
+                                <p class="text-white animated slideInDown">'.$row['post_text'].'</p>
                                 <a href="" class="btn btn-primary rounded-pill py-3 px-5 animated slideInLeft">نور</a>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="owl-carousel-item position-relative" data-dot="<img src='img/carousel-2.jpg'>">
-                <img class="img-fluid" src="img/carousel-2.jpg" alt="">
-                <div class="owl-carousel-inner">
-                    <div class="container">
-                        <div class="row justify-content-end" style="text-align: right;">
-                            <div class="col-10 col-lg-8">
-                                <h1 class="display-2 text-white animated slideInDown">سولر تیک</p>
-                                <a href="" class="btn btn-primary rounded-pill py-3 px-5 animated slideInLeft">نور</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="owl-carousel-item position-relative" data-dot="<img src='img/carousel-3.jpg'>">
-                <img class="img-fluid" src="img/carousel-3.jpg" alt="">
-                <div class="owl-carousel-inner">
-                    <div class="container">
-                        <div class="row justify-content-end" style="text-align: right;">
-                            <div class="col-10 col-lg-8">
-                                <h1 class="display-2 text-white animated slideInDown">سولر تیک</p>
-                                <a href="" class="btn btn-primary rounded-pill py-3 px-5 animated slideInLeft">نور</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </div>';
+            }
+                echo "jdfkjd";
+        }
+        else{
+            echo "jdhfkjhdfn";
+        }
+    }catch(Exception $e){
+        echo 'Please Try agin'.$e;
+    }
+
+    ?>
+        
         </div>
     </div>
     <!-- Carousel End -->
@@ -156,7 +152,7 @@
 
 
     <!-- Feature Start -->
-   <?php include('pagePartation/featurePart.php')?>
+   <?php// include('pagePartation/featurePart.php')?>
     <!-- Feature End -->
 
 

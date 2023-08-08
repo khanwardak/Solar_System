@@ -28,58 +28,114 @@ try {
 ?>
 
 <?php
-
-function addproduct()
+function showPosts()
 {
   include('DBConnection.php');
-  $goods_name = $_POST['goods_name'];
-  $goods_discription = $_POST['goods_discription'];
-  $category_id = $_POST['categoryt_id'];
-  $company_id = $_POST['company_id'];
-  $country_id = $_POST['country_id'];
-  $unit_id = $_POST['unit_id'];
-  $currency_id = $_POST['currency_id'];
-  $company_id = $_POST['company_id'];
-  $firm = $_POST['firm'];
-  $quantity = $_POST['quantity'];
-  $buy_price = $_POST['buy_price'];
-  $unit_quantity = $_POST['unit_quantity'];
-  $uniquesavename = time() . uniqid(rand());
-  $targetDir = "uploads/";
-  $fileName = basename($_FILES["image"]["name"]);
-  $targetFilePath = $targetDir . $uniquesavename . $fileName;
-  $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
-  $allowTypes = array('jpg', 'png', 'jpeg', 'gif');
+  $sqlShowPost = "SELECT * FROM `post` WHERE isDelete = '0' ORDER BY post_id DESC LIMIT 9";
+  try {
+    $showPostResult = $conn->query($sqlShowPost);
+    if ($showPostResult->num_rows > 0) {
+      while ($row = $showPostResult->fetch_assoc()) {
+        echo '<tr data-post-id="' . $row["post_id"] . '" data-post-title="' . $row["post_title"] . '" data-post-text="' . $row["post_text"] . '" data-image="' . $row["post_img"] . '" style="color:black">
+       <td style="color:black">' . $row["post_id"] . '</td>
+       <td style="color:black">' . $row["post_title"] . '</td>
+       <td style="color:black"><a class="fa fa-trash text-decoration-none deletePost" href="javascript:void(0);" style="color:red"></a>
+      <a class="fa fa-edit text-decoration-none editPost" href="javascript:void(0);" style="color:blue"></a></td>
+       </tr>';
 
-  if (in_array($fileType, $allowTypes)) {
-    // Upload file to server
-    if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFilePath)) {
-    } else {
-      $statusMsg = "Sorry, there was an error uploading your file.";
+      }
     }
-
+  } catch (Exception $e) {
+    echo 'Please Try agin!' . $e;
   }
-  $sqll = "SET FOREIGN_KEY_CHECKS = 0;";
-  $conn->query($sqll);
-  $sql2 = "INSERT INTO `goods` (`goods_name`, `goods_description`, `categ_id`, `comp_id`, `count_id`, `unit_id`, `entry_date`, `image`, `currency_id`, `firm_id`, `goods_qunatity`, `goods_price`, `unit_amount`) 
-  VALUES ('$goods_name', '$goods_discription', '$category_id', ' $company_id', '$country_id', '$unit_id', NOW(), '$targetFilePath', '$currency_id', '$firm', '$quantity', '$buy_price', '$unit_quantity');";
-  if ($conn->query($sql2)) {
-    echo ' <script LANGUAGE="JavaScript">
-                 swal("په بریالی توګه !", "د محصول معلومات اضافه شول!", "success");
-                    setTimeout(function() {
-                    window.location.href = "goods.php";
-                    }, 2000); // 2000 milliseconds (2 seconds)
-               </script>;';
-  } else {
-    echo ' ("<script LANGUAGE="JavaScript">
-                 window.alert("Opps!");
-                 window.location.href="admin.php";
-               </script>");';
-  }
-
 }
 
+// upade post start here 
 ?>
+<?php
+function showService()
+{
+  try {
+    include('DBConnection.php');
+    $sqlShowService = "SELECT * FROM `service` WHERE isDelete = '0'";
+    $sqlShowServiceResult = $conn->query($sqlShowService);
+    if ($sqlShowServiceResult->num_rows > 0) {
+      while ($row = $sqlShowServiceResult->fetch_assoc()) {
+        echo '<tr data-service-id="' . $row["service_id"] . '" data-service-title="' . $row["service_title"] . '" data-service-text="' . $row["service_text"] . '" data-image="' . $row["service_img"] . '" style="color:black">
+        <td style="color:black">' . $row["service_id"] . '</td>
+        <td style="color:black">' . $row["service_title"] . '</td>
+        <td style="color:black"><a class="fa fa-trash text-decoration-none deleteservice" href="javascript:void(0);" style="color:red"></a>
+       <a class="fa fa-edit text-decoration-none editservice" href="javascript:void(0);" style="color:blue"></a></td>
+        </tr>';
+      }
+    }
+  } catch (Exception $e) {
+    echo $e;
+  }
+}
+?>
+<!-- show showTeamMembers start -->
+<?php
+
+function showTeamMembers()
+{
+  include('DBConnection.php');
+  try {
+    $sqlShowTeamMebers = "SELECT * FROM `team_members` WHERE isDelete =0";
+    $showTeamMemberResult = $conn->query($sqlShowTeamMebers);
+    if ($showTeamMemberResult->num_rows > 0) {
+      while ($row = $showTeamMemberResult->fetch_assoc()) {
+        echo '<tr data-member-id ="' . $row['team_member_id'] . '" 
+                  data-member-fullname="' . $row['team_member_fullName'] . '"
+                  data-member-mob="' . $row['team_member_mob'] . '"
+                  data-member-skills ="' . $row['team_member_skills'] . '"
+                  data-member-fa-acc ="' . $row['team_member_fa_acc'] . '"
+                  data-member-image ="' . $row['team_member_img'] . '"
+                style="color:black">
+                <td style="color:black">' . $row['team_member_id'] . '</td>
+                <td style="color:black">' . $row['team_member_fullName'] . '</td>
+                <td style="color:black"><a class="fa fa-trash text-decoration-none deleteMember" href="javascript:void(0);" style="color:red"></a>
+                <a class="fa fa-edit text-decoration-none editTeamMember" href="javascript:void(0);" style="color:blue"></a></td>          
+              </tr>';
+      }
+    }
+  } catch (Exception $e) {
+
+  }
+}
+?>
+<!-- showTeamMembers end -->
+
+<!-- show pages headers start -->
+<?php
+function showPageHeaders()
+{
+  try {
+    include('DBConnection.php');
+    $sqlShowPageHeaders = "SELECT * FROM `pagesheader` WHERE isDelete ='0' ORDER BY `page_header_id`  DESC LIMIT 10";
+    $showPageResult = $conn->query($sqlShowPageHeaders);
+    if ($showPageResult->num_rows > 0) {
+      while ($row = $showPageResult->fetch_assoc()) {
+        echo
+          '<tr
+            data-page-name ="'.$row['page_name'].'"
+            data-pageheader-title="'.$row['page_header_title'].'"
+            data-header-text="'.$row['page_header_text'].'"
+            data-pageheader-id = "'.$row['page_header_id'].'"
+          >
+              <td>'.$row['page_header_title'].'</td>
+              <td>'.$row['page_name'].'</td>
+              <td style="color:black"><a class="fa fa-trash text-decoration-none deletpageHeader" href="javascript:void(0);" style="color:red"></a>
+                <a class="fa fa-edit text-decoration-none editPagesHeader" href="javascript:void(0);" style="color:blue"></a></td>
+            </tr>';
+      }
+    }
+  } catch (Exception $e) {
+    echo $e;
+  }
+}
+?>
+<!-- show pages header end -->
 <!DOCTYPE html>
 <html>
 
@@ -94,8 +150,12 @@ function addproduct()
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>admin</title>
+  <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.min.css'>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
   <link rel="stylesheet" type="text/css" href="admin.css?verssion=10">
+  <link rel="stylesheet" type="text/css" href="webpage.css?verssion=10">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
     integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
@@ -111,6 +171,8 @@ function addproduct()
   <script src="jsPDF/html2canvas/html2canvas.js"></script>
   <script src="jsPDF/html2canvas/html2canvas.min.js"></script>
   <script src='webpages.js'></script>
+  <script src="createService.js"></script>
+
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 </head>
@@ -178,82 +240,254 @@ function addproduct()
               <span class="fa fa-diagram-project"></span>
               <span class="icon-label">پروژې</span>
             </div>
+            <div class="icon-tab col-xs-12 col-sm-2">
+              <span class="fa fa-diagram-project"></span>
+              <span class="icon-label">د صفحاتو هیډ</span>
+            </div>
+            <div class="icon-tab col-xs-12 col-sm-2">
+              <span class="fa fa-diagram-project"></span>
+              <span class="icon-label">د صفحاتو هیډ</span>
+            </div>
           </div>
         </div>
 
         <!-- Your elements -->
         <div class="item col-sm-10 col-sm-offset-1 bg-light" style=" direction:rtl;background-color:red">
           <div class="panel panel-default" style=" direction:rtl; text-align:right;background-color:#fff">
-        
-            <div class="panel-body" style="background-color:#fff">
-            
-              <!-- Add the collapsible content -->
-            
-                <div class="row">
-                  <div class="col" style="">
-                    <div class="">
-                      <form class="postes" method="post"style="background-color:#fff; width:98%" enctype="multipart/form-data">
 
-                        <div class="form-group mt-8 bg-light">
-                          <label>عنوان: </label>
-                          <input type="text" name="post_titlet" class="form-control bg-light" placeholder="عنوان دلته ولیکئ" required style="border solide 1px black" >
-                        </div>
-                        <div class="form-group mt-8">
-                          <label>متن: </label>
-                          <textarea class="form-controle" name="post_text" id="" cols="58" rows="10" placeholder="متن دلته ولیکئ " required>
+            <div class="panel-body" style="background-color:#fff">
+
+              <!-- Add the collapsible content -->
+
+              <div class="row">
+                <div class="col" style="">
+                  <div class="">
+                    <form id="post" class="postes" method="post" style="background-color:#fff; width:98%"
+                      enctype="multipart/form-data">
+
+                      <div class="form-group mt-8 bg-light">
+                        <label>عنوان: </label>
+                        <input type="text" name="post_titlet" class="form-control bg-light"
+                          placeholder="عنوان دلته ولیکئ" required style="border solide 1px black">
+                      </div>
+                      <div class="form-group mt-8">
+                        <label>متن: </label>
+                        <textarea class="form-controle" name="post_text" id="" cols="58" rows="10"
+                          placeholder="متن دلته ولیکئ " required>
 
                           </textarea>
-                        </div>
-                        
-                        <div class="input-group mt-2">
-                      <input type="text" class="form-control" required placeholder="" name="image">
-                      <span class="input-group-text">انځور</span>
-                    </div>
-                        <button class="btn btn-success createPost">پوسټ</button>
-                      </form>
-                      
-                    </div>
+                      </div>
+
+                      <div class="input-group">
+                        <input type="file" class="form-control" required placeholder="" name="image">
+                        <input type="hidden" name="post_id" value="">
+
+                        <span class="input-group-text">انځور</span>
+                      </div>
+                      <button class="btn btn-success createPost">پوسټ</button>
+                      <button class="btn btn-primary  updatePost" style=" display:none">Update</button>
+                    </form>
 
                   </div>
-                  <div class="col" style="width:background-color:#ff">
-                    <form class="mt-2" style="width:98%">
+
+                </div>
+                <div class="col" style="width:background-color:#ff">
+                  <form class="mt-2 search" style="width:98%">
                     <label>پلټڼه</label>
-                    <input type="text" placeholder="search" class="form-control"> 
-                    <form>
-                       
-                        <div class ="table-responsice mt-2">
-                          <table class="table table-hover mt-">
-                            <thead class="table" style="background-color:#36566e">
-                              <tr style="background-color:#36566e;color:#fff">
-                                <td>عنوان</td>
-                                <td>متن</td>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr style="color:black">
-                                <td style="color:black">kjdhfkj</td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
+                    <input type="text" placeholder="search" class="form-control">
+
+                  </form>
+                  <div class="table-responsice mt-2">
+                    <table class="table table-hover mt-">
+                      <thead class="table" style="background-color:#36566e">
+                        <tr style="background-color:#36566e;color:#fff">
+                          <td>عنوان</td>
+                          <td>متن</td>
+                          <td>عملیات</td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php echo showPosts(); ?>
+                      </tbody>
+                    </table>
                   </div>
                 </div>
-              
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <!-- add team members start -->
+        <div class="item col-sm-10 col-sm-offset-1" style=" direction:rtl; text-align:right">
+          <div class="panel panel-default" style=" direction:rtl">
+
+            <div class="panel-body">
+              <div class="row">
+                <div class="col">
+                  <form class="addTeam" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                      <label for="name" class="form-label">مکمل نوم</label>
+                      <input type="text" class="form-control" id="name" name="fullName">
+
+                    </div>
+                    <div class="mb-3">
+                      <label for="skills" class="form-label">مهارتونه</label>
+                      <textarea name="team_member_skills" class="form-control" name="team_member_skills" id="skills"
+                        cols="30" rows="10">
+
+                      </textarea>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label" for="fa_acc">فسبوک اکاونټ لینک</label>
+                      <input type="text" class="form-control" id="fa_acc" name="fa_acc">
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label" for="mob">موبایل شمره</label>
+                      <input type="text" class="form-control" id="mob" name="mob">
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label" for="img">انځور</label>
+                      <input type="file" class="form-control" id="img" name="team_mermber_img">
+                    </div>
+                    <input class="hidden" name="member_id">
+                    <button class="btn btn-success addTeamMember" name="addTeamMember">ثبتول</button>
+                    <button class="btn btn-primary updateTeamMember" name="addTeamMember"
+                      style="display:none">تغیرول</button>
+                  </form>
+                </div>
+                <div class="col">
+                  <table class="table table-hover">
+                    <thead style="background-color:#36566e">
+                      <tr style="background-color:#36566e">
+                        <td>نمبر</td>
+                        <td>نوم</td>
+                        <td>عملیات</td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <?php echo showTeamMembers(); ?>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- add team members end -->
+        <div class="item col-sm-10 col-sm-offset-1" style=" direction:rtl; text-align:right">
+          <div class="panel panel-default" style=" direction:rtl">
+            <div class="panel-heading">
+
+            </div>
+            <div class="panel-body">
+              <div class="row">
+                <div class="col" style="">
+                  <form method="post" enctype="multipart/form-data" id="service" class="hhh"
+                    style="background-color:#fff; width:98%">
+                    <div class="form-group mt-8 bg-light">
+                      <label>عنوان: </label>
+                      <input type="text" name="service_titled" class="form-control bg-light"
+                        placeholder="عنوان دلته ولیکئ" required style="border solide 1px black">
+                    </div>
+                    <div class="form-group mt-8">
+                      <label>متن: </label>
+                      <textarea class="form-control" name="service_textd" id="" cols="58" rows="10"
+                        placeholder="متن دلته ولیکئ" required></textarea>
+                    </div>
+                    <div class="input-group mt-2">
+                      <input type="file" class="form-control" required placeholder="" name="service_imaged">
+                      <input type="hidden" name="service_id" value="">
+                      <span class="input-group-text">انځور</span>
+                    </div>
+                    <button class="btn btn-success createService">خدمات ثبت کړی</button>
+                    <button class="btn btn-primary updateService" style=" display:none">تغیرول</button>
+                  </form>
+
+                </div>
+                <div class="col" style="width:background-color:#ff">
+                  <form class="mt-2 serviceSearch" style="width:98%">
+                    <label>پلټڼه</label>
+                    <input type="text" placeholder="search" class="form-control">
+
+                  </form>
+                  <div class="table-responsice mt-2">
+                    <table class="table table-hover mt-">
+                      <thead class="table" style="background-color:#36566e">
+                        <tr style="background-color:#36566e;color:#fff">
+                          <td>عنوان</td>
+                          <td>متن</td>
+                          <td>عملیات</td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php echo showService(); ?>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
         <div class="item col-sm-10 col-sm-offset-1" style=" direction:rtl; text-align:right">
-          <div class="panel panel-default" style=" direction:rtl">
-            <div class="panel-heading">
-              <h3>Element 2</h3>
+          project
+        </div>
+        <div class="item col-sm-10 col-sm-offset-1" style=" direction:rtl; text-align:right">
+          <div class="row">
+            <div class="col">
+              <form class="pageHeader" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                  <label for="header_title" class="form-label">هیډر عنوان</label>
+                  <input type="text" class="form-control" id="header_title" name="header_title">
+
+                </div>
+                <div class="mb-3">
+                  <label for="header_tex" class="form-label">هیډر متن</label>
+                  <textarea name="header_text" class="form-control"  id="header_tex" cols="30" rows="10">
+
+                      </textarea>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label" for="page">صفحه انتخاب کړی</label>
+                  <select name="page" id="page" class="form-control">
+                    <option value="1">خدمات</option>
+                    <option value="2">ټیم</option>
+                    <option value="3">پروژې</option>
+                    <option value="4">ځانګړتیاوې</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label" for="header_img">انځور</label>
+                  <input type="file" class="form-control" id="header_img" name="header_img">
+                </div>
+                <input class="hidden" name="page_header_id">
+                <button class="btn btn-success addPageHeader" name="addPageHeader">ثبتول</button>
+                <button class="btn btn-primary updatePageHeader" name="updataddPageHeader"
+                  style="display:none">تغیرول</button>
+              </form>
             </div>
-            <div class="panel-body">kjhj</div>
+            <div class="col">
+              <table class="table table-hover mt-">
+                <thead class="table" style="background-color:#36566e">
+                  <tr style="background-color:#36566e;color:#fff">
+                    <td>عنوان</td>
+                    <td>صفحه</td>
+                    <td>عملیات</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php
+                     echo showPageHeaders()
+
+                    ?>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-
-        <div class="item col-sm-10 col-sm-offset-1">
-
+        <div class="item col-sm-10 col-sm-offset-1" style=" direction:rtl; text-align:right">
+          pageHeaders1
         </div>
         <!-- tab-contents end -->
       </main>
