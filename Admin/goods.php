@@ -520,7 +520,7 @@ function addproduct()
         //  }
         ?>
         <script>
-
+// insert into customer buy googs ajax
           $(document).ready(function () {
             $('.soldandbuy').click(function (event) {
               event.preventDefault();
@@ -755,9 +755,9 @@ function addproduct()
                       <div class="row" style="color:#fff">
 
                         <div class="col-lg-8 justify-content-start text-align" style="text-align: right;background-color:#fff" >
-                          <div class="receipt-let" style="width:200px">
+                          <div class="receipt-left">
                             <img class="img-responsie" alt="solar-tech-logo"
-                              src="img/solar tech logo.png">
+                              src="img/solar tech logo.png" style="width:200px">
                           </div>
                           <div class="receipt-right" style="text-align: right;">
                             <h5 style="color:black">Solar Tech</h5>
