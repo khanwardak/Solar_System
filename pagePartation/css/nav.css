@@ -1,0 +1,32 @@
+.nav-item {
+  font-size:14px;
+  text-transform:uppercase;
+  height:82px;
+  line-height:64px;
+}
+.flare {
+  background:#227322;
+}
+.flare a.nav-link {
+  color:#fff !important
+  
+}
+.topbarElements > div:nth-of-type(1){
+  font-size:16px;
+  margin:2px 15px;
+  color:#2c6d29
+  
+}
+@media screen and (min-width:1040px){
+  .flare { margin-right:-15px; }
+}
+@media screen and (max-width:1029px){
+  .navbar-nav {
+    margin-bottom:15px;
+    text-align:center
+  }
+  .nav-item {
+    background : hwb(0 100% 0% / 0.1);
+    margin:2px;
+  }
+}

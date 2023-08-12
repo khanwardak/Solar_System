@@ -248,7 +248,7 @@ session_start();
                   });
               });
                            });
-               $(document).ready(function(){
+  $(document).ready(function(){
 
     $('.loan_quantity').keyup(function(){
     var loan_quantity = $(this).val();

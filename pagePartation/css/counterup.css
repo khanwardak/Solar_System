@@ -1,0 +1,92 @@
+.container {
+    margin-top: 50px;
+}
+/* .projects-wrapper{
+    margin-top: 2rem;
+} */
+.counter-box {
+    display: block;
+    background: #f6f6f6;
+    padding: 40px 20px 37px;
+    text-align: center;
+    margin-right: 15px;
+    margin-left: 15px;
+    transition: background-color 0.5s ease, transform 0.3s ease;
+}
+
+.counter-box p {
+    margin: 5px 0 0;
+    padding: 0;
+    color: #f6f2f2;
+    font-size: 18px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.counter-box i {
+    font-size: 60px;
+    margin: 0 0 15px;
+    color: #f4efef;
+    transition: color 0.3s ease;
+}
+
+.counter {
+    display: block;
+    font-size: 32px;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 28px;
+    transition: color 0.3s ease;
+}
+
+.counter-box {
+    background: #3acf87;
+}
+
+/* ... (other styles) ... */
+
+/* Add hover effects with animation for counter boxes and icons */
+.counter-box:hover {
+    background: #fff;
+    transform: scale(1.05);
+}
+
+.counter-box:hover p,
+.counter-box:hover i,
+.counter-box:hover .counter {
+    color: #3acf87;
+}
+
+.sectionClass {
+    padding: 0px 0px 0px 0px;
+    position: relative;
+    display: block;
+  }
+  .sectiontitle {
+    background-position: center;
+    margin-bottom: 20px;
+    text-align: center;
+    min-height: 20px;
+  }
+  
+  .sectiontitle h2 {
+    font-size: 30px;
+    color: #222;
+    margin-bottom: 0px;
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+  .headerLine {
+    width: 160px;
+    height: 4px;
+    display: inline-block;
+    background: #101F2E;
+  }
+  .counter-box:hover {
+    background: #fff;
+}
+
+.counter-box:hover i {
+    color: #3acf87;
+}
+  

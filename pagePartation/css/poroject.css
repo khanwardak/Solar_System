@@ -1,0 +1,162 @@
+
+
+
+
+article {
+--link-color: black;
+--link-icon-translate: -20px;
+--link-icon-opacity: 0;
+position: relative;
+max-width: 400px;
+margin-inline: auto;
+border-radius: 16px;
+overflow: hidden;
+box-shadow: none;
+background: #fff;
+transform-origin: center;
+transition: all 0.4s ease-in-out;
+display: column;
+}
+
+
+.article img {
+    max-width: 100%;
+    height: auto;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.overlay i {
+    font-size: 24px;
+    color: white;
+    transition: transform 0.3s ease-in-out;
+}
+
+.article:hover img {
+    opacity: 0.5;
+}
+
+.article:hover .overlay {
+    opacity: 1;
+}
+
+.article:hover .overlay i {
+    transform: scale(1.2);
+}
+
+
+article a::after {
+position: absolute;
+inset-block: 0;
+inset-inline: 0;
+cursor: pointer;
+content: "";
+}
+
+article a:hover {
+--link-color: #47d837;
+--link-icon-translate: 0;
+--link-icon-opacity: 1;
+}
+
+/* basic article styling */
+article h2 {
+margin: 0 0 18px 0;
+
+font-size: 1.9rem;
+letter-spacing: 0.06em;
+color: black;
+}
+
+article a {
+display: block;
+color: var(--title-color);
+}
+
+article a:focus {
+outline: 1px dotted #28666e;
+}
+
+.read-more .icon {
+transform: translateX(var(--link-icon-translate));
+opacity: var(--link-icon-opacity);
+transition: all 0.3s;
+}
+
+figure {
+margin: 0;
+padding: 0;
+aspect-ratio: 16 / 9;
+overflow: hidden;
+}
+
+.read-more {
+display: inline-flex;
+align-items: center;
+text-decoration: none;
+color: #39ac16;
+}
+
+.read-more .icon {
+margin-left: 5px;
+}
+
+/************************ 
+Generic layout (demo looks)
+**************************/
+
+*,
+*::before,
+*::after {
+box-sizing: border-box;
+}
+
+
+
+.article-body {
+padding: 24px;
+}
+
+.articles {
+display: grid;
+max-width: 1200px;
+margin-inline: auto;
+padding-inline: 24px;
+grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+gap: 24px;
+}
+
+img {
+max-width: 100%;
+line-height: 0;
+}
+
+.icon {
+min-width: 24px;
+width: 24px;
+height: 24px;
+}
+
+.sr-only:not(:focus):not(:active) {
+clip: rect(0 0 0 0);
+clip-path: inset(50%);
+height: 1px;
+overflow: hidden;
+position: absolute;
+white-space: nowrap;
+width: 1px;
+}
+

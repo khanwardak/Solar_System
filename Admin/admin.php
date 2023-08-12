@@ -1,12 +1,13 @@
 <?php
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+
 require '../vendor/autoload.php';
 include('DBConnection.php');
 if (!isset($_COOKIE['access_token']) || empty($_COOKIE['access_token'] || $_COOKIE['role_admin'] != 1)) {
   header("Location: login.php");
   exit();
-} elseif (!isset($_COOKIE['role_admin']) || $_COOKIE['role_admin'] !=1) {
+} elseif (!isset($_COOKIE['role_admin']) || $_COOKIE['role_admin'] != 1) {
   header("Location: login.php");
   exit();
 }
@@ -65,7 +66,62 @@ function recentlly()
 
 
 ?>
+<!-- show loan start -->
+<?php
+function showLoan(){
+  include('DBConnection.php');
+  try{
+    $sqlShowLoan ="SELECT DISTINCT person.person_id, persoN.person_name, person.person_f_name, person.person_fathe_name, person.person_address, loan.bill_number, loan.date, loan.total_loan, loan.total_paid, loan.currency FROM person JOIN customers_bys_goods ON person.person_id = customers_bys_goods.person_id JOIN loan ON customers_bys_goods.bill_number = loan.bill_number";
+    $showLoanResult = $conn->query($sqlShowLoan );
+    if($showLoanResult -> num_rows> 0){
+      while($row = $showLoanResult->fetch_assoc()){
+        $totalAmount = $row['total_loan'] +$row['total_paid'];
+        $baqidari = $totalAmount-$row['total_paid'];
+        echo '
+          <tr data-person-name="'.$row['person_name'].'" data-person-faname="'.$row['person_f_name'].'">
+            <td ><a href="javascript:void(0)"class="info" >'.$row['person_name'].'</a></td>
+            <td >'.$row['person_f_name'].'</td>
+            <td>'. $totalAmount.'</td>
+            <td>'.$row['total_paid'].'</td>
+            <td>'.$baqidari.'</td>
+            <td>'.$row['bill_number'].'</td>
+            <td >'.$row['currency'].'</td>
+          </tr>
+        ';
+      }
+    }
+  }catch(Exception $e){
 
+  }
+}
+?>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $('.info').click(function(){
+      var person = $(this).closest('tr').data('person-name');
+      var personFname = $(this).closest('tr').data('person-faname');
+      $.ajax({
+        url: 'addLoan.php',
+        method:'POST',
+        data:{person:person},
+        success: function(response) {
+         $("#loanDetails").empty();
+          $("#loanDetails").append(response);
+
+         alert(response);
+        },
+        error: function(xhr, status, error) {
+          alert('Error deleting the countery: ' + error);
+        }
+      });
+     
+    });
+  });
+ 
+    
+</script>
+<!-- show loan end -->
 <?php
 if (isset($_POST["provID"])) {
   require_once('DBConnection.php');
@@ -294,7 +350,7 @@ function updateCompany()
 function addOurLoan()
 {
   try {
-    
+
     include('DBConnection.php');
     $ourloanfirm = $_POST['ourloanfirm'];
     $ourloancurency_id = $_POST['ourloancurrency_id'];
@@ -498,7 +554,7 @@ function updateFirm()
   try {
     include('DBConnection.php');
     $firmId = $_POST['update_firm_id'];
-    $addressID=$_POST['update_firm_address'];
+    $addressID = $_POST['update_firm_address'];
     $location = $_POST['update_firm_location_name'];
     $dist = $_POST['update_firm_district'];
     $province = $_POST['update_firm_address'];
@@ -508,23 +564,23 @@ function updateFirm()
     $sql2 = "UPDATE `address` SET adress_vilage='$location', address_province='$province', address_district='$dist' WHERE address_id='$addressID'";
 
     if ($conn->query($sql2)) {
-        // Update successful
-        echo '<script LANGUAGE="JavaScript">
+      // Update successful
+      echo '<script LANGUAGE="JavaScript">
                 swal("په بریالی توګه !", "د شرکت معلومات تازه شو!", "success");
                 setTimeout(function() {
                     window.location.href = "admin.php";
                 }, 2000); // 2000 milliseconds (2 seconds)
               </script>';
     } else {
-        // Update failed, print the error message
-        echo '<script LANGUAGE="JavaScript">
+      // Update failed, print the error message
+      echo '<script LANGUAGE="JavaScript">
                 window.alert("Opps: ' . $conn->error . '");
               </script>';
     }
-    
-   
-  
-    
+
+
+
+
 
     ///$store_name = $_POST['firm_name'];
     $sqlfirm = "UPDATE `firm` SET firm_name='$firm_name', address_id='$addressID' WHERE firm_id='$firmId'";
@@ -606,15 +662,15 @@ function addCustomers()
 function updateCustomers()
 {
   try {
-   
-   
+
+
     include('DBConnection.php');
-    
+
     $location = $_POST['update_cus_vilage_name'];
     $dist = $_POST['update_cus_district'];
     $province = $_POST['update_cus_province'];
-    $personAddress=$_POST['update_person_address_id'];
-    $personId = $_POST['update_person_id'];// Assuming you have a field to provide the person ID
+    $personAddress = $_POST['update_person_address_id'];
+    $personId = $_POST['update_person_id']; // Assuming you have a field to provide the person ID
 
     // Update address first
     $sqlUpdateAddress = "UPDATE `address` SET `adress_vilage` = '$location', `address_province` = '$province', `address_district` = '$dist' WHERE `address_id` = '$personAddress'";
@@ -750,7 +806,7 @@ function updateCurrency()
     $currency_id = $_POST['update_currency_id']; // Assuming you have a form field with the currency ID
     $currency_name = $_POST['update_currency_name'];
     $currency_sign = $_POST['update_currency_sign'];
-    $currency_price=$_POST['update_currency_price'];
+    $currency_price = $_POST['update_currency_price'];
 
     include('DBConnection.php');
 
@@ -1276,28 +1332,28 @@ function addUnit()
                           <tbody>
 
                           <?php
-try {
-  require_once('DBConnection.php');
-  $sql = "SELECT * FROM `category` WHERE status='0' ORDER BY categ_id DESC LIMIT 10";
-  $result = $conn->query($sql);
-  if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-      echo '<tr data-category-id="' . $row["categ_id"] . '" data-category-name="' . $row["categ_name"] . '">';
-      echo '<td>' . $row["categ_name"] . '</td>';
-      echo '<td>
+                          try {
+                            require_once('DBConnection.php');
+                            $sql = "SELECT * FROM `category` WHERE status='0' ORDER BY categ_id DESC LIMIT 10";
+                            $result = $conn->query($sql);
+                            if ($result->num_rows > 0) {
+                              while ($row = $result->fetch_assoc()) {
+                                echo '<tr data-category-id="' . $row["categ_id"] . '" data-category-name="' . $row["categ_name"] . '">';
+                                echo '<td>' . $row["categ_name"] . '</td>';
+                                echo '<td>
               <a class="fa fa-edit text-decoration-none editButtonCategory" href="javascript:void(0);" data-category-id="' . $row["categ_id"] . '" style="color:blue"></a>
             </td>';
-      echo '<td style="color:red">
+                                echo '<td style="color:red">
               <a class="fa fa-trash text-decoration-none deletCatagory" href="javascript:void(0);" data-category-id="' . $row["categ_id"] . '" style="color:red"></a>
             </td>';
-      echo '</tr>';
-    }
-  }
-} catch (Exception $e) {
-  echo "something went wrong" . $e;
-}
+                                echo '</tr>';
+                              }
+                            }
+                          } catch (Exception $e) {
+                            echo "something went wrong" . $e;
+                          }
 
-?>
+                          ?>
 
             </td>
             <td><a class="fa fa-trash text-decoration-none" href=""></a></td>
@@ -1451,7 +1507,7 @@ try {
                               $result = $conn->query($sql);
                               if ($result->num_rows > 0) {
                                 while ($row = $result->fetch_assoc()) {
-                               
+
                                   echo '<tr data-company-id="' . $row["comp_id"] . '" data-company-name="' . $row["comp_name"] . '">';
                                   echo '<td>' . $row["comp_name"] . '</td>';
                                   echo '<td>
@@ -1550,63 +1606,55 @@ try {
 
             <div class="modal left fade" id="loan" data-backdrop="static" data-keyboard="false" tabindex="-1"
               role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
+              <div class="modal-dialog modal-fullscreen">
+              <div class="modal-content">
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <nav class="mt-2" style=" direction:rtl">
+                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                   <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">قرض</button>
+                   <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">آداینه</button>
 
-                  <div class="col">
-                    <div class="modal-body  card " style="direction:rtl">
-                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                      <form method="post">
-                        <div class="mb-3 mt-3">
-                          <label for="email">مشتری</label>
-                          <select name="store" id="store" class="form-select form-select-sm">
-                            <?php
-                            try {
-                              $sql = "SELECT person_id,person_name FROM `person`";
-                              include('DBConnection.php');
-                              $result = $conn->query($sql);
-                              if ($result->num_rows > 0) {
-
-                              } else {
-                                echo 'No Customer Information Find';
-                              }
-                              while ($row = $result->fetch_assoc()) {
-                                echo '<option value="' . $row['person_id'] . '">' . $row['person_name'] . '</option>';
-                              }
-                              //loaned customer id
-                              if (isset($_POST['selecte'])) {
-                                echo $_POST['selecte'];
-                                $_SESSION['selecte'] = $_POST['selecte'];
-
-                              }
-                            } catch (Exception $e) {
-
-                            }
-
-                            ?>
-                          </select>
-                        </div>
-                        <div class="mb-3">
-                          <label for="pwd">مقدار</label>
-                          <input type="text" class="form-control" id="loan_quantity" placeholder="" name="loan_quantity"
-                            required>
-                        </div>
-                        <div class="mb-3">
-                          <label for="loan_quantity">اداینه</label>
-                          <input type="text" class="form-control" id="paid_quantity" placeholder="" name="paid_quantity"
-                            required>
-                        </div>
-                        <div class="mb-3">
-                          <label for="paid_quantity">ټوټل</label>
-                          <input type="text" class="form-control" id="total_paid" placeholder="" name="total_paid"
-                            required>
-                        </div>
-
-                        <input type="submit" class="btn btn-success form-control " name="loan" value="Save">
-                      </form>
+                 </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"> <div class="row">
+                  <div class="col-lg-4 mt-2">
+                    <div class="modal-body card loanDetails" style="direction:rtl" id="loanDetails">
+                      
+                
 
                     </div>
                   </div>
+                  <div class="col-lg-8 mt-2 table-responsive">
+                  <input type="text" class="form-control m-2" placeholder="د نوم پر اساس پلټنه" style=" text-align:right; margin-right:10px; margin-left:10px">
+                    <table class="table table-hover m-2" style="direction:rtl">
+
+                          <thead style=" background-color: #202645; color:white" class="m-4">
+                            <tr>
+                              <td>نوم</td>
+                              <td>پلار نوم</td>
+                              <td>ټوټل قرض</td>
+                              <td>ادا قرض</td>
+                              <td> باقداری</td>
+                              <td>بئل  نمبر</td>
+                              <td>پولی وااخد</td>
+                            </tr>
+                          </thead>
+                   
+                    <tbody>
+                    
+                      <?php showLoan();?>
+                       
+                        
+                    </tbody>
+                    </table>
+                  </div>
+                  </div>
+                </div>
+                  <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">...</div>
+
+                </div>
+               
                   <script type="text/javascript">
                     $(document).ready(function () {
                       $('#store').on('change', function () {
@@ -1642,7 +1690,7 @@ try {
                 <div class="modal-content">
 
                   <div class="col">
-                    <div class="modal-body  card " style="direction:rtl">
+                    <div class="modal-body  card " style="direction:rtl" id="loanDetails">
                       <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 
 
@@ -1798,7 +1846,7 @@ try {
                               $result = $conn->query($sql);
                               if ($result->num_rows > 0) {
                                 while ($row = $result->fetch_assoc()) {
-                               
+
                                   echo '<tr data-country-id="' . $row["count_id"] . '" data-country-name="' . $row["count_name"] . '">';
                                   echo '<td>' . $row["count_name"] . '</td>';
                                   echo '<td>
@@ -1994,7 +2042,7 @@ try {
                                       </td>';
                                 echo '<td><a class="fa fa-trash text-decoration-none deleteFirm" href="" style="color:red"></a></td>';
                                 echo '</tr>';
-                                
+
                               }
                             }
                             ?>
@@ -2414,7 +2462,7 @@ try {
                                   echo '<td>' . $row["firm_name"] . '</td>';
                                   echo '<td>' . $row["currency_name"] . '</td>';
                                   echo '<td>' . $row["loan_amount"] . '</td>';
-                                 
+
                                   echo '<td>
                                           <a class="fa fa-edit text-decoration-none editButtonOurloan" href="javascript:void(0);" style="color:blue"></a>
                                         </td>';
@@ -2422,7 +2470,7 @@ try {
                                   echo '</tr>';
                                 }
                               }
-                              
+
                             } catch (Exception $e) {
 
                             }
@@ -2719,7 +2767,7 @@ try {
                                   echo '</tr>';
                                 }
                               }
-                              
+
                             } catch (Exception $e) {
 
                             }
@@ -3195,7 +3243,7 @@ try {
                             $result = $conn->query($sql);
                             if ($result->num_rows > 0) {
                               while ($row = $result->fetch_assoc()) {
-                                echo '<tr data-cus-person-address-id="'.$row["person_address"].'"data-cus-person-id="' . $row["person_id"] . '" data-cus-person-name="' . $row["person_name"] .'" data-cus-person-father-name="' . $row["person_fathe_name"] . '" data-cus-person-f-name="' . $row["person_f_name"] . '" data-cus-province-name="' . $row["province_name"] . '" data-cus-district-name="' . $row["district_name"] . '" data-cus-village-name="' . $row["adress_vilage"] . '">';
+                                echo '<tr data-cus-person-address-id="' . $row["person_address"] . '"data-cus-person-id="' . $row["person_id"] . '" data-cus-person-name="' . $row["person_name"] . '" data-cus-person-father-name="' . $row["person_fathe_name"] . '" data-cus-person-f-name="' . $row["person_f_name"] . '" data-cus-province-name="' . $row["province_name"] . '" data-cus-district-name="' . $row["district_name"] . '" data-cus-village-name="' . $row["adress_vilage"] . '">';
                                 echo '<td>' . $row["person_name"] . '</td>';
                                 echo '<td>' . $row["person_f_name"] . '</td>';
                                 echo '<td>' . $row["person_fathe_name"] . '</td>';
@@ -3207,7 +3255,7 @@ try {
                                       </td>';
                                 echo '<td><a class="fa fa-trash text-decoration-none" href=""></a></td>';
                                 echo '</tr>';
-                                
+
                               }
                             }
                             ?>

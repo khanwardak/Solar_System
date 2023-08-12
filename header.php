@@ -57,3 +57,7 @@
             <a href="" class="btn btn-primary rounded-0 py-4 px-lg-5 d-none d-lg-block">کوټ<i class="fa fa-arrow-right ms-3"></i></a>
         </div>
     </nav>
+
+    <style>
+        
+    </style>

@@ -5,11 +5,9 @@
     <meta charset="utf-8">
     <title>Solartech</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="" name="keywords">
-    <meta content="" name="description">
+  
 
-    <!-- Favicon -->
-    <link href="img/favicon.ico" rel="icon">
+ 
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,14 +22,18 @@
     <link href="lib/animate/animate.min.css" rel="stylesheet">
     <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/aos/3.0.0-beta.6/aos.js"></script>	
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 </head>
-
+ <script>
+    AOS.init();
+  </script>
 <body >
     <!-- Spinner Start -->
     <!-- <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
@@ -58,9 +60,9 @@
         $showSilderInfoResult = $conn->query($sqlSowSilderInfo);
         if($showSilderInfoResult -> num_rows>0){
             while($row = $showSilderInfoResult->fetch_assoc()){
-              //  echo 'Admin'.'/'.trim($row['post_img']);
-                echo ' <div class="owl-carousel-item position-relative" data-dot="<img src=Admin'.'/'.trim($row['post_img']).'>">
-                <img class="img-fluid" src="Admin'.'/'.trim($row['post_img']).'" alt="" style="max-height: 800px;">
+               echo 'Admin'.'/'.trim($row['post_img']);
+                echo ' <div class="owl-carousel-item position-relative" data-dot="<img src="Admin'.'/'.trim($row['post_img']).'">
+                <img class="img-fluid" src=Admin'.'/'.trim($row['post_img']).' alt="" style="max-height: 800px;">
                 <div class="owl-carousel-inner">
                     <div class="container">
                         <div class="row justify-content-end" style="text-align: right;">
@@ -74,7 +76,7 @@
                 </div>
             </div>';
             }
-                echo "jdfkjd";
+               
         }
         else{
             echo "jdhfkjhdfn";
@@ -180,4 +182,16 @@
     <?php include('footer.php')?>;
 </body>
 
-</html>
+</html> <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js'></script>
+    <script src='lib/wow/wow.min.js'></script>
+    <script src='lib/easing/easing.min.js'#></script>
+    <script src='lib/waypoints/waypoints.min.js'></script>
+    <script src='lib/counterup/counterup.min.js'></script>
+    <script src='lib/owlcarousel/owl.carousel.min.js'></script>
+    <script src="lib/isotope/isotope.pkgd.min.js"></script>
+    <script src='lib/lightbox/js/lightbox.min.js'></script>
+    <script src='Admin/js/jquery.min.js'></script>
+
+    <!-- Template Javascript -->
+    <

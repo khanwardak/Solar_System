@@ -1,0 +1,65 @@
+.carousel-indicators {
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  bottom: auto;
+  left: auto;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  flex-direction: column;
+  display: flex; /* Add this to enable flex layout */
+}
+
+.carousel-indicators li {
+  display: block;
+  margin: 5px 0;
+  width: 50px !important;
+  height: 50px !important;
+  border-radius: 50%;
+  background-image: url('images/slider-1.jpg');
+  background-position: center;
+  background-size: contain;
+}
+
+.carousel-indicators .active {
+width: 60px !important;
+height: 60px !important;
+
+  background-image: url('images/slider-1.jpg');
+ 
+}
+.carousel-inner img {
+max-height: 600px; /* Set your desired maximum height here */
+  width: auto; /* Maintain aspect ratio */
+  margin: 0 auto;
+}
+/* Add these styles to your existing CSS file */
+.carousel-caption {
+ 
+  color: #ffffff;
+  position: absolute;
+  right: 0; /* Position on the right side */
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 10px 20px;
+  width: 80%; /* Adjust the width as needed */
+}
+.carousel-caption h1,
+.carousel-caption p {
+  text-align: right;
+  direction: rtl; /* For RTL text alignment */
+  margin: 0;
+}
+
+/* Style caption text */
+.carousel-caption h1 {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.carousel-caption p {
+  font-size: 16px;
+  margin-top: 5px;
+  font-weight: bold;
+}
